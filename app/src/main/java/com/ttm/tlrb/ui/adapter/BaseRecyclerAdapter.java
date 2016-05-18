@@ -15,8 +15,8 @@ import java.util.List;
  * Created by Helen on 2016/5/18.
  *
  */
-public abstract class BaseRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
-    private List<?> mDataList;
+public abstract class BaseRecyclerAdapter<D> extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
+    private List<D> mDataList;
     private static final int TYPE_CONTENT = 1;
     private static final int TYPE_FOOTER = 2;
 
@@ -25,14 +25,14 @@ public abstract class BaseRecyclerAdapter extends RecyclerView.Adapter<RecyclerV
     public final static int STATUS_LOAD_FAIL = 2;
     private int status = STATUS_NORMAL;
 
-    public BaseRecyclerAdapter(List<?> dataList){
+    public BaseRecyclerAdapter(List<D> dataList){
         this.mDataList = dataList;
     }
 
     @Override
     final public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         if(viewType == TYPE_FOOTER){
-            return new FooterViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.xlistview_footer, parent, false));
+            return onCreateFooterViewHolder(parent);
         }else {
             return onCreateContentViewHolder(parent);
         }
@@ -40,9 +40,13 @@ public abstract class BaseRecyclerAdapter extends RecyclerView.Adapter<RecyclerV
 
     protected abstract RecyclerView.ViewHolder onCreateContentViewHolder(ViewGroup parent);
 
+    protected RecyclerView.ViewHolder onCreateFooterViewHolder(ViewGroup parent){
+        return new FooterViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.xlistview_footer, parent, false));
+    }
+
     @Override
     final public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-        if(holder instanceof FooterViewHolder){
+        if(getItemViewType(position) == TYPE_FOOTER){
             onBindFooterViewHolder(holder);
         }else {
             onBindContentViewHolder(holder,position);

@@ -22,7 +22,7 @@ public interface APIService {
     @POST("2/files/{fileName}")
     Observable<FileBodyEn> postFileUpload(@Path("fileName") String fileName, @Body RequestBody file);
 
-    @POST("1/classes/FeedBack")
+    @POST("1/classes/Feedback")
     Observable<BaseEn> postFeedback(@Body RequestBody feedBack);
 
     @GET("1/classes/VersionInfo")
