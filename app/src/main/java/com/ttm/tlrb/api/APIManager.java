@@ -20,6 +20,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
  */
 public class APIManager {
     private Retrofit retrofit;
+    private APIService apiService;
     private APIManager(){
         File cacheFile = new File(EnvironmentUtil.getCacheFile(), Constant.CACHE_HTTP);
         OkHttpClient client = new OkHttpClient().newBuilder()
@@ -33,6 +34,7 @@ public class APIManager {
                 .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
                 .client(client)
                 .build();
+        apiService = retrofit.create(APIService.class);
     }
 
     public static APIManager getInstance(){
@@ -48,6 +50,6 @@ public class APIManager {
     }
 
     public APIService getAPIService(){
-        return getService(APIService.class);
+        return apiService;
     }
 }
