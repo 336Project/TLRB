@@ -1,0 +1,45 @@
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion 23
+    buildToolsVersion "23.0.3"
+
+    defaultConfig {
+        applicationId "com.ttm.tlrb"
+        minSdkVersion 14
+        targetSdkVersion 23
+        versionCode 1
+        versionName "1.0"
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    testCompile 'junit:junit:4.12'
+    compile 'com.android.support:appcompat-v7:23.3.0'
+    compile 'com.android.support:design:23.3.0'
+    compile 'io.reactivex:rxandroid:1.1.0'
+    compile 'io.reactivex:rxjava:1.1.0'
+    compile 'com.squareup.retrofit2:retrofit:2.0.1'
+    compile 'com.squareup.retrofit2:converter-gson:2.0.1'
+    compile 'com.squareup.retrofit2:adapter-rxjava:2.0.1'
+    //compile 'com.squareup.retrofit2:converter-scalars:2.0.0'
+    //fresco
+    compile 'com.facebook.fresco:fresco:0.10.0'
+    // If your app supports Android versions before Ice Cream Sandwich (API level 14)
+    compile 'com.facebook.fresco:animated-base-support:0.10.0'
+    // For animated GIF support
+    compile 'com.facebook.fresco:animated-gif:0.10.0'
+    // For WebP support, including animated WebP
+    //compile 'com.facebook.fresco:animated-webp:0.10.0'
+    //compile 'com.facebook.fresco:webpsupport:0.10.0'
+    // For WebP support, without animations
+    //compile 'com.facebook.fresco:webpsupport:0.10.0'
+    compile 'com.github.traex.rippleeffect:library:1.3'
+}
