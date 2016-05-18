@@ -20,7 +20,7 @@
         </activity>
         <activity
            android:screenOrientation="portrait"
-           android:name=".ui.activity.FeedbackActivity"/>
+           android:name=".ui.activity.FeedBackActivity"/>
     </application>
 
 </manifest>

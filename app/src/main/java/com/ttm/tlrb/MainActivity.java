@@ -12,7 +12,7 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.ttm.tlrb.ui.activity.BaseActivity;
-import com.ttm.tlrb.ui.activity.FeedbackActivity;
+import com.ttm.tlrb.ui.activity.FeedBackActivity;
 
 public class MainActivity extends BaseActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -28,7 +28,7 @@ public class MainActivity extends BaseActivity
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                FeedbackActivity.launcher(MainActivity.this);
+                FeedBackActivity.launcher(MainActivity.this);
             }
         });
 

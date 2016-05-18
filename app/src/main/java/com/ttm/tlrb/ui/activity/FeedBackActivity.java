@@ -35,16 +35,15 @@ import rx.schedulers.Schedulers;
  * Created by Helen on 2016/5/5.
  *
  */
-public class FeedbackActivity extends TitlebarActivity implements View.OnClickListener{
+public class FeedBackActivity extends TitlebarActivity implements View.OnClickListener{
 
     public static void launcher(Context context){
-        context.startActivity(new Intent(context,FeedbackActivity.class));
+        context.startActivity(new Intent(context,FeedBackActivity.class));
     }
 
     private EditText mEditTextContent;
     private EditText mEditTextContact;
     private CheckBox mCheckBox;
-    private Button mBtnSend;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -59,9 +58,10 @@ public class FeedbackActivity extends TitlebarActivity implements View.OnClickLi
         mEditTextContent = (EditText) findViewById(R.id.et_feedback_content);
         mEditTextContact = (EditText) findViewById(R.id.et_contact);
         mCheckBox = (CheckBox) findViewById(R.id.cb_upload_log);
-        mBtnSend = (Button) findViewById(R.id.btn_send);
-        mBtnSend.setOnClickListener(this);
+        Button btnSend = (Button) findViewById(R.id.btn_send);
+        btnSend.setOnClickListener(this);
         mAPIService = APIManager.getInstance().getAPIService();
+
     }
 
     @Override
@@ -114,7 +114,7 @@ public class FeedbackActivity extends TitlebarActivity implements View.OnClickLi
 
                 @Override
                 public void onNext(BaseEn o) {
-                    ToastUtil.showToast(FeedbackActivity.this,getString(R.string.thanks_to_feedback));
+                    ToastUtil.showToast(FeedBackActivity.this,getString(R.string.thanks_to_feedback));
                     if(logFile != null && logFile.exists()) {
                         FileUtil.deleteFile(logFile);
                     }
