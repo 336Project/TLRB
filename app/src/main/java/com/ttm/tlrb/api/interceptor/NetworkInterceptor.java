@@ -21,9 +21,8 @@ public class NetworkInterceptor implements Interceptor {
     public Response intercept(Chain chain) throws IOException {
         Request request = chain.request();
         Request.Builder builder = request.newBuilder();
-        builder.addHeader("apikey","cd3546573f9f857c77f603aaa5f004f2");
-        builder.addHeader("X-Bmob-Application-Id","893c2b4926e7201960116466fa76d2ca");
-        builder.addHeader("X-Bmob-REST-API-Key","4688fb9639a6d64fae95f36f28f07a40");
+        builder.addHeader("X-Bmob-Application-Id","c1aa552ec6d7639a92f11a362ff22b34");
+        builder.addHeader("X-Bmob-REST-API-Key","a93c8e5501c9f2ed942ae1cff46ccd77");
         if(!EnvironmentUtil.isNetworkConnected()){
             builder.cacheControl(CacheControl.FORCE_CACHE);
         }

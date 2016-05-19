@@ -1,25 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <litepal>
-    <!--
-		Define the database name of your application. 
-		By default each database name should be end with .db. 
-		If you didn't name your database end with .db, 
-		LitePal would plus the suffix automaticly for you.
-		For example:    
-    	<dbname value="demo" ></dbname>
-    -->
-    <dbname value="sample" ></dbname>
-
-    <!--
-    	Define the version of your database. Each time you want 
-    	to upgrade your database, the version tag would helps.
-    	Modify the models you defined in the mapping tag, and just 
-    	make the version value plus one, the upgrade of database
-    	will be processed automaticly without concern.
-		For example:    
-    	<version value="1" ></version>
-    -->
-    <version value="1" ></version>
 
     <!--
     	Define your models in the list with mapping tag, LitePal will
@@ -33,6 +13,7 @@
     -->
     <list>
 		<mapping class="com.ttm.tlrb.ui.entity.RedBomb"></mapping>
+		<mapping class="com.ttm.tlrb.ui.entity.Category"/>
         <!--<mapping class="org.litepal.litepalsample.model.Album"></mapping>
         <mapping class="org.litepal.litepalsample.model.Song"></mapping>
         <mapping class="org.litepal.litepalsample.model.Singer"></mapping>-->
@@ -54,5 +35,6 @@
     	
 		Note that this tag is optional for developers.
     -->
-
+    <dbname value="tlrb.db"/>
+    <version value="1"/>
 </litepal>

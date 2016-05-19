@@ -8,7 +8,7 @@ public class VersionInfo extends BaseEn{
     private String objectId;
     private String version;
     private String updateContent;
-    private BmobFile apkFile;
+    private String apkUrl;
 
     public String getObjectId() {
         return objectId;
@@ -37,12 +37,12 @@ public class VersionInfo extends BaseEn{
         this.updateContent = updateContent;
     }
 
-    public BmobFile getApkFile() {
-        return apkFile;
+    public String getApkUrl() {
+        return apkUrl;
     }
 
-    public void setApkFile(BmobFile apkFile) {
-        this.apkFile = apkFile;
+    public void setApkUrl(String apkUrl) {
+        this.apkUrl = apkUrl;
     }
 
     @Override
@@ -51,7 +51,7 @@ public class VersionInfo extends BaseEn{
                 "objectId='" + objectId + '\'' +
                 ", version='" + version + '\'' +
                 ", updateContent='" + updateContent + '\'' +
-                ", apkFile=" + apkFile +
+                ", apkUrl=" + apkUrl +
                 '}';
     }
 }
