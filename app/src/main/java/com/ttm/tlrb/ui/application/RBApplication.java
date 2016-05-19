@@ -7,6 +7,8 @@ import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.imagepipeline.core.ImagePipelineConfig;
 import com.ttm.tlrb.utils.EnvironmentUtil;
 
+import org.litepal.LitePalApplication;
+
 /**
  * Created by Helen on 2016/4/28.
  *
@@ -16,6 +18,7 @@ public class RBApplication extends Application{
     @Override
     public void onCreate() {
         super.onCreate();
+        LitePalApplication.initialize(this);
         String processName = EnvironmentUtil.getProcessName(this,android.os.Process.myPid());
         if(getPackageName().equals(processName)){
             init();
