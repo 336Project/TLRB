@@ -13,5 +13,6 @@
         </list>
     -->
     <list>
+        <mapping class="com.ttm.tlrb.ui.entity.Category"/>
     </list>
 </litepal>
