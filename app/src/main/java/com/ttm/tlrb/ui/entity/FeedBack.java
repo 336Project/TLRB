@@ -7,7 +7,7 @@ import com.google.gson.Gson;
  * Created by Helen on 2016/5/5.
  * 用户反馈
  */
-public class Feedback extends BaseEn{
+public class FeedBack extends BaseEn{
     private String content;
     private String contact;
     private BmobFile fileLog;
