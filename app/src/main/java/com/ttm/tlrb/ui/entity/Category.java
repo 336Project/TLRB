@@ -8,8 +8,18 @@ import org.litepal.crud.DataSupport;
  */
 public class Category extends DataSupport{
     private int id;
+    private String objectId;//服务端字段，只有当数据同步之后，该字段才有值
     private String name;//组别名称
     private String userName;//数据关联的用户名
+
+
+    public String getObjectId() {
+        return objectId;
+    }
+
+    public void setObjectId(String objectId) {
+        this.objectId = objectId;
+    }
 
     public int getId() {
         return id;

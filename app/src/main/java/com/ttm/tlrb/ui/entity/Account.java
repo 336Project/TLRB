@@ -10,7 +10,7 @@ public class Account extends BaseEn{
     private String userName;//登录账号
     private String password;//密码
     private String nickname;//昵称，显示名称
-    private int type;//注册类型：0自注册，1新浪微博，2微信，3qq
+    private Integer type;//注册类型：0自注册，1新浪微博，2微信，3qq
     private String phoneNumber;//绑定的手机号,用于找回密码?
     private String portrait;//头像地址
 
@@ -42,7 +42,7 @@ public class Account extends BaseEn{
         return type;
     }
 
-    public void setType(int type) {
+    public void setType(Integer type) {
         this.type = type;
     }
 
