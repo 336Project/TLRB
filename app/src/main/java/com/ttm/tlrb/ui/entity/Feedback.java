@@ -8,9 +8,9 @@ import com.google.gson.Gson;
  * 用户反馈
  */
 public class Feedback extends BaseEn{
-    private String content;
-    private String contact;
-    private BmobFile fileLog;
+    private String content;//反馈内容
+    private String contact;//联系方式
+    private BmobFile fileLog;//崩溃日志文件
 
     public BmobFile getFileLog() {
         return fileLog;
