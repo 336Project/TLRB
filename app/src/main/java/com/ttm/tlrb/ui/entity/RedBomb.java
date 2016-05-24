@@ -11,15 +11,25 @@ public class RedBomb extends DataSupport {
     private long id;//本地数据库id
     @Column(unique = true, defaultValue = "",nullable = false)
     private String userName;//数据关联的数据账号
+    private String objectId;//服务端字段，只有当数据同步之后，该字段才有值
     private String name;//姓名
     private String time;//时间
-    private int target;//男女方（1男方、2女方、3共同）
-    private int type;//类型（1收入、2支出）
+    private Integer target;//男女方（1男方、2女方、3共同）
+    private Integer type;//类型（1收入、2支出）
     private String categoryName;//组别名称（不设置，都为'默认'组别）
-    private double money;//金额
+    private Double money;//金额
     private String gift;//随礼
     private String remark;//备注
-    private boolean isSync;//是否同步到服务器上面
+    private boolean isSync;//是否已经同步到服务器上
+
+
+    public String getObjectId() {
+        return objectId;
+    }
+
+    public void setObjectId(String objectId) {
+        this.objectId = objectId;
+    }
 
     public long getId() {
         return id;
@@ -57,7 +67,7 @@ public class RedBomb extends DataSupport {
         return target;
     }
 
-    public void setTarget(int target) {
+    public void setTarget(Integer target) {
         this.target = target;
     }
 
@@ -65,7 +75,7 @@ public class RedBomb extends DataSupport {
         return type;
     }
 
-    public void setType(int type) {
+    public void setType(Integer type) {
         this.type = type;
     }
 
@@ -81,7 +91,7 @@ public class RedBomb extends DataSupport {
         return money;
     }
 
-    public void setMoney(double money) {
+    public void setMoney(Double money) {
         this.money = money;
     }
 
