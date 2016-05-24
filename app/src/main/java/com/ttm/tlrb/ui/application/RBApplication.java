@@ -16,7 +16,6 @@ public class RBApplication extends LitePalApplication{
     @Override
     public void onCreate() {
         super.onCreate();
-        LitePalApplication.initialize(this);
         String processName = EnvironmentUtil.getProcessName(this,android.os.Process.myPid());
         if(getPackageName().equals(processName)){
             init();
