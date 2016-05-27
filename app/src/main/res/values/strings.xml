@@ -4,6 +4,25 @@
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
+    <!-- 添加红包 -->
+    <string name="name">姓名</string>
+    <string name="sex">属于</string>
+    <string name="men">男方</string>
+    <string name="women">女方</string>
+    <string name="all">共同</string>
+    <string name="time">时间</string>
+    <string name="type">类型</string>
+    <string name="income">收入</string>
+    <string name="spending">支出</string>
+    <string name="money">金额</string>
+    <string name="gift">随礼</string>
+    <string name="remark">备注</string>
+    <string name="categoryName">关系类别</string>
+    <string name="commit">提交</string>
+    <string name="cancel">取消</string>
+    <string name="sure">确定</string>
+
+
     <string name="action_settings">Settings</string>
     <string name="error">轻触屏幕重新加载</string>
     <string name="no_data">暂无数据</string>
