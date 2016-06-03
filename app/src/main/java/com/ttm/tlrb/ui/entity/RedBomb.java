@@ -39,7 +39,7 @@ public class RedBomb extends BmobObject {
         this.time = time;
     }
 
-    public int getTarget() {
+    public Integer getTarget() {
         return target;
     }
 
@@ -47,7 +47,7 @@ public class RedBomb extends BmobObject {
         this.target = target;
     }
 
-    public int getType() {
+    public Integer getType() {
         return type;
     }
 
@@ -63,7 +63,7 @@ public class RedBomb extends BmobObject {
         this.categoryName = categoryName;
     }
 
-    public double getMoney() {
+    public Double getMoney() {
         return money;
     }
 
@@ -87,13 +87,6 @@ public class RedBomb extends BmobObject {
         this.remark = remark;
     }
 
-    /*public boolean isSync() {
-        return isSync;
-    }
-
-    public void setIsSync(boolean isSync) {
-        this.isSync = isSync;
-    }*/
 
     @Override
     public String toString() {
