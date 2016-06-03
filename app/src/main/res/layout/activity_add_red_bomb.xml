@@ -1,0 +1,264 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fitsSystemWindows="true"
+        android:orientation="vertical"
+        android:focusable="true"
+        android:background="@color/white">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/add_redbomb_radiobutton_padding"
+            android:orientation="horizontal">
+            <TextView
+                style="@style/add_red_bomb_text"
+                android:text="@string/name"/>
+
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/layout_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <com.ttm.tlrb.view.CleanableEditText
+                    style="@style/add_red_bomb_edittext"
+                    android:hint="@string/name"/>
+            </android.support.design.widget.TextInputLayout>
+
+            <!--<android.support.design.widget.TextInputEditText
+                android:id="@+id/et_name"
+                style="@style/add_red_bomb_edittext"/>-->
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <TextView
+                style="@style/add_red_bomb_text"
+                android:text="@string/money"/>
+
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/layout_money"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <com.ttm.tlrb.view.CleanableEditText
+                    style="@style/add_red_bomb_edittext"
+                    android:inputType="numberDecimal"
+                    android:hint="@string/money"/>
+            </android.support.design.widget.TextInputLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <TextView
+                style="@style/add_red_bomb_text"
+                android:text="@string/gift"/>
+
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/layout_gift"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <com.ttm.tlrb.view.CleanableEditText
+                    style="@style/add_red_bomb_edittext"
+                    android:hint="@string/gift"/>
+            </android.support.design.widget.TextInputLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <TextView
+                style="@style/add_red_bomb_text"
+                android:text="@string/categoryName"/>
+
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/layout_categoryName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <com.ttm.tlrb.view.CleanableEditText
+                    style="@style/add_red_bomb_edittext"
+                    android:hint="@string/categoryName"/>
+            </android.support.design.widget.TextInputLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <TextView
+                style="@style/add_red_bomb_text"
+                android:text="@string/time"/>
+
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/layout_time"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content">
+                <com.ttm.tlrb.view.CleanableEditText
+                    style="@style/add_red_bomb_edittext"
+                    android:hint="@string/time"/>
+            </android.support.design.widget.TextInputLayout>
+
+            <ImageView
+                android:id="@+id/iv_time"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_marginRight="@dimen/add_redbomb_radiobutton_padding"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_date"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <TextView
+                style="@style/add_red_bomb_text"
+                android:text="@string/remark"/>
+
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/layout_remark"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <com.ttm.tlrb.view.CleanableEditText
+                    style="@style/add_red_bomb_edittext"
+                    android:hint="@string/remark"/>
+            </android.support.design.widget.TextInputLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="40dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="20dp"
+            android:orientation="horizontal">
+            <TextView
+                style="@style/add_red_bomb_text"
+                android:visibility="visible"
+                android:text="@string/sex"/>
+
+            <RadioGroup
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:orientation="horizontal">
+                <RadioButton
+                    android:id="@+id/rb_boy"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:gravity="center_vertical|left"
+                    android:textSize="@dimen/add_redbomb_textsize"
+                    android:checked="true"
+                    android:text="@string/men"/>
+
+                <RadioButton
+                    android:id="@+id/rb_gril"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:gravity="center_vertical|left"
+                    android:textSize="@dimen/add_redbomb_textsize"
+                    android:layout_marginLeft="@dimen/add_redbomb_radiobutton_padding"
+                    android:text="@string/women"/>
+                <RadioButton
+                    android:id="@+id/rb_all"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:gravity="center_vertical|left"
+                    android:layout_marginLeft="@dimen/add_redbomb_radiobutton_padding"
+                    android:textSize="@dimen/add_redbomb_textsize"
+                    android:text="@string/all"/>
+
+            </RadioGroup>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="40dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="20dp"
+            android:orientation="horizontal">
+            <TextView
+                style="@style/add_red_bomb_text"
+                android:visibility="visible"
+                android:text="@string/type"/>
+
+            <RadioGroup
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:orientation="horizontal">
+
+                <RadioButton
+                    android:id="@+id/rb_spending"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:gravity="center_vertical|left"
+                    android:textSize="@dimen/add_redbomb_textsize"
+                    android:checked="true"
+                    android:text="@string/spending"/>
+
+                <RadioButton
+                    android:id="@+id/rb_income"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:gravity="center_vertical|left"
+                    android:layout_marginLeft="@dimen/add_redbomb_radiobutton_padding"
+                    android:textSize="@dimen/add_redbomb_textsize"
+                    android:text="@string/income"/>
+
+            </RadioGroup>
+
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/btn_commit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:background="@color/Blue_500"
+            android:textSize="@dimen/font_18"
+            android:textColor="@color/white"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:text="@string/commit"/>
+
+        <Button
+            android:id="@+id/btn_show"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:background="@color/Blue_500"
+            android:textSize="@dimen/font_18"
+            android:textColor="@color/white"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:text="@string/commit"/>
+    </LinearLayout>
+</ScrollView>
