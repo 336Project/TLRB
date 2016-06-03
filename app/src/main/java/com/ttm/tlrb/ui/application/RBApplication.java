@@ -13,6 +13,16 @@ import org.litepal.LitePalApplication;
  */
 public class RBApplication extends LitePalApplication{
     private static RBApplication instance;
+    private String session = "";
+
+    public String getSession() {
+        return session;
+    }
+
+    public void setSession(String session) {
+        this.session = session;
+    }
+
     @Override
     public void onCreate() {
         super.onCreate();

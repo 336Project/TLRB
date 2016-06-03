@@ -1,33 +1,12 @@
 package com.ttm.tlrb.ui.entity;
 
-import org.litepal.crud.DataSupport;
-
 /**
- * Created by 李晓伟 on 2016/5/19.
- *
+ * Created by Helen on 2016/5/19.
+ * 组别
  */
-public class Category extends DataSupport{
-    private int id;
-    private String objectId;//服务端字段，只有当数据同步之后，该字段才有值
+public class Category extends BmobObject{
     private String name;//组别名称
     private String userName;//数据关联的用户名
-
-
-    public String getObjectId() {
-        return objectId;
-    }
-
-    public void setObjectId(String objectId) {
-        this.objectId = objectId;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
 
     public String getName() {
         return name;
@@ -43,5 +22,26 @@ public class Category extends DataSupport{
 
     public void setUserName(String userName) {
         this.userName = userName;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder builder = new StringBuilder();
+        builder.append("{");
+        if(name != null){
+            builder.append("\"name\":\"").append(name).append("\",");
+        }else {
+            throw new NullPointerException("name not be null");
+        }
+        if (getACL() != null){
+            builder.append("\"ACL\":").append(getACL().toString()).append(",");
+        }
+        if(userName != null){
+            builder.append("\"userName\":\"").append(userName).append("\"");
+        }else {
+            throw new NullPointerException("userName not be null");
+        }
+        builder.append("}");
+        return builder.toString();
     }
 }

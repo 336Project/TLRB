@@ -1,17 +1,11 @@
 package com.ttm.tlrb.ui.entity;
 
-import org.litepal.annotation.Column;
-import org.litepal.crud.DataSupport;
-
 /**
  * user:wtw
  * time: 2016/5/19 0019.
  */
-public class RedBomb extends DataSupport {
-    private long id;//本地数据库id
-    @Column(unique = true, defaultValue = "",nullable = false)
+public class RedBomb extends BmobObject {
     private String userName;//数据关联的数据账号
-    private String objectId;//服务端字段，只有当数据同步之后，该字段才有值
     private String name;//姓名
     private String time;//时间
     private Integer target;//男女方（1男方、2女方、3共同）
@@ -20,24 +14,6 @@ public class RedBomb extends DataSupport {
     private Double money;//金额
     private String gift;//随礼
     private String remark;//备注
-    private boolean isSync;//是否已经同步到服务器上
-
-
-    public String getObjectId() {
-        return objectId;
-    }
-
-    public void setObjectId(String objectId) {
-        this.objectId = objectId;
-    }
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
 
     public String getUserName() {
         return userName;
@@ -111,11 +87,48 @@ public class RedBomb extends DataSupport {
         this.remark = remark;
     }
 
-    public boolean isSync() {
+    /*public boolean isSync() {
         return isSync;
     }
 
     public void setIsSync(boolean isSync) {
         this.isSync = isSync;
+    }*/
+
+    @Override
+    public String toString() {
+        StringBuilder builder = new StringBuilder();
+        builder.append("{");
+        if(name != null){
+            builder.append("\"name\":\"").append(name).append("\",");
+        }
+        if(time != null){
+            builder.append("\"time\":\"").append(time).append("\",");
+        }
+        if(type != null){
+            builder.append("\"type\":").append(type).append(",");
+        }
+        if(categoryName != null){
+            builder.append("\"categoryName\":\"").append(categoryName).append("\",");
+        }
+        if(money != null){
+            builder.append("\"money\":").append(money).append(",");
+        }
+        if(gift != null){
+            builder.append("\"gift\":\"").append(gift).append("\",");
+        }
+        if(remark != null){
+            builder.append("\"remark\":\"").append(remark).append("\",");
+        }
+        if (getACL() != null){
+            builder.append("\"ACL\":").append(getACL().toString()).append(",");
+        }
+        if(userName != null){
+            builder.append("\"userName\":\"").append(userName).append("\"");
+        }else {
+            throw new NullPointerException("userName not be null");
+        }
+        builder.append("}");
+        return builder.toString();
     }
 }
