@@ -35,7 +35,7 @@ public class ApplicationTest extends ApplicationTestCase<Application> {
     }
 
     public void testGetRedBombList(){
-        APIManager.getInstance().getRedBombList("test002", 1, 2, new Subscriber<List<RedBomb>>() {
+        APIManager.getInstance().getRedBombList("test002", 0,1, 2, new Subscriber<List<RedBomb>>() {
             @Override
             public void onCompleted() {
 
@@ -90,7 +90,7 @@ public class ApplicationTest extends ApplicationTestCase<Application> {
         redBomb.setCategoryName("默认");
         redBomb.setTarget(1);
         redBomb.setName("张少锋");
-        redBomb.setType(2);
+        redBomb.setType(1);
         redBomb.setTime("2016-06-03");
 
         APIManager.getInstance().addRedBomb(redBomb, new Subscriber<BmobObject>() {

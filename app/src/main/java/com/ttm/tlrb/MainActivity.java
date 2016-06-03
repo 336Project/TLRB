@@ -39,6 +39,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     private List<RedBomb> mRedBombList = new ArrayList<>();
     private int page = 1;
     private boolean hasMore = true;
+    private int type = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -102,7 +103,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
-                if (newState == RecyclerView.SCROLL_STATE_IDLE && lastVisibleItem + 1 == mAdapter.getItemCount()) {
+                if (hasMore && newState == RecyclerView.SCROLL_STATE_IDLE && lastVisibleItem + 1 == mAdapter.getItemCount()) {
                     page += 1;
                     requestData();
                 }
@@ -138,7 +139,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         if(mRefreshLayout.isRefreshing()){
             page = 1;
         }
-        APIManager.getInstance().getRedBombList("test001", page, Constant.PAGE_SIZE, new Subscriber<List<RedBomb>>() {
+        APIManager.getInstance().getRedBombList("test001",type, page, Constant.PAGE_SIZE, new Subscriber<List<RedBomb>>() {
             @Override
             public void onCompleted() {
 
@@ -158,12 +159,12 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                 mRefreshLayout.setEnabled(true);
                 mRefreshLayout.setRefreshing(false);
                 mEmptyContainer.setType(EmptyEmbeddedContainer.EmptyStyle.EmptyStyle_NORMAL);
+                if (page == 1) {
+                    mRedBombList.clear();
+                }
                 int status = BaseRecyclerAdapter.STATUS_NORMAL;
                 if (redBombs != null && !redBombs.isEmpty()) {
                     status = redBombs.size() == Constant.PAGE_SIZE?BaseRecyclerAdapter.STATUS_LOADING : BaseRecyclerAdapter.STATUS_NORMAL;
-                    if (page == 1) {
-                        mRedBombList.clear();
-                    }
                     mRedBombList.addAll(redBombs);
                 }
                 if (mRedBombList.isEmpty()) {
@@ -208,9 +209,24 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_all) {
+            page = 1;
+            type = 0;
+            mEmptyContainer.setType(EmptyEmbeddedContainer.EmptyStyle.EmptyStyle_LOADING_WITH_VIEW);
+            requestData();
+            return true;
+        }else if(id == R.id.action_in){
+            page = 1;
+            type = 1;
+            mEmptyContainer.setType(EmptyEmbeddedContainer.EmptyStyle.EmptyStyle_LOADING_WITH_VIEW);
+            requestData();
+            return true;
+        }else if(id == R.id.action_out){
+            page = 1;
+            type = 2;
+            mEmptyContainer.setType(EmptyEmbeddedContainer.EmptyStyle.EmptyStyle_LOADING_WITH_VIEW);
+            requestData();
             return true;
         }
 

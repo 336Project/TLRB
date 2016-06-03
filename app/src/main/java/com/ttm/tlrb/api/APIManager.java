@@ -115,9 +115,12 @@ public class APIManager {
      * @param size 页大小
      * @param subscriber 回调
      */
-    public void getRedBombList(String username,int page,int size,Subscriber<List<RedBomb>> subscriber){
-        Map<String,String> where = new HashMap<>();
+    public void getRedBombList(String username,int type,int page,int size,Subscriber<List<RedBomb>> subscriber){
+        Map<String,Object> where = new HashMap<>();
         where.put("userName",username);
+        if(type == 1 || type == 2) {
+            where.put("type", type);
+        }
         int skip = size * (page-1);
         getAPIService().getRedBomb(GsonUtil.fromMap2Json(where),skip, size)
                 .map(new Func1<ResponseEn<RedBomb>, List<RedBomb>>() {
