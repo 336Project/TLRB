@@ -1,17 +1,18 @@
 package com.ttm.tlrb.ui.application;
 
+import android.app.Application;
+
 import com.facebook.cache.disk.DiskCacheConfig;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.imagepipeline.core.ImagePipelineConfig;
 import com.ttm.tlrb.utils.EnvironmentUtil;
 
-import org.litepal.LitePalApplication;
 
 /**
  * Created by Helen on 2016/4/28.
  *
  */
-public class RBApplication extends LitePalApplication{
+public class RBApplication extends Application{
     private static RBApplication instance;
     private String session = "";
 

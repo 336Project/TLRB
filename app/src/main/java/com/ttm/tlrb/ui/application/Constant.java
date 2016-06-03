@@ -31,4 +31,6 @@ public class Constant {
     public static final MediaType TEXT = MediaType.parse("text/plain");
     /**RequestBody Json格式*/
     public static final MediaType JSON = MediaType.parse("application/json");
+    /**页数*/
+    public static final int PAGE_SIZE = 10;
 }

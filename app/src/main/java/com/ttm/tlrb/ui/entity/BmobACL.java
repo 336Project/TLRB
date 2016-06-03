@@ -36,6 +36,11 @@ public class BmobACL extends BaseEn{
 
     }
 
+    /**
+     * 设置是否可读
+     * @param userId 当前用户的objectId
+     * @param allowed true 可读
+     */
     public void setReadAccess(String userId, boolean allowed) {
         if(TextUtils.isEmpty(userId)) {
             throw new IllegalArgumentException("cannot setReadAccess for null userId");
@@ -46,7 +51,11 @@ public class BmobACL extends BaseEn{
 
         }
     }
-
+    /**
+     * 设置是否可写
+     * @param userId 当前用户的objectId
+     * @param allowed true 可写
+     */
     public void setWriteAccess(String userId, boolean allowed) {
         if(TextUtils.isEmpty(userId)) {
             throw new IllegalArgumentException("cannot setReadAccess for null userId");

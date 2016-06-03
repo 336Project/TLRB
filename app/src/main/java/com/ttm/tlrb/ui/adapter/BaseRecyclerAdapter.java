@@ -8,6 +8,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.ttm.tlrb.R;
+import com.ttm.tlrb.view.EmptyEmbeddedContainer;
 
 import java.util.List;
 
@@ -55,19 +56,23 @@ public abstract class BaseRecyclerAdapter<D> extends RecyclerView.Adapter<Recycl
 
     protected void onBindFooterViewHolder(RecyclerView.ViewHolder holder){
         FooterViewHolder footerViewHolder = (FooterViewHolder) holder;
+        showFooterViewHolderStatus(footerViewHolder);
+    }
+
+    private void showFooterViewHolderStatus(FooterViewHolder footerViewHolder){
         switch (status){
             case STATUS_LOADING:
+                footerViewHolder.itemView.setVisibility(View.VISIBLE);
                 footerViewHolder.mProgressBar.setVisibility(View.VISIBLE);
                 footerViewHolder.mTextMore.setText(R.string.loading);
                 break;
             case STATUS_LOAD_FAIL:
+                footerViewHolder.itemView.setVisibility(View.VISIBLE);
                 footerViewHolder.mProgressBar.setVisibility(View.GONE);
                 footerViewHolder.mTextMore.setText(R.string.load_fail_retry);
                 break;
             case STATUS_NORMAL:
-            default:
-                footerViewHolder.mProgressBar.setVisibility(View.VISIBLE);
-                footerViewHolder.mTextMore.setText(R.string.loading);
+                footerViewHolder.itemView.setVisibility(View.GONE);
                 break;
         }
     }
@@ -80,6 +85,10 @@ public abstract class BaseRecyclerAdapter<D> extends RecyclerView.Adapter<Recycl
             return mDataList.size() +1;
         }
         return 0;
+    }
+
+    protected D getItem(int position){
+        return mDataList.get(position);
     }
 
     @Override
@@ -95,6 +104,11 @@ public abstract class BaseRecyclerAdapter<D> extends RecyclerView.Adapter<Recycl
         this.status = status;
         super.notifyDataSetChanged();
     }
+    private EmptyEmbeddedContainer.EmptyInterface emptyInterface;
+
+    public void setEmptyInterface(EmptyEmbeddedContainer.EmptyInterface emptyInterface) {
+        this.emptyInterface = emptyInterface;
+    }
 
     private class FooterViewHolder extends RecyclerView.ViewHolder{
         private TextView mTextMore;
@@ -104,11 +118,11 @@ public abstract class BaseRecyclerAdapter<D> extends RecyclerView.Adapter<Recycl
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    /*if(emptyInterface != null){
+                    if(emptyInterface != null){
                         emptyInterface.doRetry();
-                    }*/
-                    mProgressBar.setVisibility(View.VISIBLE);
-                    mTextMore.setText(R.string.loading);
+                    }
+                    mProgressBar.setVisibility(View.GONE);
+                    mTextMore.setText(R.string.load_fail_retry);
                 }
             });
             mProgressBar = (ProgressBar) itemView.findViewById(R.id.progress_bar);

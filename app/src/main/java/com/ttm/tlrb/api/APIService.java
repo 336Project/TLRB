@@ -11,6 +11,7 @@ import com.ttm.tlrb.ui.entity.VersionInfo;
 import okhttp3.RequestBody;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
+import retrofit2.http.Headers;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
@@ -23,10 +24,10 @@ import rx.Observable;
 public interface APIService {
     String BASE_URL = "https://api.bmob.cn/";
     int BATCH_LIMIT_COUNT = 50;
-
+    /**登录*/
     @GET("1/login")
-    Observable<Account> login(@Query("username") String username,@Query("password") String password);
-
+    Observable<Account> login(@Query("username") String username, @Query("password") String password);
+    /**注册*/
     @POST("1/users")
     Observable<Account> register(@Body RequestBody user);
 
@@ -41,6 +42,7 @@ public interface APIService {
     Observable<ResponseEn<VersionInfo>> getVersionInfo(@Query("limit") int limit, @Query("order") String bql);
 
     /**获取红包列表数据,分页**/
+    @Headers("Cache-Control: public, max-age=600")//10分钟
     @GET("1/classes/RedBomb")
     Observable<ResponseEn<RedBomb>> getRedBomb(@Query("where") String where,@Query("skip") int skip,@Query("limit") int limit);
 

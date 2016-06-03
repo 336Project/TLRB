@@ -1,36 +1,12 @@
 package com.ttm.tlrb.utils;
 
-import android.content.ContentValues;
-
-import com.google.gson.Gson;
-import com.ttm.tlrb.api.APIManager;
-import com.ttm.tlrb.api.APIService;
-import com.ttm.tlrb.ui.application.Constant;
-import com.ttm.tlrb.ui.entity.BaseEn;
-import com.ttm.tlrb.ui.entity.RedBomb;
-import com.ttm.tlrb.ui.entity.RequestBatch;
-
-import org.litepal.crud.DataSupport;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import okhttp3.RequestBody;
-import rx.Observable;
-import rx.Subscriber;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Func1;
-import rx.schedulers.Schedulers;
-
 /**
  * Created by 李晓伟 on 2016/5/26.
  * 数据同步操作
  */
 public class DataSyncUtil {
 
-    public synchronized static void syncRedBombData(final String userName) {
+    /*public synchronized static void syncRedBombData(final String userName) {
         Subscriber<BaseEn> subscriber = new Subscriber<BaseEn>() {
             @Override
             public void onCompleted() {
@@ -106,11 +82,11 @@ public class DataSyncUtil {
         //3、将获取到的数据和本地数据一一比较，是否已经存在，不存在，插入本地数据库
     }
 
-    /**
+    *//**
      * 将数据上传服务器
      * @param redBombs
      * @return
-     */
+     *//*
     private static Observable<BaseEn> postRedBombBatch(List<RedBomb> redBombs){
         Gson gson = new Gson();
         Map<String, List<RequestBatch>> map = new HashMap<>();
@@ -125,5 +101,5 @@ public class DataSyncUtil {
         RequestBody requestBody = RequestBody.create(Constant.JSON, gson.toJson(map));
         APIService apiService = APIManager.getInstance().getAPIService();
         return apiService.postBatch(requestBody);
-    }
+    }*/
 }

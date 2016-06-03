@@ -20,8 +20,10 @@ public class LogInterceptor implements Interceptor{
     public Response intercept(Chain chain) throws IOException {
         Request request = chain.request();
         String url = request.url().toString();
+        String method = request.method();
         long t1 = System.nanoTime();
-        HLog.d(TAG,String.format(Locale.getDefault(),"Sending request [url = %s]",url));
+        HLog.d(TAG,String.format(Locale.getDefault(),"Sending %s request [url = %s]",method,url));
+
         Response response = chain.proceed(request);
         long t2 = System.nanoTime();
         HLog.d(TAG,String.format(Locale.getDefault(),"Received response for [url = %s] in %.1fms",url, (t2-t1)/1e6d));

@@ -10,7 +10,7 @@ public class RedBomb extends BmobObject {
     private String time;//时间
     private Integer target;//男女方（1男方、2女方、3共同）
     private Integer type;//类型（1收入、2支出）
-    private String categoryName;//组别名称（不设置，都为'默认'组别）
+    private String categoryName = "默认";//组别名称（不设置，都为'默认'组别）
     private Double money;//金额
     private String gift;//随礼
     private String remark;//备注
@@ -100,6 +100,9 @@ public class RedBomb extends BmobObject {
         }
         if(type != null){
             builder.append("\"type\":").append(type).append(",");
+        }
+        if(target != null){
+            builder.append("\"target\":").append(target).append(",");
         }
         if(categoryName != null){
             builder.append("\"categoryName\":\"").append(categoryName).append("\",");

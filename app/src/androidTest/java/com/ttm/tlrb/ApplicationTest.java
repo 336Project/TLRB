@@ -84,7 +84,14 @@ public class ApplicationTest extends ApplicationTestCase<Application> {
         acl.setReadAccess("40b6c198a1",true);
         acl.setWriteAccess("40b6c198a1",true);
         redBomb.setACL(acl);
-        //redBomb.setUserName("test002");
+        redBomb.setUserName("test001");
+        redBomb.setGift("没有随礼");
+        redBomb.setMoney(600d);
+        redBomb.setCategoryName("默认");
+        redBomb.setTarget(1);
+        redBomb.setName("张少锋");
+        redBomb.setType(2);
+        redBomb.setTime("2016-06-03");
 
         APIManager.getInstance().addRedBomb(redBomb, new Subscriber<BmobObject>() {
             @Override
