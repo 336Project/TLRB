@@ -22,7 +22,6 @@ import java.io.File;
  */
 public class DownloadService extends Service{
     public static final String KEY_URL = "url";
-    private DownloadManager dm;
     private long enqueue;
     private BroadcastReceiver receiver;
     private String url;
@@ -62,7 +61,7 @@ public class DownloadService extends Service{
     }
 
     private void startDownload() {
-        dm = (DownloadManager) getSystemService(DOWNLOAD_SERVICE);
+        DownloadManager dm = (DownloadManager) getSystemService(DOWNLOAD_SERVICE);
         DownloadManager.Request request = new DownloadManager.Request(
                 Uri.parse(url));
         request.setTitle(getString(R.string.app_name));

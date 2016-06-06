@@ -5,18 +5,9 @@ package com.ttm.tlrb.ui.entity;
  *
  */
 public class VersionInfo extends BaseEn{
-    private String objectId;
     private String version;//版本号
     private String updateContent;//更新内容
     private String apkUrl;//apk下载地址
-
-    public String getObjectId() {
-        return objectId;
-    }
-
-    public void setObjectId(String objectId) {
-        this.objectId = objectId;
-    }
 
     public String getVersion() {
         return version;
@@ -48,7 +39,6 @@ public class VersionInfo extends BaseEn{
     @Override
     public String toString() {
         return "VersionInfo{" +
-                "objectId='" + objectId + '\'' +
                 ", version='" + version + '\'' +
                 ", updateContent='" + updateContent + '\'' +
                 ", apkUrl=" + apkUrl +

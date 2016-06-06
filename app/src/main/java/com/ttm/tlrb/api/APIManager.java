@@ -10,6 +10,7 @@ import com.ttm.tlrb.ui.entity.BmobObject;
 import com.ttm.tlrb.ui.entity.FileBodyEn;
 import com.ttm.tlrb.ui.entity.RedBomb;
 import com.ttm.tlrb.ui.entity.ResponseEn;
+import com.ttm.tlrb.ui.entity.VersionInfo;
 import com.ttm.tlrb.utils.EnvironmentUtil;
 import com.ttm.tlrb.utils.GsonUtil;
 import com.ttm.tlrb.utils.HLog;
@@ -180,6 +181,27 @@ public class APIManager {
         //构造RequestBody并发起请求
         RequestBody requestBody = RequestBody.create(mediaType,file);
         getAPIService().postFileUpload(fileName,requestBody)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(subscriber);
+    }
+
+    /**
+     * 检查更新
+     * @param subscriber 回调
+     */
+    public void checkVersionUpdate(Subscriber<VersionInfo> subscriber){
+        getAPIService().getVersionInfo(1,"-version")
+                .map(new Func1<ResponseEn<VersionInfo>, VersionInfo>() {
+                    @Override
+                    public VersionInfo call(ResponseEn<VersionInfo> responseEn) {
+                        List<VersionInfo> versionInfoList = responseEn.results;
+                        if(responseEn != null && versionInfoList != null && !versionInfoList.isEmpty()){
+                            return versionInfoList.get(0);
+                        }
+                        return null;
+                    }
+                })
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(subscriber);

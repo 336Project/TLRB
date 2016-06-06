@@ -26,6 +26,9 @@
             android:name=".ui.activity.FeedBackActivity"
             android:screenOrientation="portrait"/>
         <activity
+            android:name=".ui.activity.AboutActivity"
+            android:screenOrientation="portrait"/>
+        <activity
             android:name=".ui.activity.AddRedBombActivity"
             android:screenOrientation="portrait">
         </activity>

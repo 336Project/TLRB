@@ -40,4 +40,14 @@
     <string name="thanks_to_feedback">提交成功,感谢您的建议!</string>
     <string name="title_about">关于</string>
     <string name="setting">系统</string>
+    <string name="check_update">检测更新</string>
+    <string name="new_version">最新版本</string>
+    <string name="share_soft">分享软件</string>
+    <string name="more_share">更多分享</string>
+    <string name="not_find_share_soft">没有找到分享软件</string>
+    <string name="v">V%s</string>
+    <string name="no_new_version">当前已是最新版本</string>
+    <string name="alert">提示</string>
+    <string name="update">更新</string>
+    <string name="share_tip">红包不只是钱的问题，这是一场包含人情世故的游戏，请记录下游戏里的每一个人！快来下载吧！http://helengray.github.io/</string>
 </resources>
