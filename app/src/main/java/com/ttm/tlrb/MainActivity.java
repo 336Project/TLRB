@@ -17,6 +17,7 @@ import android.view.View;
 import com.ttm.tlrb.api.APIManager;
 import com.ttm.tlrb.ui.activity.AddRedBombActivity;
 import com.ttm.tlrb.ui.activity.BaseActivity;
+import com.ttm.tlrb.ui.activity.FeedBackActivity;
 import com.ttm.tlrb.ui.adapter.BaseRecyclerAdapter;
 import com.ttm.tlrb.ui.adapter.RedBombAdapter;
 import com.ttm.tlrb.ui.application.Constant;
@@ -247,9 +248,9 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 
         } else if (id == R.id.nav_manage) {
 
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
+        } else if (id == R.id.nav_feedback) {
+            FeedBackActivity.launcher(this);
+        } else if (id == R.id.nav_about) {
 
         }
 
