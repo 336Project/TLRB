@@ -23,14 +23,16 @@ import rx.Observable;
  */
 public interface APIService {
     String BASE_URL = "https://api.bmob.cn/";
-    int BATCH_LIMIT_COUNT = 50;
+    //int BATCH_LIMIT_COUNT = 50;
     /**登录*/
     @GET("1/login")
     Observable<Account> login(@Query("username") String username, @Query("password") String password);
     /**注册*/
     @POST("1/users")
     Observable<Account> register(@Body RequestBody user);
-
+    /**查询用户*/
+    @GET("1/users")
+    Observable<ResponseEn<Account>> getUser(@Query("where") String where);
     /**文件上传**/
     @POST("2/files/{fileName}")
     Observable<FileBodyEn> postFileUpload(@Path("fileName") String fileName, @Body RequestBody file);
@@ -40,16 +42,13 @@ public interface APIService {
     /**检测更新**/
     @GET("1/classes/VersionInfo")
     Observable<ResponseEn<VersionInfo>> getVersionInfo(@Query("limit") int limit, @Query("order") String bql);
-
     /**获取红包列表数据,分页**/
     @Headers("Cache-Control: public, max-age=600")//10分钟
     @GET("1/classes/RedBomb")
     Observable<ResponseEn<RedBomb>> getRedBomb(@Query("where") String where,@Query("skip") int skip,@Query("limit") int limit);
-
     /**批量添加数据(一次只能操作50条)**/
-    @POST("https://api.bmob.cn/1/batch")
-    Observable<BaseEn> postBatch(@Body RequestBody requests);
-
+    /*@POST("https://api.bmob.cn/1/batch")
+    Observable<BaseEn> postBatch(@Body RequestBody requests);*/
     /**添加单条数据**/
     @POST("1/classes/RedBomb")
     Observable<BmobObject> postRedBomb(@Body RequestBody data);

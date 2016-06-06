@@ -38,4 +38,6 @@
     <string name="hint_upload_log">上传程序错误日志,帮助我们改进吧。</string>
     <string name="send">发送</string>
     <string name="thanks_to_feedback">提交成功,感谢您的建议!</string>
+    <string name="title_about">关于</string>
+    <string name="setting">系统</string>
 </resources>
