@@ -1,12 +1,14 @@
 package com.ttm.tlrb.api;
 
 
-import com.ttm.tlrb.api.e.UserExistException;
 import com.ttm.tlrb.api.interceptor.LogInterceptor;
 import com.ttm.tlrb.api.interceptor.NetworkInterceptor;
 import com.ttm.tlrb.ui.application.Constant;
+import com.ttm.tlrb.ui.application.RBApplication;
 import com.ttm.tlrb.ui.entity.Account;
+import com.ttm.tlrb.ui.entity.BmobACL;
 import com.ttm.tlrb.ui.entity.BmobObject;
+import com.ttm.tlrb.ui.entity.Category;
 import com.ttm.tlrb.ui.entity.FileBodyEn;
 import com.ttm.tlrb.ui.entity.RedBomb;
 import com.ttm.tlrb.ui.entity.ResponseEn;
@@ -30,9 +32,9 @@ import okhttp3.RequestBody;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
-import rx.Observable;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
 import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 
@@ -95,11 +97,12 @@ public class APIManager {
      */
     public void register(Account account,Subscriber<Account> subscriber){
         final RequestBody body = RequestBody.create(Constant.JSON,account.toString());
-        Map<String,Object> where = new HashMap<>();
+        /*Map<String,Object> where = new HashMap<>();
         where.put("username",account.getUsername());
-        getAPIService().getUser(GsonUtil.fromMap2Json(where))
+        getUser(GsonUtil.fromMap2Json(where))*/
+        getAPIService().register(body)
                 //先校验账号是否已经存在
-                .flatMap(new Func1<ResponseEn<Account>, Observable<Account>>() {
+                /*.flatMap(new Func1<ResponseEn<Account>, Observable<Account>>() {
                     @Override
                     public Observable<Account> call(ResponseEn<Account> responseEn) {
                         if(responseEn != null
@@ -109,6 +112,36 @@ public class APIManager {
                         }
                         return getAPIService().register(body);
                     }
+                })*/
+                .doOnNext(new Action1<Account>() {
+                    @Override
+                    public void call(Account account) {
+                        //注册成功后，修改用户的ACL规则，使其他用户无法获取该用户的信息
+                        RBApplication.getInstance().setSession(account.getSessionToken());
+                        String objectId = account.getObjectId();
+                        Account a = new Account();
+                        a.setObjectId(objectId);
+                        BmobACL acl = new BmobACL();
+                        acl.setReadAccess(objectId,true);
+                        acl.setWriteAccess(objectId,true);
+                        a.setACL(acl);
+                        updateUser(a, new Subscriber<BmobObject>() {
+                            @Override
+                            public void onCompleted() {
+
+                            }
+
+                            @Override
+                            public void onError(Throwable e) {
+
+                            }
+
+                            @Override
+                            public void onNext(BmobObject object) {
+
+                            }
+                        });
+                    }
                 })
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -116,11 +149,32 @@ public class APIManager {
     }
 
     /**
+     * 更新用户
+     * @param account 当前用户
+     * @param subscriber 回调
+     */
+    public void updateUser(Account account,Subscriber<BmobObject> subscriber){
+        RequestBody body = RequestBody.create(Constant.JSON, account.getUpdateString());
+        getAPIService()
+                .putUser(account.getObjectId(),body)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(subscriber);
+    }
+    /**
      * 添加条红包数据到服务器
      * @param redBomb 添加对象
      * @param subscriber 回调监听
      */
     public void addRedBomb(RedBomb redBomb, Subscriber<BmobObject> subscriber){
+        if(redBomb.getACL() == null){
+            BmobACL acl = new BmobACL();
+            Account account = UserManager.getInstance().getAccount();
+            String objectId = account.getObjectId();
+            acl.setReadAccess(objectId,true);
+            acl.setWriteAccess(objectId,true);
+            redBomb.setACL(acl);
+        }
         RequestBody body = RequestBody.create(Constant.JSON,redBomb.toString());
         getAPIService().postRedBomb(body)
                 .subscribeOn(Schedulers.io())
@@ -196,12 +250,20 @@ public class APIManager {
                     @Override
                     public VersionInfo call(ResponseEn<VersionInfo> responseEn) {
                         List<VersionInfo> versionInfoList = responseEn.results;
-                        if(responseEn != null && versionInfoList != null && !versionInfoList.isEmpty()){
+                        if(versionInfoList != null && !versionInfoList.isEmpty()){
                             return versionInfoList.get(0);
                         }
                         return null;
                     }
                 })
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(subscriber);
+    }
+
+    public void addCategory(Category category,Subscriber<BmobObject> subscriber){
+        RequestBody body = RequestBody.create(Constant.JSON,category.toString());
+        getAPIService().postCategory(body)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(subscriber);

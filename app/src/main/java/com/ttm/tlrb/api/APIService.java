@@ -3,6 +3,7 @@ package com.ttm.tlrb.api;
 import com.ttm.tlrb.ui.entity.Account;
 import com.ttm.tlrb.ui.entity.BaseEn;
 import com.ttm.tlrb.ui.entity.BmobObject;
+import com.ttm.tlrb.ui.entity.Category;
 import com.ttm.tlrb.ui.entity.FileBodyEn;
 import com.ttm.tlrb.ui.entity.RedBomb;
 import com.ttm.tlrb.ui.entity.ResponseEn;
@@ -13,6 +14,7 @@ import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.Headers;
 import retrofit2.http.POST;
+import retrofit2.http.PUT;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
 import rx.Observable;
@@ -33,6 +35,9 @@ public interface APIService {
     /**查询用户*/
     @GET("1/users")
     Observable<ResponseEn<Account>> getUser(@Query("where") String where);
+    /**更新用户*/
+    @PUT("1/users/{objectId}")
+    Observable<BmobObject> putUser(@Path("objectId") String id,@Body RequestBody body);
     /**文件上传**/
     @POST("2/files/{fileName}")
     Observable<FileBodyEn> postFileUpload(@Path("fileName") String fileName, @Body RequestBody file);
@@ -52,4 +57,10 @@ public interface APIService {
     /**添加单条数据**/
     @POST("1/classes/RedBomb")
     Observable<BmobObject> postRedBomb(@Body RequestBody data);
+    /**获取组别*/
+    @GET("1/classes/Category")
+    Observable<ResponseEn<Category>> getCategory(@Query("where") String where,@Query("limit") int limit);
+    /**添加分组*/
+    @POST("1/classes/Category")
+    Observable<BmobObject> postCategory(@Body RequestBody body);
 }

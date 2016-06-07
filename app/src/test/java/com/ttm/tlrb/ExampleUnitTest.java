@@ -4,6 +4,7 @@ import org.junit.Test;
 
 import rx.Observable;
 import rx.Subscriber;
+import rx.functions.Action1;
 import rx.functions.Func1;
 
 /**
@@ -17,7 +18,7 @@ public class ExampleUnitTest {
             @Override
             public void call(Subscriber<? super String> subscriber) {
                 for (int i = 0;i<4;i++){
-                    subscriber.onNext(""+i/0);
+                    subscriber.onNext(""+i);
                     System.out.println("in");
                 }
                 subscriber.onCompleted();
@@ -26,6 +27,11 @@ public class ExampleUnitTest {
             @Override
             public Observable<Integer> call(String s) {
                 return Observable.just(Integer.valueOf(s));
+            }
+        }).doOnNext(new Action1<Integer>() {
+            @Override
+            public void call(Integer integer) {
+                System.out.println("doOnNext" + integer);
             }
         }).subscribe(new Subscriber<Integer>() {
             @Override

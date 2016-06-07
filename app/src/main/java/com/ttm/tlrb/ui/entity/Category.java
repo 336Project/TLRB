@@ -1,5 +1,7 @@
 package com.ttm.tlrb.ui.entity;
 
+import com.google.gson.Gson;
+
 /**
  * Created by Helen on 2016/5/19.
  * 组别
@@ -24,7 +26,7 @@ public class Category extends BmobObject{
         this.userName = userName;
     }
 
-    @Override
+    /*@Override
     public String toString() {
         StringBuilder builder = new StringBuilder();
         builder.append("{");
@@ -43,5 +45,10 @@ public class Category extends BmobObject{
         }
         builder.append("}");
         return builder.toString();
+    }*/
+
+    @Override
+    public String toString() {
+        return new Gson().toJson(this);
     }
 }

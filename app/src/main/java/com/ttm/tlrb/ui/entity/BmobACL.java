@@ -2,36 +2,27 @@ package com.ttm.tlrb.ui.entity;
 
 import android.text.TextUtils;
 
-import com.ttm.tlrb.utils.GsonUtil;
+import com.google.gson.Gson;
 
 import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Created by 李晓伟 on 2016/6/2.
+ * Created by Helen on 2016/6/2.
  *
  */
-public class BmobACL extends BaseEn{
-    private Map<String, Object> aclMap = new HashMap<>();
-
-    public Map<String, Object> getAclMap() {
-        return aclMap;
-    }
-
-    public void setAclMap(Map<String, Object> aclMap) {
-        this.aclMap = aclMap;
-    }
+public class BmobACL extends HashMap<String,Object>{
 
     private void code(String userId, String key, boolean isAllow) {
 
-        if(aclMap.containsKey(userId)){
-            Map<String,Object> m = (Map<String, Object>) aclMap.get(userId);
+        if(containsKey(userId)){
+            Map<String,Object> m = (Map<String, Object>) get(userId);
             m.put(key,isAllow);
-            aclMap.put(userId,m);
+            put(userId,m);
         }else {
             Map<String,Object> v = new HashMap<>();
             v.put(key, isAllow);
-            aclMap.put(userId,v);
+            put(userId,v);
         }
 
     }
@@ -69,6 +60,6 @@ public class BmobACL extends BaseEn{
 
     @Override
     public String toString() {
-        return GsonUtil.fromMap2Json(aclMap);
+        return new Gson().toJson(this);
     }
 }

@@ -1,5 +1,7 @@
 package com.ttm.tlrb.ui.entity;
 
+import com.google.gson.Gson;
+
 /**
  * user:wtw
  * time: 2016/5/19 0019.
@@ -88,7 +90,7 @@ public class RedBomb extends BmobObject {
     }
 
 
-    @Override
+    /*@Override
     public String toString() {
         StringBuilder builder = new StringBuilder();
         builder.append("{");
@@ -126,5 +128,10 @@ public class RedBomb extends BmobObject {
         }
         builder.append("}");
         return builder.toString();
+    }*/
+
+    @Override
+    public String toString() {
+        return new Gson().toJson(this);
     }
 }

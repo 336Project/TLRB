@@ -40,4 +40,32 @@ public class Account extends BmobUser{
     public String toString() {
         return new Gson().toJson(this);
     }
+
+    public String getUpdateString(){//该方法用于更新用户时，上传服务器的json body
+        StringBuilder builder = new StringBuilder();
+        builder.append("{");
+
+        if(nickname != null){
+            builder.append("\"nickname\":\"").append(nickname).append("\",");
+        }
+        if(portrait != null){
+            builder.append("\"portrait\":\"").append(portrait).append("\",");
+        }
+        if(type != null){
+            builder.append("\"type\":").append(type).append(",");
+        }
+        if(getUsername() != null){
+            builder.append("\"username\":\"").append(getUsername()).append("\",");
+        }
+
+        if(getACL() != null){
+            builder.append("\"ACL\":").append(getACL()).append(",");
+        }
+        //去掉最后一个逗号
+        int index = builder.lastIndexOf(",");
+        builder = builder.delete(index,builder.length());
+
+        builder.append("}");
+        return builder.toString();
+    }
 }

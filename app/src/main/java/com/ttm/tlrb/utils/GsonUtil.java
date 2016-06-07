@@ -48,9 +48,9 @@ public class GsonUtil {
 		return null;
 	}
 
-	public static Map<String,String> fromJson2Map(String json){
+	public static Map<String,?> fromJson2Map(String json){
 		Gson gson = new Gson();
-		return gson.fromJson(json,new TypeToken<Map<String, String>>() {}.getType());
+		return gson.fromJson(json,new TypeToken<Map<String, ?>>() {}.getType());
 	}
 
 	public static String fromMap2Json(Map<?, ?> map){
