@@ -1,6 +1,10 @@
 package com.ttm.tlrb.api;
 
 
+import android.text.TextUtils;
+
+import com.ttm.tlrb.api.e.CategoryExistException;
+import com.ttm.tlrb.api.e.CategoryOverCountException;
 import com.ttm.tlrb.api.interceptor.LogInterceptor;
 import com.ttm.tlrb.api.interceptor.NetworkInterceptor;
 import com.ttm.tlrb.ui.application.Constant;
@@ -32,6 +36,7 @@ import okhttp3.RequestBody;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
+import rx.Observable;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
@@ -45,6 +50,7 @@ import rx.schedulers.Schedulers;
 public class APIManager {
     private Retrofit retrofit;
     private APIService apiService;
+    private UserManager mUserManager;
     private APIManager(){
         File cacheFile = new File(EnvironmentUtil.getCacheFile(), Constant.CACHE_HTTP);
         OkHttpClient client = new OkHttpClient().newBuilder()
@@ -58,7 +64,8 @@ public class APIManager {
                 .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
                 .client(client)
                 .build();
-        apiService = retrofit.create(APIService.class);
+        apiService = getService(APIService.class);
+        mUserManager = UserManager.getInstance();
     }
 
     public static APIManager getInstance(){
@@ -85,6 +92,13 @@ public class APIManager {
      */
     public void login(String username, String pwd, Subscriber<Account> subscriber){
         getAPIService().login(username,pwd)
+                .doOnNext(new Action1<Account>() {
+                    @Override
+                    public void call(Account account) {
+                        RBApplication.getInstance().setSession(account.getSessionToken());
+                        mUserManager.updateAccount(account);
+                    }
+                })
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(subscriber);
@@ -133,12 +147,12 @@ public class APIManager {
 
                             @Override
                             public void onError(Throwable e) {
-
+                                //do nothing
                             }
 
                             @Override
                             public void onNext(BmobObject object) {
-
+                                //do nothing
                             }
                         });
                     }
@@ -153,10 +167,16 @@ public class APIManager {
      * @param account 当前用户
      * @param subscriber 回调
      */
-    public void updateUser(Account account,Subscriber<BmobObject> subscriber){
+    public void updateUser(final Account account, Subscriber<BmobObject> subscriber){
         RequestBody body = RequestBody.create(Constant.JSON, account.getUpdateString());
         getAPIService()
                 .putUser(account.getObjectId(),body)
+                .doOnNext(new Action1<BmobObject>() {
+                    @Override
+                    public void call(BmobObject object) {
+                        mUserManager.updateAccount(account);
+                    }
+                })
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(subscriber);
@@ -167,14 +187,9 @@ public class APIManager {
      * @param subscriber 回调监听
      */
     public void addRedBomb(RedBomb redBomb, Subscriber<BmobObject> subscriber){
-        if(redBomb.getACL() == null){
-            BmobACL acl = new BmobACL();
-            Account account = UserManager.getInstance().getAccount();
-            String objectId = account.getObjectId();
-            acl.setReadAccess(objectId,true);
-            acl.setWriteAccess(objectId,true);
-            redBomb.setACL(acl);
-        }
+        redBomb.setACL(mUserManager.getUserACL());
+        redBomb.setUserName(mUserManager.getAccount().getUsername());
+
         RequestBody body = RequestBody.create(Constant.JSON,redBomb.toString());
         getAPIService().postRedBomb(body)
                 .subscribeOn(Schedulers.io())
@@ -184,19 +199,20 @@ public class APIManager {
 
     /**
      * 获取红包列表
-     * @param username 当前用户名
      * @param page 页码
      * @param size 页大小
      * @param subscriber 回调
      */
-    public void getRedBombList(String username,int type,int page,int size,Subscriber<List<RedBomb>> subscriber){
+    public void getRedBombList(int type,int page,int size,Subscriber<List<RedBomb>> subscriber){
+        //关联当前用户
         Map<String,Object> where = new HashMap<>();
-        where.put("userName",username);
+        where.put("userName",mUserManager.getAccount().getUsername());
         if(type == 1 || type == 2) {
             where.put("type", type);
         }
+
         int skip = size * (page-1);
-        getAPIService().getRedBomb(GsonUtil.fromMap2Json(where),skip, size)
+        getAPIService().getRedBomb(GsonUtil.fromMap2Json(where),skip, size,"-createdAt")
                 .map(new Func1<ResponseEn<RedBomb>, List<RedBomb>>() {
                     @Override
                     public List<RedBomb> call(ResponseEn<RedBomb> redBombResponseEn) {
@@ -216,7 +232,7 @@ public class APIManager {
      * @param file 要上传的文件
      * @param subscriber 回调
      */
-    public void uploadFile(File file, Subscriber<FileBodyEn> subscriber){
+    public void uploadFile(File file, Subscriber<String> subscriber){
         if(file == null){
             throw new NullPointerException("upload file not be null");
         }
@@ -235,6 +251,13 @@ public class APIManager {
         //构造RequestBody并发起请求
         RequestBody requestBody = RequestBody.create(mediaType,file);
         getAPIService().postFileUpload(fileName,requestBody)
+                .map(new Func1<FileBodyEn, String>() {
+                    @Override
+                    public String call(FileBodyEn fileBodyEn) {
+                        HLog.d("uploadFile",fileBodyEn.toString());
+                        return fileBodyEn.getUrl();
+                    }
+                })
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(subscriber);
@@ -261,9 +284,111 @@ public class APIManager {
                 .subscribe(subscriber);
     }
 
-    public void addCategory(Category category,Subscriber<BmobObject> subscriber){
-        RequestBody body = RequestBody.create(Constant.JSON,category.toString());
-        getAPIService().postCategory(body)
+    /**
+     * 添加分组
+     * @param category 组别对象
+     * @param subscriber 回调
+     */
+    public void addCategory(Category category, Subscriber<BmobObject> subscriber){
+        final String userName = mUserManager.getAccount().getUsername();
+        final String name = category.getName();
+        if(TextUtils.isEmpty(userName)){
+            throw new NullPointerException("Category's userName not be null");
+        }
+        if(TextUtils.isEmpty(name)){
+            throw new NullPointerException("Category's name not be null");
+        }
+
+        category.setACL(mUserManager.getUserACL());
+        category.setUserName(userName);
+
+        Map<String,Object> where = new HashMap<>();
+        Map<String,Object> map = new HashMap<>();
+        map.put("$in",new String[]{userName,"-1"});
+        where.put("userName",map);
+        where.put("name",name);
+        final RequestBody body = RequestBody.create(Constant.JSON,category.toString());
+        getAPIService().getCategory(GsonUtil.fromMap2Json(where),Category.LIMIT_COUNT)
+                //先查看是否已经存在相同的组名
+                .flatMap(new Func1<ResponseEn<Category>, Observable<ResponseEn<Category>>>() {
+                    @Override
+                    public Observable<ResponseEn<Category>> call(ResponseEn<Category> categoryResponseEn) {
+                        List<Category> categoryList = categoryResponseEn.results;
+                        if(categoryList != null && categoryList.size() > 0){
+                            throw new CategoryExistException(name);
+                        }
+                        Map<String,Object> where = new HashMap<>();
+                        Map<String,Object> map = new HashMap<>();
+                        map.put("$in",new String[]{userName,"-1"});
+                        where.put("userName",map);
+                        return getAPIService().countCategory(GsonUtil.fromMap2Json(where),0,"1");
+                    }
+                })
+                //是否超出个数限制
+                .flatMap(new Func1<ResponseEn<Category>, Observable<BmobObject>>() {
+                    @Override
+                    public Observable<BmobObject> call(ResponseEn<Category> categoryResponseEn) {
+                        if(categoryResponseEn.count >= Category.LIMIT_COUNT){
+                            throw new CategoryOverCountException();
+                        }
+                        return getAPIService().postCategory(body);
+                    }
+                })
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(subscriber);
+    }
+
+    /**
+     * 获取组别列表
+     * @param subscriber 回调
+     */
+    public void getCategoryList(Subscriber<List<Category>> subscriber){
+        String userName = mUserManager.getAccount().getUsername();
+        Map<String,Object> where = new HashMap<>();
+        Map<String,Object> map = new HashMap<>();
+        map.put("$in",new String[]{userName,"-1"});
+        where.put("userName",map);
+        getAPIService().getCategory(GsonUtil.fromMap2Json(where),Category.LIMIT_COUNT)
+                .map(new Func1<ResponseEn<Category>, List<Category>>() {
+                    @Override
+                    public List<Category> call(ResponseEn<Category> categoryResponseEn) {
+                        return categoryResponseEn.results;
+                    }
+                })
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(subscriber);
+    }
+
+    /**
+     * 修改组别
+     * @param objectId 要修改的组别id
+     * @param name 修改后的组别名称
+     * @param subscriber 回调
+     */
+    public void updateCategory(final String objectId, final String name, Subscriber<BmobObject> subscriber){
+        final String userName = mUserManager.getAccount().getUsername();
+        Map<String,Object> where = new HashMap<>();
+        Map<String,Object> map = new HashMap<>();
+        map.put("$in",new String[]{userName,"-1"});
+        where.put("userName",map);
+        where.put("name",name);
+        getAPIService().getCategory(GsonUtil.fromMap2Json(where),Category.LIMIT_COUNT)
+                //先查看是否已经存在相同的组名
+                .flatMap(new Func1<ResponseEn<Category>, Observable<BmobObject>>() {
+                    @Override
+                    public Observable<BmobObject> call(ResponseEn<Category> categoryResponseEn) {
+                        List<Category> categoryList = categoryResponseEn.results;
+                        if(categoryList != null && categoryList.size() > 0){
+                            throw new CategoryExistException(name);
+                        }
+                        Map<String,String> bodyMap = new HashMap<String, String>();
+                        bodyMap.put("name",name);
+                        RequestBody body = RequestBody.create(Constant.JSON,GsonUtil.fromMap2Json(bodyMap));
+                        return getAPIService().putCategory(objectId,body);
+                    }
+                })
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(subscriber);

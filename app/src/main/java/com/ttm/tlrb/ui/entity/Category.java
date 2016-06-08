@@ -7,6 +7,9 @@ import com.google.gson.Gson;
  * 组别
  */
 public class Category extends BmobObject{
+    /**分组总个数限制*/
+    public static final int LIMIT_COUNT = 10;
+
     private String name;//组别名称
     private String userName;//数据关联的用户名
 

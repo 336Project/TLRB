@@ -1,10 +1,12 @@
 package com.ttm.tlrb.ui.application;
 
 import android.app.Application;
+import android.text.TextUtils;
 
 import com.facebook.cache.disk.DiskCacheConfig;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.imagepipeline.core.ImagePipelineConfig;
+import com.ttm.tlrb.api.UserManager;
 import com.ttm.tlrb.utils.EnvironmentUtil;
 
 
@@ -17,6 +19,9 @@ public class RBApplication extends Application{
     private String session = "";
 
     public String getSession() {
+        if(TextUtils.isEmpty(session)){
+            session = UserManager.getInstance().getSessionToken();
+        }
         return session;
     }
 

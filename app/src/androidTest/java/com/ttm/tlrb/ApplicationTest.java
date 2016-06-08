@@ -8,7 +8,7 @@ import com.ttm.tlrb.ui.application.RBApplication;
 import com.ttm.tlrb.ui.entity.Account;
 import com.ttm.tlrb.ui.entity.BmobACL;
 import com.ttm.tlrb.ui.entity.BmobObject;
-import com.ttm.tlrb.ui.entity.FileBodyEn;
+import com.ttm.tlrb.ui.entity.Category;
 import com.ttm.tlrb.ui.entity.RedBomb;
 import com.ttm.tlrb.utils.GsonUtil;
 
@@ -47,7 +47,7 @@ public class ApplicationTest extends ApplicationTestCase<RBApplication> {
     }
 
     public void testGetRedBombList(){
-        APIManager.getInstance().getRedBombList("test002", 0,1, 2, new Subscriber<List<RedBomb>>() {
+        APIManager.getInstance().getRedBombList(0,1, 2, new Subscriber<List<RedBomb>>() {
             @Override
             public void onCompleted() {
 
@@ -218,7 +218,7 @@ public class ApplicationTest extends ApplicationTestCase<RBApplication> {
 
     public void testUploadFile() throws InterruptedException {
         File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)+"/dayjoke","a0f57cc0d367596106cbcd26a73d2b9e.jpg");
-        APIManager.getInstance().uploadFile(file, new Subscriber<FileBodyEn>() {
+        APIManager.getInstance().uploadFile(file, new Subscriber<String>() {
             @Override
             public void onCompleted() {
                 signal.countDown();
@@ -231,15 +231,79 @@ public class ApplicationTest extends ApplicationTestCase<RBApplication> {
             }
 
             @Override
-            public void onNext(FileBodyEn fileBodyEn) {
-                System.out.println(fileBodyEn);
+            public void onNext(String url) {
+                System.out.println(url);
                 signal.countDown();
             }
         });
         signal.await();
     }
 
-    public void testAddCategory(){
+    public void testAddCategory() throws InterruptedException {
+        Category category = new Category();
+        category.setName("默认");
+        APIManager.getInstance().addCategory(category, new Subscriber<BmobObject>() {
+            @Override
+            public void onCompleted() {
 
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                System.out.println(e.getMessage());
+                signal.countDown();
+            }
+
+            @Override
+            public void onNext(BmobObject object) {
+                System.out.println(object);
+                signal.countDown();
+            }
+        });
+        signal.await();
+    }
+
+    public void testGetCategoryList() throws InterruptedException {
+        APIManager.getInstance().getCategoryList(new Subscriber<List<Category>>() {
+            @Override
+            public void onCompleted() {
+
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                System.out.println(e.getMessage());
+                signal.countDown();
+            }
+
+            @Override
+            public void onNext(List<Category> categories) {
+                System.out.println(categories);
+                signal.countDown();
+            }
+        });
+        signal.await();
+    }
+
+    public void testUpdateCategoryList() throws InterruptedException {
+        APIManager.getInstance().updateCategory("2829293a2e", "同事", new Subscriber<BmobObject>() {
+            @Override
+            public void onCompleted() {
+
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                System.out.println(e.getMessage());
+                signal.countDown();
+            }
+
+            @Override
+            public void onNext(BmobObject object) {
+                System.out.println(object);
+                signal.countDown();
+            }
+        });
+        signal.await();
     }
 }

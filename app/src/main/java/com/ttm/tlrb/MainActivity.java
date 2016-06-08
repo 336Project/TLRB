@@ -141,7 +141,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         if(mRefreshLayout.isRefreshing()){
             page = 1;
         }
-        APIManager.getInstance().getRedBombList("test001",type, page, Constant.PAGE_SIZE, new Subscriber<List<RedBomb>>() {
+        APIManager.getInstance().getRedBombList(type, page, Constant.PAGE_SIZE, new Subscriber<List<RedBomb>>() {
             @Override
             public void onCompleted() {
 

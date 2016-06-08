@@ -31,10 +31,10 @@ public interface APIService {
     Observable<Account> login(@Query("username") String username, @Query("password") String password);
     /**注册*/
     @POST("1/users")
-    Observable<Account> register(@Body RequestBody user);
+    Observable<Account> register(@Body RequestBody body);
     /**查询用户*/
-    @GET("1/users")
-    Observable<ResponseEn<Account>> getUser(@Query("where") String where);
+    /*@GET("1/users")
+    Observable<ResponseEn<Account>> getUser(@Query("where") String where);*/
     /**更新用户*/
     @PUT("1/users/{objectId}")
     Observable<BmobObject> putUser(@Path("objectId") String id,@Body RequestBody body);
@@ -46,11 +46,11 @@ public interface APIService {
     Observable<BaseEn> postFeedback(@Body RequestBody feedBack);
     /**检测更新**/
     @GET("1/classes/VersionInfo")
-    Observable<ResponseEn<VersionInfo>> getVersionInfo(@Query("limit") int limit, @Query("order") String bql);
+    Observable<ResponseEn<VersionInfo>> getVersionInfo(@Query("limit") int limit, @Query("order") String order);
     /**获取红包列表数据,分页**/
-    @Headers("Cache-Control: public, max-age=600")//10分钟
+    @Headers("Cache-Control: public, max-age=600")//10分钟刷新一次
     @GET("1/classes/RedBomb")
-    Observable<ResponseEn<RedBomb>> getRedBomb(@Query("where") String where,@Query("skip") int skip,@Query("limit") int limit);
+    Observable<ResponseEn<RedBomb>> getRedBomb(@Query("where") String where,@Query("skip") int skip,@Query("limit") int limit,@Query("order") String order);
     /**批量添加数据(一次只能操作50条)**/
     /*@POST("https://api.bmob.cn/1/batch")
     Observable<BaseEn> postBatch(@Body RequestBody requests);*/
@@ -60,7 +60,13 @@ public interface APIService {
     /**获取组别*/
     @GET("1/classes/Category")
     Observable<ResponseEn<Category>> getCategory(@Query("where") String where,@Query("limit") int limit);
+    /**统计组别*/
+    @GET("1/classes/Category")
+    Observable<ResponseEn<Category>> countCategory(@Query("where") String where,@Query("limit") int limit,@Query("count") String count);
     /**添加分组*/
     @POST("1/classes/Category")
     Observable<BmobObject> postCategory(@Body RequestBody body);
+    /**更新分组*/
+    @PUT("1/classes/Category/{objectId}")
+    Observable<BmobObject> putCategory(@Path("objectId") String id,@Body RequestBody body);
 }

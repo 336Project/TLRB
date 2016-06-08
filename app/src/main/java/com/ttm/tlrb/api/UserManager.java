@@ -1,6 +1,7 @@
 package com.ttm.tlrb.api;
 
 import com.ttm.tlrb.ui.entity.Account;
+import com.ttm.tlrb.ui.entity.BmobACL;
 import com.ttm.tlrb.utils.GsonUtil;
 import com.ttm.tlrb.utils.SPUtil;
 
@@ -28,13 +29,14 @@ public class UserManager {
         }
         mAccount = account;
         SPUtil.getInstance().putString("user_info",account.toString()).commit();
+        updateSessionToken(mAccount.getSessionToken());
     }
 
     public Account getAccount(){
-        if(mAccount != null){
-            return mAccount;
+        if(mAccount == null){
+            mAccount = GsonUtil.fromJson(SPUtil.getInstance().getString("user_info"),Account.class);
         }
-        return GsonUtil.fromJson(SPUtil.getInstance().getString("user_info"),Account.class);
+        return mAccount;
     }
 
     public void updateSessionToken(String sessionToken){
@@ -42,6 +44,18 @@ public class UserManager {
     }
 
     public String getSessionToken(){
+        if(mAccount != null){
+            return mAccount.getSessionToken();
+        }
         return SPUtil.getInstance().getString("session_token");
+    }
+
+    public BmobACL getUserACL(){
+        BmobACL acl = new BmobACL();
+        Account account = getAccount();
+        String objectId = account.getObjectId();
+        acl.setReadAccess(objectId,true);
+        acl.setWriteAccess(objectId,true);
+        return acl;
     }
 }

@@ -8,4 +8,5 @@ import java.util.List;
  */
 public class ResponseEn<T> extends BaseEn{
     public List<T> results;
+    public int count;
 }
