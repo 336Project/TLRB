@@ -29,6 +29,9 @@ public class Account extends BmobUser{
     }
 
     public String getPortrait() {
+        if(portrait == null){
+            return "";
+        }
         return portrait;
     }
 

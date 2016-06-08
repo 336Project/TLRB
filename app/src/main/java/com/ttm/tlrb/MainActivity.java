@@ -1,5 +1,6 @@
 package com.ttm.tlrb;
 
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -13,7 +14,9 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 
+import com.facebook.drawee.view.SimpleDraweeView;
 import com.ttm.tlrb.api.APIManager;
 import com.ttm.tlrb.ui.activity.AboutActivity;
 import com.ttm.tlrb.ui.activity.AddRedBombActivity;
@@ -43,6 +46,10 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     private boolean hasMore = true;
     private int type = 0;
 
+    private SimpleDraweeView mHeaderView;
+    private TextView mTextUserName;
+    private TextView mTextNickName;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -67,6 +74,12 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
+        View header = navigationView.getHeaderView(0);
+
+        mHeaderView = (SimpleDraweeView) header.findViewById(R.id.iv_portrait);
+        mTextUserName = (TextView) header.findViewById(R.id.tv_username);
+        mTextNickName = (TextView) header.findViewById(R.id.tv_nickname);
+
         initRecyclerView();
         initRefreshLayout();
         initEmptyLayout();
@@ -86,6 +99,9 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
             @Override
             public void onNext(Account account) {
                 RBApplication.getInstance().setSession(account.getSessionToken());
+                mHeaderView.setImageURI(Uri.parse(account.getPortrait()));
+                mTextUserName.setText(account.getUsername());
+                mTextNickName.setText(account.getNickname());
                 requestData();
             }
         });
