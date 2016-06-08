@@ -30,9 +30,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_margin="@dimen/fab_margin"
-        app:backgroundTint="@color/Indigo_200"
-        app:rippleColor="@color/Indigo_100"
         app:borderWidth="0dp"
-        android:src="@drawable/icon_add_redbomb"/>
+        android:src="@drawable/rfab__drawable_rfab_default"/>
 
 </android.support.design.widget.CoordinatorLayout>
