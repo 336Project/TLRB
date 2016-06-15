@@ -3,6 +3,7 @@ package com.ttm.tlrb.api;
 
 import android.text.TextUtils;
 
+import com.ttm.tlrb.BuildConfig;
 import com.ttm.tlrb.api.e.CategoryExistException;
 import com.ttm.tlrb.api.e.CategoryOverCountException;
 import com.ttm.tlrb.api.interceptor.LogInterceptor;
@@ -11,6 +12,7 @@ import com.ttm.tlrb.ui.application.Constant;
 import com.ttm.tlrb.ui.application.RBApplication;
 import com.ttm.tlrb.ui.entity.Account;
 import com.ttm.tlrb.ui.entity.BmobACL;
+import com.ttm.tlrb.ui.entity.BmobFile;
 import com.ttm.tlrb.ui.entity.BmobObject;
 import com.ttm.tlrb.ui.entity.Category;
 import com.ttm.tlrb.ui.entity.FileBodyEn;
@@ -23,8 +25,12 @@ import com.ttm.tlrb.utils.HLog;
 import com.ttm.tlrb.utils.MD5;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.net.FileNameMap;
 import java.net.URLConnection;
+import java.net.URLDecoder;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -33,6 +39,8 @@ import okhttp3.Cache;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.RequestBody;
+import okhttp3.ResponseBody;
+import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
@@ -263,12 +271,15 @@ public class APIManager {
                 .subscribe(subscriber);
     }
 
+
     /**
      * 检查更新
      * @param subscriber 回调
      */
     public void checkVersionUpdate(Subscriber<VersionInfo> subscriber){
-        getAPIService().getVersionInfo(1,"-version")
+        Map<String,Object> where = new HashMap<>();
+        where.put("isPatch",false);
+        getAPIService().getVersionInfo(GsonUtil.fromMap2Json(where),1,"-version")
                 .map(new Func1<ResponseEn<VersionInfo>, VersionInfo>() {
                     @Override
                     public VersionInfo call(ResponseEn<VersionInfo> responseEn) {
@@ -282,6 +293,114 @@ public class APIManager {
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(subscriber);
+    }
+
+    /**
+     * 热修复
+     */
+    public void addPatch(){
+        Map<String,Object> where = new HashMap<>();
+        where.put("isPatch",true);
+        where.put("version", BuildConfig.VERSION_NAME);
+        getAPIService().getVersionInfo(GsonUtil.fromMap2Json(where),10,"-updatedAt")
+                .flatMap(new Func1<ResponseEn<VersionInfo>, Observable<String>>() {
+                    @Override
+                    public Observable<String> call(ResponseEn<VersionInfo> versionInfoResponseEn) {
+                        List<VersionInfo> versionInfos = versionInfoResponseEn.results;
+                        List<String> urls = new ArrayList<String>();
+                        if(versionInfos != null){
+                            for (VersionInfo info:versionInfos){
+                                HLog.d("APIManager",info.toString());
+                                BmobFile file = info.getFile();
+                                if(file != null) {
+                                    String url = file.getUrl();
+                                    String fileName = url.substring(url.lastIndexOf("/")+1,url.length());
+                                    File patchFile = new File(EnvironmentUtil.getCacheFile() + File.separator + Constant.CACHE_PATCH, fileName);
+                                    if (info.getPatch() && !TextUtils.isEmpty(url) && !patchFile.exists()) {
+                                        urls.add(url);
+                                    }
+                                }
+                            }
+                        }
+                        return Observable.from(urls.toArray(new String[urls.size()]));
+                    }
+                })
+                .flatMap(new Func1<String, Observable<Response<ResponseBody>>>() {
+                    @Override
+                    public Observable<Response<ResponseBody>> call(String url) {
+                        String fileId = url.replace(APIService.BASE_DOWNLOAD_FILE_URL,"");
+                        return getAPIService().getFile(fileId);
+                    }
+                })
+                .map(new Func1<Response<ResponseBody>, File>() {
+                    @Override
+                    public File call(Response<ResponseBody> response) {
+                        okhttp3.Response resp = response.raw();
+                        if(resp.isSuccessful()) {
+                            String url = resp.request().url().url().getPath();
+                            url = URLDecoder.decode(url);
+                            HLog.d("APIManager","response decode url == "+url);
+                            String fileName = url.substring(url.lastIndexOf("/")+1,url.length());
+                            HLog.d("APIManager","file name == "+fileName);
+                            File file = new File(EnvironmentUtil.getCacheFile() + File.separator + Constant.CACHE_PATCH, fileName);
+                            FileOutputStream fos = null;
+                            ResponseBody body = response.body();
+                            try {
+                                if (!file.exists()) {
+                                    file.createNewFile();
+                                }
+                                fos = new FileOutputStream(file, false);
+                                fos.write(body.bytes());
+                                fos.flush();
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            } finally {
+                                if (fos != null) {
+                                    try {
+                                        fos.close();
+                                        body.close();
+                                    } catch (IOException e) {
+                                        e.printStackTrace();
+                                    }
+                                }
+                            }
+                            return file;
+                        }
+                        return null;
+                    }
+                })
+                .map(new Func1<File, Boolean>() {
+                    @Override
+                    public Boolean call(File file) {
+                        if(file != null) {
+                            try {
+                                RBApplication.getInstance().getPatchManager().addPatch(file.getAbsolutePath());
+                                return true;
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                        return false;
+                    }
+                })
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Subscriber<Boolean>() {
+                    @Override
+                    public void onCompleted() {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        HLog.e("APIManager","onError",e);
+                    }
+
+                    @Override
+                    public void onNext(Boolean isSuccess) {
+                        HLog.d("APIManager","onNext----"+isSuccess);
+                    }
+                });
     }
 
     /**

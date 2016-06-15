@@ -9,6 +9,8 @@ import okhttp3.MediaType;
  *
  */
 public class Constant {
+    /**修复包*/
+    public static final String CACHE_PATCH = "a_patch";
     /**网络缓存文件夹*/
     public static final String CACHE_HTTP = "network_cache";
     /**图片缓存文件夹*/

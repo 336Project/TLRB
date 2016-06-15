@@ -16,6 +16,7 @@ import android.os.Environment;
 import android.view.Display;
 import android.view.WindowManager;
 
+import com.ttm.tlrb.ui.application.Constant;
 import com.ttm.tlrb.ui.application.RBApplication;
 
 import java.io.File;
@@ -26,6 +27,11 @@ import java.util.List;
  * 系统环境Util
  */
 public class EnvironmentUtil {
+
+    public static void init(){
+        FileUtil.mkDir(new File(getCacheFile(), Constant.CACHE_PATCH));
+        FileUtil.mkDir(new File(getCacheFile(),Constant.CACHE_LOG));
+    }
 
     /**
      *

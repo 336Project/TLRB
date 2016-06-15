@@ -10,6 +10,8 @@ import com.ttm.tlrb.ui.entity.ResponseEn;
 import com.ttm.tlrb.ui.entity.VersionInfo;
 
 import okhttp3.RequestBody;
+import okhttp3.ResponseBody;
+import retrofit2.Response;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.Headers;
@@ -25,6 +27,7 @@ import rx.Observable;
  */
 public interface APIService {
     String BASE_URL = "https://api.bmob.cn/";
+    String BASE_DOWNLOAD_FILE_URL = "http://bmob-cdn-2106.b0.upaiyun.com/";
     //int BATCH_LIMIT_COUNT = 50;
     /**登录*/
     @GET("1/login")
@@ -41,12 +44,15 @@ public interface APIService {
     /**文件上传**/
     @POST("2/files/{fileName}")
     Observable<FileBodyEn> postFileUpload(@Path("fileName") String fileName, @Body RequestBody file);
+    /**下载文件*/
+    @GET(BASE_DOWNLOAD_FILE_URL+"{fileId}")
+    Observable<Response<ResponseBody>> getFile(@Path("fileId") String fileId);
     /**用户反馈**/
     @POST("1/classes/Feedback")
     Observable<BaseEn> postFeedback(@Body RequestBody feedBack);
     /**检测更新**/
     @GET("1/classes/VersionInfo")
-    Observable<ResponseEn<VersionInfo>> getVersionInfo(@Query("limit") int limit, @Query("order") String order);
+    Observable<ResponseEn<VersionInfo>> getVersionInfo(@Query("where") String where,@Query("limit") int limit, @Query("order") String order);
     /**获取红包列表数据,分页**/
     @Headers("Cache-Control: public, max-age=600")//10分钟刷新一次
     @GET("1/classes/RedBomb")
