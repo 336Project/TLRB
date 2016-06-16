@@ -2,13 +2,21 @@ package com.ttm.tlrb.ui.activity;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.view.View;
 
 import com.ttm.tlrb.R;
 import com.ttm.tlrb.api.APIManager;
 import com.ttm.tlrb.ui.entity.Account;
+import com.ttm.tlrb.utils.ToastUtil;
 import com.ttm.tlrb.view.CleanableEditText;
 
-public class RegisterActivity extends BaseActivity {
+import rx.Subscriber;
+
+public class RegisterActivity extends BaseActivity implements View.OnClickListener{
+
+    private  CleanableEditText mEditTextUsername;
+    private  CleanableEditText mEditTextPassword;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -17,17 +25,37 @@ public class RegisterActivity extends BaseActivity {
     }
 
     private void initView() {
-        CleanableEditText mEditTextUsername =  (CleanableEditText)findViewById(R.id.editText_username);
-        CleanableEditText mEditTextPassword =  (CleanableEditText)findViewById(R.id.editText_password);
-        CleanableEditText mEditTextNickname =  (CleanableEditText)findViewById(R.id.editText_nickname);
-        CleanableEditText mEditTextPhone =  (CleanableEditText)findViewById(R.id.editText_phone);
-        CleanableEditText mEditTextPortrait =  (CleanableEditText)findViewById(R.id.editText_portrait);
+        mEditTextUsername =  (CleanableEditText)findViewById(R.id.editText_username);
+        mEditTextPassword =  (CleanableEditText)findViewById(R.id.editText_password);
+        findViewById(R.id.button).setOnClickListener(this);
     }
     private void input(){
         Account account = new Account();
+        account.setUsername(mEditTextUsername.getText().toString().trim());
+        account.setPassword(mEditTextPassword.getText().toString().trim());
 
+        APIManager.getInstance().register(account, new Subscriber<Account>() {
+            @Override
+            public void onCompleted() {
+                ToastUtil.showToast(RegisterActivity.this,"onCompleted");
+            }
+            @Override
+            public void onError(Throwable e) {
+                ToastUtil.showToast(RegisterActivity.this,"onError");
+            }
+            @Override
+            public void onNext(Account account) {
+                ToastUtil.showToast(RegisterActivity.this,"onNext");
+            }
+        });
 
-//        APIManager.getInstance().register();
-
+    }
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()){
+            case R.id.button:
+                input();
+                break;
+        }
     }
 }

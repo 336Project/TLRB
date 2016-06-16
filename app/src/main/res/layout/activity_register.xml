@@ -29,32 +29,12 @@
             android:id="@+id/editText_password"
             android:hint="密码"/>
     </android.support.design.widget.TextInputLayout>
-    <android.support.design.widget.TextInputLayout
-        android:id="@+id/layout_nickname"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <com.ttm.tlrb.view.CleanableEditText
-            style="@style/add_red_bomb_edittext"
-            android:id="@+id/editText_nickname"
-            android:hint="昵称"/>
-    </android.support.design.widget.TextInputLayout>
-    <android.support.design.widget.TextInputLayout
-        android:id="@+id/layout_phone"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <com.ttm.tlrb.view.CleanableEditText
-            style="@style/add_red_bomb_edittext"
-            android:id="@+id/editText_phone"
-            android:hint="手机号"/>
-    </android.support.design.widget.TextInputLayout>
-    <android.support.design.widget.TextInputLayout
-        android:id="@+id/layout_portrait"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <com.ttm.tlrb.view.CleanableEditText
-            style="@style/add_red_bomb_edittext"
-            android:id="@+id/editText_portrait"
-            android:hint="头像"/>
-    </android.support.design.widget.TextInputLayout>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="注册"
+        android:id="@+id/button"/>
+
 
 </LinearLayout>
