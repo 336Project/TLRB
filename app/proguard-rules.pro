@@ -15,3 +15,12 @@
 #-keepclassmembers class fqcn.of.javascript.interface.for.webview {
 #   public *;
 #}
+
+#-dontwarn net.youmi.android.**
+#-keep class net.youmi.android.** {
+#    *;
+#}
+
+-keep class com.baidu.** {
+ public protected *;
+}

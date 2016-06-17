@@ -47,7 +47,12 @@ public class RBApplication extends Application{
         EnvironmentUtil.init();
         HCrashHandler.init(this);
         initFresco();
+        initAD();
         //initPatchManager();
+    }
+
+    private void initAD() {
+        //AdManager.getInstance(this).init("abef61a1925a5d96","95ce78a402f6cf12",true);
     }
 
     private void initPatchManager() {
