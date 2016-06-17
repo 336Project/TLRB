@@ -1,5 +1,7 @@
 package com.ttm.tlrb.ui.activity;
 
+import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -27,6 +29,10 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     private SimpleDraweeView mHeaderView;
     private TextView mTextUserName;
     private TextView mTextNickName;
+
+    public static void launcher(Context context){
+        context.startActivity(new Intent(context,MainActivity.class));
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -126,6 +132,8 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         } else if (id == R.id.nav_about) {
             AboutActivity.launcher(this);
         } else if (id == R.id.nav_exit){
+            UserManager.getInstance().logout();
+            LoginActivity.launcher(MainActivity.this);
             finish();
         }
 

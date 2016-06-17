@@ -1,5 +1,6 @@
 package com.ttm.tlrb.ui.activity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -8,16 +9,22 @@ import android.view.View;
 
 import com.ttm.tlrb.R;
 import com.ttm.tlrb.api.APIManager;
+import com.ttm.tlrb.api.e.HttpExceptionHandle;
 import com.ttm.tlrb.ui.entity.Account;
 import com.ttm.tlrb.utils.ToastUtil;
 import com.ttm.tlrb.view.CleanableEditText;
 
+import retrofit2.adapter.rxjava.HttpException;
 import rx.Subscriber;
 
 public class LoginActivity extends BaseActivity implements View.OnClickListener{
 
     private CleanableEditText mEditTextUserName;
     private CleanableEditText mEditTextPassword;
+
+    public static void launcher(Context context){
+        context.startActivity(new Intent(context,LoginActivity.class));
+    }
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -74,14 +81,15 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener{
             }
             @Override
             public void onError(Throwable e) {
-                ToastUtil.showToast(LoginActivity.this,"账号或密码错误");
+                if(e instanceof HttpException){
+                    HttpExceptionHandle handle = new HttpExceptionHandle((HttpException) e,LoginActivity.this);
+                    handle.handle();
+                }
             }
             @Override
             public void onNext(Account account) {
                 Log.e("success","success");
-                Intent intent = new Intent();
-                intent.setClass(LoginActivity.this,MainActivity.class);
-                startActivity(intent);
+                MainActivity.launcher(LoginActivity.this);
                 finish();
             }
         });
