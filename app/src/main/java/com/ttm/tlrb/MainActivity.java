@@ -269,6 +269,8 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
             FeedBackActivity.launcher(this);
         } else if (id == R.id.nav_about) {
             AboutActivity.launcher(this);
+        } else if (id == R.id.nav_exit){
+            finish();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

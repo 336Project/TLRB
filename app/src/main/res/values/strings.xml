@@ -39,6 +39,7 @@
     <string name="send">发送</string>
     <string name="thanks_to_feedback">提交成功,感谢您的建议!</string>
     <string name="title_about">关于</string>
+    <string name="title_exit">退出账号</string>
     <string name="setting">系统</string>
     <string name="check_update">检测更新</string>
     <string name="new_version">最新版本</string>

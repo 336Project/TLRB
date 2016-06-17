@@ -25,6 +25,7 @@
     <dimen name="font_18">18sp</dimen>
     <dimen name="font_20">20sp</dimen>
     <dimen name="font_22">22sp</dimen>
+    <dimen name="font_24">24sp</dimen>
 
     <dimen name="action_button_height">32dp</dimen>
     <dimen name="action_button_text_size">14sp</dimen>
