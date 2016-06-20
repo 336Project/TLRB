@@ -58,7 +58,7 @@ public class AddRedBombActivity extends TitlebarActivity implements View.OnClick
         redBomb.setName(mLayoutName.getEditText().getText().toString());
         redBomb.setMoney(Double.valueOf(mLayoutMoney.getEditText().getText().toString()));
         redBomb.setGift(mLayoutGift.getEditText().getText().toString());
-        if(mRbBoy.isChecked()){
+        if (mRbBoy.isChecked()){
             redBomb.setTarget(1);
         }else if(mRbGirl.isChecked()){
             redBomb.setTarget(2);
@@ -73,11 +73,18 @@ public class AddRedBombActivity extends TitlebarActivity implements View.OnClick
         redBomb.setCategoryName(mLayoutCategoryName.getEditText().getText().toString());
         redBomb.setTime(mLayoutTime.getEditText().getText().toString());
         redBomb.setRemark(mLayoutNote.getEditText().getText().toString());
-        /*if (redBomb.save()) {
-            Toast.makeText(AddRedBombActivity.this, "存储成功", Toast.LENGTH_SHORT).show();
-        } else {
-            Toast.makeText(AddRedBombActivity.this, "存储失败", Toast.LENGTH_SHORT).show();
-        }*/
+//        redBomb.save(this, new SaveListener() {
+//            @Override
+//            public void onSuccess() {
+//                ToastUtil.showToast(AddRedBombActivity.this,"提交成功");
+//                finish();
+//            }
+//
+//            @Override
+//            public void onFailure(int i, String s) {
+//                ToastUtil.showToast(AddRedBombActivity.this,"提交失败");
+//            }
+//        });
 
     }
 
