@@ -8,7 +8,6 @@ import com.facebook.cache.disk.DiskCacheConfig;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.imagepipeline.core.ImagePipelineConfig;
 import com.ttm.tlrb.BuildConfig;
-import com.ttm.tlrb.api.APIManager;
 import com.ttm.tlrb.api.UserManager;
 import com.ttm.tlrb.utils.EnvironmentUtil;
 
@@ -48,7 +47,7 @@ public class RBApplication extends Application{
         HCrashHandler.init(this);
         initFresco();
         initAD();
-        //initPatchManager();
+        initPatchManager();
     }
 
     private void initAD() {
@@ -59,7 +58,6 @@ public class RBApplication extends Application{
         mPatchManager = new PatchManager(this);
         mPatchManager.init(BuildConfig.VERSION_NAME);
         mPatchManager.loadPatch();
-        APIManager.getInstance().addPatch();
     }
 
     public PatchManager getPatchManager() {

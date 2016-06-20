@@ -12,18 +12,28 @@ import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
+import android.text.Html;
+import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.ttm.tlrb.R;
+import com.ttm.tlrb.api.APIManager;
 import com.ttm.tlrb.api.UserManager;
 import com.ttm.tlrb.ui.adapter.RedBombPagerAdapter;
 import com.ttm.tlrb.ui.application.RBApplication;
 import com.ttm.tlrb.ui.entity.Account;
+import com.ttm.tlrb.ui.entity.BmobFile;
+import com.ttm.tlrb.ui.entity.VersionInfo;
 import com.ttm.tlrb.ui.fragment.RedBombFragment;
+import com.ttm.tlrb.ui.service.DownloadService;
+import com.ttm.tlrb.view.MaterialDialog;
+
+import rx.Subscriber;
 
 public class MainActivity extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener{
     private SimpleDraweeView mHeaderView;
@@ -71,6 +81,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
             mTextUserName.setText(account.getUsername());
             mTextNickName.setText(account.getNickname());
         }
+        checkUpdate();
     }
 
     private void initTabLayout(){
@@ -84,6 +95,80 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         tabLayout.setupWithViewPager(viewPager);
     }
 
+    /**
+     * 登录检测更新
+     */
+    private Subscriber<VersionInfo> mVersionInfoSubscriber;
+    private void checkUpdate(){
+        if(mVersionInfoSubscriber == null || mVersionInfoSubscriber.isUnsubscribed()){
+            mVersionInfoSubscriber = new Subscriber<VersionInfo>() {
+                @Override
+                public void onCompleted() {
+
+                }
+
+                @Override
+                public void onError(Throwable e) {
+
+                }
+
+                @Override
+                public void onNext(VersionInfo versionInfo) {
+                    if (versionInfo != null) {
+                        if (!versionInfo.getPatch()) {//有新版本
+                            showUpdateDialog(versionInfo);
+                        } else {//有修复包
+                            APIManager.getInstance().addPatch();
+                        }
+                    }
+                }
+            };
+        }
+
+        APIManager.getInstance().loginCheckVersion(mVersionInfoSubscriber);
+    }
+
+    private void showUpdateDialog(final VersionInfo versionInfo){
+        final boolean isForce = versionInfo.getForce();
+        final MaterialDialog dialog = new MaterialDialog(this);
+        dialog.setCanceledOnTouchOutside(false);
+        String alert = isForce ? getString(R.string.force_to_update):getString(R.string.alert);
+        dialog.setTitle(alert);
+        dialog.setPositiveButton(getString(R.string.update), new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                BmobFile file = versionInfo.getFile();
+                if(file != null && !TextUtils.isEmpty(file.getUrl())) {
+                    Intent intent = new Intent(MainActivity.this, DownloadService.class);
+                    intent.putExtra(DownloadService.KEY_URL, file.getUrl());
+                    startService(intent);
+                }
+                dialog.dismiss();
+                if(isForce) {
+                    finishAll();
+                }
+            }
+        });
+        dialog.setNegativeButton(getString(R.string.cancel), new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+                if(isForce){
+                    finishAll();
+                }
+            }
+        });
+        dialog.setMessage(Html.fromHtml(versionInfo.getUpdateContent()));
+        dialog.show();
+    }
+
+    @Override
+    protected void onDestroy() {
+        if(mVersionInfoSubscriber != null && !mVersionInfoSubscriber.isUnsubscribed()){
+            mVersionInfoSubscriber.unsubscribe();
+        }
+        super.onDestroy();
+    }
 
     @Override
     public void onBackPressed() {
@@ -91,7 +176,17 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
-            super.onBackPressed();
+            quit();
+        }
+    }
+
+    private long exitTime = 0;
+    public void quit() {
+        if ((System.currentTimeMillis() - exitTime) > 2000) {
+            Toast.makeText(getApplicationContext(), R.string.once_click_quit, Toast.LENGTH_SHORT).show();
+            exitTime = System.currentTimeMillis();
+        } else {
+            finishAll();
         }
     }
 

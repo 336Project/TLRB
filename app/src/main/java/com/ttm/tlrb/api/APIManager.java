@@ -295,6 +295,48 @@ public class APIManager {
                 .subscribe(subscriber);
     }
 
+    public void loginCheckVersion(Subscriber<VersionInfo> subscriber){
+        getAPIService().getVersionInfo(null,5,"-version")
+                .map(new Func1<ResponseEn<VersionInfo>, List<VersionInfo>>() {
+                    @Override
+                    public List<VersionInfo> call(ResponseEn<VersionInfo> versionInfoResponseEn) {
+                        return versionInfoResponseEn.results;
+                    }
+                })
+                .map(new Func1<List<VersionInfo>, VersionInfo>() {
+                    @Override
+                    public VersionInfo call(List<VersionInfo> versionInfos) {
+                        VersionInfo currInfo = null;
+                        if(versionInfos != null){
+                            for (VersionInfo info:versionInfos){
+                                String version = info.getVersion();
+                                if(!info.getPatch() && version.compareTo(BuildConfig.VERSION_NAME) > 0){//新版本
+                                    currInfo = info;
+                                    break;
+                                }else if(info.getPatch() && version.equals(BuildConfig.VERSION_NAME)) {//有修复包
+                                    currInfo = info;
+                                    break;
+                                }
+                            }
+                        }
+                        return currInfo;
+                    }
+                })
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(subscriber);
+                /*.map(new Func1<ResponseEn<VersionInfo>, VersionInfo>() {
+                    @Override
+                    public VersionInfo call(ResponseEn<VersionInfo> responseEn) {
+                        List<VersionInfo> versionInfoList = responseEn.results;
+                        if(versionInfoList != null && !versionInfoList.isEmpty()){
+                            return versionInfoList.get(0);
+                        }
+                        return null;
+                    }
+                })*/
+    }
+
     /**
      * 热修复
      */
