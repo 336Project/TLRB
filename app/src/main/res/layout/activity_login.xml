@@ -81,6 +81,7 @@
             android:layout_height="wrap_content"
             >
             <com.ttm.tlrb.view.CleanableEditText
+                android:id="@+id/editText_username"
                 style="@style/add_red_bomb_edittext"
                 android:hint="账号"/>
         </android.support.design.widget.TextInputLayout>
@@ -89,11 +90,20 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
             <com.ttm.tlrb.view.CleanableEditText
+                android:id="@+id/editText_password"
                 style="@style/add_red_bomb_edittext"
                 android:hint="密码"/>
         </android.support.design.widget.TextInputLayout>
 
     </LinearLayout>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="登录"
+        android:id="@+id/btn_login"
+        android:layout_gravity="center"
+        />
 
     <Button
         android:layout_width="wrap_content"

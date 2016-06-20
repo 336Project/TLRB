@@ -10,6 +10,8 @@ import com.ttm.tlrb.utils.SPUtil;
  *
  */
 public class UserManager {
+    public static final String KEY_SP_USER = "user_info";
+    public static final String KEY_SP_TOKEN = "session_token";
 
     private static UserManager mInstance;
     private Account mAccount;
@@ -28,26 +30,29 @@ public class UserManager {
             return;
         }
         mAccount = account;
-        SPUtil.getInstance().putString("user_info",account.toString()).commit();
+        SPUtil.getInstance().putString(KEY_SP_USER,account.toString()).commit();
         updateSessionToken(mAccount.getSessionToken());
     }
 
     public Account getAccount(){
         if(mAccount == null){
-            mAccount = GsonUtil.fromJson(SPUtil.getInstance().getString("user_info"),Account.class);
+            mAccount = GsonUtil.fromJson(SPUtil.getInstance().getString(KEY_SP_USER),Account.class);
+        }
+        if(mAccount == null){
+            mAccount = new Account();
         }
         return mAccount;
     }
 
     public void updateSessionToken(String sessionToken){
-        SPUtil.getInstance().putString("session_token",sessionToken).commit();
+        SPUtil.getInstance().putString(KEY_SP_TOKEN,sessionToken).commit();
     }
 
     public String getSessionToken(){
         if(mAccount != null){
             return mAccount.getSessionToken();
         }
-        return SPUtil.getInstance().getString("session_token");
+        return SPUtil.getInstance().getString(KEY_SP_TOKEN,"");
     }
 
     public BmobACL getUserACL(){
@@ -57,5 +62,16 @@ public class UserManager {
         acl.setReadAccess(objectId,true);
         acl.setWriteAccess(objectId,true);
         return acl;
+    }
+
+    /**
+     * 登出
+     */
+    public void logout(){
+        mAccount = null;
+        SPUtil.getInstance()
+                .remove(KEY_SP_USER)
+                .remove(KEY_SP_TOKEN)
+                .commit();
     }
 }

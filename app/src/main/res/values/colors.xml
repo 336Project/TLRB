@@ -4,7 +4,7 @@
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
     <color name="white">#ffffff</color>
-
+    <color name="transparent">#00ffffff</color>
     <!-- date_picker_dialog -->
     <color name="alertdialog_line">#c6c6c6</color>
     <color name="trans_pop_blue">#408ed6</color>

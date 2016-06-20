@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<litepal>
-    <dbname value="tlrb.db"/>
-    <version value="1"/>
-    <list>
-		<mapping class="com.ttm.tlrb.ui.entity.RedBomb"/>
-		<mapping class="com.ttm.tlrb.ui.entity.Category"/>
-    </list>
-</litepal>

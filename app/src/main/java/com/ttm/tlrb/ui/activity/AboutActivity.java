@@ -4,12 +4,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Html;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.TextView;
 
 import com.ttm.tlrb.BuildConfig;
 import com.ttm.tlrb.R;
 import com.ttm.tlrb.api.APIManager;
+import com.ttm.tlrb.ui.entity.BmobFile;
 import com.ttm.tlrb.ui.entity.VersionInfo;
 import com.ttm.tlrb.ui.service.DownloadService;
 import com.ttm.tlrb.utils.ToastUtil;
@@ -93,9 +95,12 @@ public class AboutActivity extends TitlebarActivity implements View.OnClickListe
                         @Override
                         public void onClick(View v) {
                             if(hasNewVersion()) {
-                                Intent intent = new Intent(AboutActivity.this, DownloadService.class);
-                                intent.putExtra(DownloadService.KEY_URL,mVersionInfo.getApkUrl());
-                                startService(intent);
+                                BmobFile file = mVersionInfo.getFile();
+                                if(file != null && !TextUtils.isEmpty(file.getUrl())) {
+                                    Intent intent = new Intent(AboutActivity.this, DownloadService.class);
+                                    intent.putExtra(DownloadService.KEY_URL, file.getUrl());
+                                    startService(intent);
+                                }
                             }
                             materialDialog.dismiss();
                         }

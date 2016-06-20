@@ -7,6 +7,14 @@ import java.io.File;
  *
  */
 public class FileUtil {
+
+    public static boolean mkDir(File dir){
+        if(dir != null && !dir.exists()){
+            return dir.mkdirs();
+        }
+        return false;
+    }
+
     /**
      * 统计文件夹大小
      */

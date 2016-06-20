@@ -7,7 +7,16 @@ package com.ttm.tlrb.ui.entity;
 public class VersionInfo extends BaseEn{
     private String version;//版本号
     private String updateContent;//更新内容
-    private String apkUrl;//apk下载地址
+    private BmobFile file;//下载文件
+    private Boolean isPatch;//是否是修复包
+
+    public Boolean getPatch() {
+        return isPatch;
+    }
+
+    public void setPatch(Boolean patch) {
+        isPatch = patch;
+    }
 
     public String getVersion() {
         return version;
@@ -28,20 +37,21 @@ public class VersionInfo extends BaseEn{
         this.updateContent = updateContent;
     }
 
-    public String getApkUrl() {
-        return apkUrl;
+    public BmobFile getFile() {
+        return file;
     }
 
-    public void setApkUrl(String apkUrl) {
-        this.apkUrl = apkUrl;
+    public void setFile(BmobFile file) {
+        this.file = file;
     }
 
     @Override
     public String toString() {
         return "VersionInfo{" +
-                ", version='" + version + '\'' +
+                "version='" + version + '\'' +
                 ", updateContent='" + updateContent + '\'' +
-                ", apkUrl=" + apkUrl +
+                ", file=" + file +
+                ", isPatch=" + isPatch +
                 '}';
     }
 }

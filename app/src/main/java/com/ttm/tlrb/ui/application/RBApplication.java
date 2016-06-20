@@ -3,9 +3,12 @@ package com.ttm.tlrb.ui.application;
 import android.app.Application;
 import android.text.TextUtils;
 
+import com.alipay.euler.andfix.patch.PatchManager;
 import com.facebook.cache.disk.DiskCacheConfig;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.imagepipeline.core.ImagePipelineConfig;
+import com.ttm.tlrb.BuildConfig;
+import com.ttm.tlrb.api.APIManager;
 import com.ttm.tlrb.api.UserManager;
 import com.ttm.tlrb.utils.EnvironmentUtil;
 
@@ -17,6 +20,7 @@ import com.ttm.tlrb.utils.EnvironmentUtil;
 public class RBApplication extends Application{
     private static RBApplication instance;
     private String session = "";
+    private PatchManager mPatchManager;
 
     public String getSession() {
         if(TextUtils.isEmpty(session)){
@@ -40,8 +44,26 @@ public class RBApplication extends Application{
 
     private void init(){
         instance = this;
+        EnvironmentUtil.init();
         HCrashHandler.init(this);
         initFresco();
+        initAD();
+        //initPatchManager();
+    }
+
+    private void initAD() {
+        //AdManager.getInstance(this).init("abef61a1925a5d96","95ce78a402f6cf12",true);
+    }
+
+    private void initPatchManager() {
+        mPatchManager = new PatchManager(this);
+        mPatchManager.init(BuildConfig.VERSION_NAME);
+        mPatchManager.loadPatch();
+        APIManager.getInstance().addPatch();
+    }
+
+    public PatchManager getPatchManager() {
+        return mPatchManager;
     }
 
     private void initFresco(){
