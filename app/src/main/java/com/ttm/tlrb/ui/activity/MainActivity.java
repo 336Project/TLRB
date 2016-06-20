@@ -43,7 +43,6 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     public static void launcher(Context context){
         context.startActivity(new Intent(context,MainActivity.class));
     }
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

@@ -295,7 +295,10 @@ public class APIManager {
                 .subscribe(subscriber);
     }
 
+    private boolean isCheck = false;
     public void loginCheckVersion(Subscriber<VersionInfo> subscriber){
+        if (isCheck) return;
+        isCheck = true;
         getAPIService().getVersionInfo(null,5,"-version")
                 .map(new Func1<ResponseEn<VersionInfo>, List<VersionInfo>>() {
                     @Override
