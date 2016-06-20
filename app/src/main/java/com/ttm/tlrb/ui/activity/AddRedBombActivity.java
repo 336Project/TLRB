@@ -9,10 +9,15 @@ import android.widget.DatePicker;
 import android.widget.RadioButton;
 
 import com.ttm.tlrb.R;
+import com.ttm.tlrb.api.APIManager;
+import com.ttm.tlrb.ui.entity.BmobObject;
 import com.ttm.tlrb.ui.entity.RedBomb;
+import com.ttm.tlrb.utils.ToastUtil;
 import com.ttm.tlrb.view.DatePickerView;
 
 import java.util.Calendar;
+
+import rx.Subscriber;
 
 public class AddRedBombActivity extends TitlebarActivity implements View.OnClickListener{
 
@@ -50,7 +55,6 @@ public class AddRedBombActivity extends TitlebarActivity implements View.OnClick
         findViewById(R.id.iv_time).setOnClickListener(this);
         mLayoutNote=(TextInputLayout)findViewById(R.id.layout_remark);
         findViewById(R.id.btn_commit).setOnClickListener(this);
-        findViewById(R.id.btn_show).setOnClickListener(this);
     }
 
     private void saveData(){
@@ -58,7 +62,7 @@ public class AddRedBombActivity extends TitlebarActivity implements View.OnClick
         redBomb.setName(mLayoutName.getEditText().getText().toString());
         redBomb.setMoney(Double.valueOf(mLayoutMoney.getEditText().getText().toString()));
         redBomb.setGift(mLayoutGift.getEditText().getText().toString());
-        if(mRbBoy.isChecked()){
+        if (mRbBoy.isChecked()){
             redBomb.setTarget(1);
         }else if(mRbGirl.isChecked()){
             redBomb.setTarget(2);
@@ -73,12 +77,23 @@ public class AddRedBombActivity extends TitlebarActivity implements View.OnClick
         redBomb.setCategoryName(mLayoutCategoryName.getEditText().getText().toString());
         redBomb.setTime(mLayoutTime.getEditText().getText().toString());
         redBomb.setRemark(mLayoutNote.getEditText().getText().toString());
-        /*if (redBomb.save()) {
-            Toast.makeText(AddRedBombActivity.this, "存储成功", Toast.LENGTH_SHORT).show();
-        } else {
-            Toast.makeText(AddRedBombActivity.this, "存储失败", Toast.LENGTH_SHORT).show();
-        }*/
+        APIManager.getInstance().addRedBomb(redBomb, new Subscriber<BmobObject>() {
+            @Override
+            public void onCompleted() {
+                ToastUtil.showToast(AddRedBombActivity.this, "添加成功");
+                finish();
+            }
 
+            @Override
+            public void onError(Throwable e) {
+                ToastUtil.showToast(AddRedBombActivity.this, "注册错误，请重试");
+            }
+
+            @Override
+            public void onNext(BmobObject bmobObject) {
+
+            }
+        });
     }
 
     private void setStartDate() {
@@ -107,14 +122,6 @@ public class AddRedBombActivity extends TitlebarActivity implements View.OnClick
                 break;
             case R.id.iv_time:
                 setStartDate();
-                break;
-            case R.id.btn_show:
-                /*RedBomb redBomb=DataSupport.findFirst(RedBomb.class);
-                if(redBomb==null){
-                    Toast.makeText(AddRedBombActivity.this,"没数据",Toast.LENGTH_SHORT).show();
-                }else{
-                    Log.e("addredbombactivity",""+redBomb.toString());
-                }*/
                 break;
             default:
                 break;

@@ -14,11 +14,11 @@ public class ToastUtil {
 
                 @Override
                 public void run() {
-                    Toast.makeText(mContext, resId, Toast.LENGTH_SHORT).show();
+                    MyToast.showShort(mContext,resId);
                 }
             });
         }else{
-            Toast.makeText(mContext, resId, Toast.LENGTH_SHORT).show();
+            MyToast.showShort(mContext, resId);
         }
     }
 
@@ -28,11 +28,11 @@ public class ToastUtil {
 
                 @Override
                 public void run() {
-                    Toast.makeText(mContext, text, Toast.LENGTH_SHORT).show();
+                    MyToast.showShort(mContext, text);
                 }
             });
         }else{
-            Toast.makeText(mContext, text, Toast.LENGTH_SHORT).show();
+            MyToast.showShort(mContext, text);
         }
     }
 
@@ -42,11 +42,11 @@ public class ToastUtil {
 
                 @Override
                 public void run() {
-                    Toast.makeText(mContext, resId, Toast.LENGTH_LONG).show();
+                    MyToast.showLong(mContext,resId);
                 }
             });
         }else{
-            Toast.makeText(mContext, resId, Toast.LENGTH_LONG).show();
+            MyToast.showLong(mContext, resId);
         }
     }
 
@@ -56,11 +56,11 @@ public class ToastUtil {
 
                 @Override
                 public void run() {
-                    Toast.makeText(mContext, text, Toast.LENGTH_LONG).show();
+                    MyToast.showLong(mContext, text);
                 }
             });
         }else{
-            Toast.makeText(mContext, text, Toast.LENGTH_LONG).show();
+            MyToast.showLong(mContext, text);
         }
     }
 

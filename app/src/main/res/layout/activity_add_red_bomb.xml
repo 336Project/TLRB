@@ -238,18 +238,6 @@
         </LinearLayout>
 
         <Button
-            android:id="@+id/btn_show"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:background="@color/Blue_500"
-            android:textSize="@dimen/font_18"
-            android:textColor="@color/white"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:text="@string/commit"/>
-
-        <Button
             android:id="@+id/btn_commit"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -259,6 +247,7 @@
             android:textColor="@color/white"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
+            android:layout_marginBottom="10dp"
             android:text="@string/commit"/>
     </LinearLayout>
 </ScrollView>
