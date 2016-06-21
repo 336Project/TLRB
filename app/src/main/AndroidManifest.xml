@@ -49,6 +49,7 @@
         <activity android:name=".ui.activity.LoginActivity" android:screenOrientation="portrait">
         </activity>
 
+        <service android:name=".ui.service.DownloadService"/>
 
         <!--有米广告-->
         <!--<activity

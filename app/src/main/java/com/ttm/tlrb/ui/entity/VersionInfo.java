@@ -9,6 +9,15 @@ public class VersionInfo extends BaseEn{
     private String updateContent;//更新内容
     private BmobFile file;//下载文件
     private Boolean isPatch;//是否是修复包
+    private Boolean isForce;//是否强制更新
+
+    public Boolean getForce() {
+        return isForce;
+    }
+
+    public void setForce(Boolean force) {
+        isForce = force;
+    }
 
     public Boolean getPatch() {
         return isPatch;
@@ -52,6 +61,7 @@ public class VersionInfo extends BaseEn{
                 ", updateContent='" + updateContent + '\'' +
                 ", file=" + file +
                 ", isPatch=" + isPatch +
+                ", isForce=" + isForce +
                 '}';
     }
 }

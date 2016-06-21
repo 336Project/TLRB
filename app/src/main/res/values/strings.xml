@@ -3,7 +3,7 @@
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
-
+    <string name="once_click_quit">再按一次退出程序</string>
     <!-- 添加红包 -->
     <string name="name">姓名</string>
     <string name="sex">属于</string>
@@ -52,4 +52,5 @@
     <string name="alert">提示</string>
     <string name="update">更新</string>
     <string name="share_tip">红包不只是钱的问题，这是一场包含人情世故的游戏，请记录下游戏里的每一个人！快来下载吧！http://helengray.github.io/</string>
+    <string name="force_to_update">该版本需要更新后才能使用</string>
 </resources>
