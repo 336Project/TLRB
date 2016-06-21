@@ -11,6 +11,7 @@
     <dimen name="add_redbomb_text_margin">10dp</dimen>
     <dimen name="add_redbomb_radiobutton_padding">10dp</dimen>
     <dimen name="add_redbomb_textsize">20sp</dimen>
+    <dimen name="add_redbomb_title_text">18sp</dimen>
     <dimen name="select_buttom_radio">4dp</dimen>
 
     <!--边距-->

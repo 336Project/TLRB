@@ -233,7 +233,6 @@ public class AddRedBombActivity extends TitlebarActivity implements View.OnClick
                 mTvIncome.setTextColor(getResources().getColor(R.color.black_de));
                 break;
             case R.id.tv_addType:
-                GroupActivity.launcher(AddRedBombActivity.this);
                 Intent intent =new Intent(AddRedBombActivity.this,GroupActivity.class);
                 startActivityForResult(intent,GO_GROUP);
                 break;

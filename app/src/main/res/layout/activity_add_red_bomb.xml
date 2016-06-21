@@ -3,7 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/bg_add_redbomb">
+    android:background="@color/Grey_300">
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -172,6 +172,7 @@
             <TextView
                 style="@style/add_red_bomb_text"
                 android:visibility="visible"
+                android:textSize="@dimen/add_redbomb_title_text"
                 android:text="@string/categoryName"/>
 
             <Spinner
