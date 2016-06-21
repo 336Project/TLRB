@@ -59,4 +59,5 @@ dependencies {
     compile 'com.github.traex.rippleeffect:library:1.3'
     compile 'com.android.support:cardview-v7:23.3.0'
     compile 'com.alipay.euler:andfix:0.4.0@aar'
+    //compile 'me.gujun.android.taggroup:library:1.4@aar'
 }

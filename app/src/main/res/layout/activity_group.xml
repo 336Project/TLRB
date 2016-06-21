@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.ttm.tlrb.view.EmptyEmbeddedContainer
+    android:id="@+id/empty_container"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="@dimen/activity_vertical_margin">
+
+        <com.ttm.tlrb.view.TagGroup
+            android:id="@+id/tag_group"
+            style="@style/TagGroup.Beauty_Red"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone"
+            app:atg_inputHint="@string/hint_add_group"
+            app:atg_isAppendMode="true"/>
+    </LinearLayout>
+</com.ttm.tlrb.view.EmptyEmbeddedContainer>

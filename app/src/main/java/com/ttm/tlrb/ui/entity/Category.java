@@ -29,6 +29,16 @@ public class Category extends BmobObject{
         this.userName = userName;
     }
 
+    @Override
+    public int hashCode() {
+        return name.hashCode();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        return name.equals(o);
+    }
+
     /*@Override
     public String toString() {
         StringBuilder builder = new StringBuilder();

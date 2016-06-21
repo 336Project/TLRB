@@ -13,8 +13,8 @@ import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import retrofit2.Response;
 import retrofit2.http.Body;
+import retrofit2.http.DELETE;
 import retrofit2.http.GET;
-import retrofit2.http.Headers;
 import retrofit2.http.POST;
 import retrofit2.http.PUT;
 import retrofit2.http.Path;
@@ -54,7 +54,7 @@ public interface APIService {
     @GET("1/classes/VersionInfo")
     Observable<ResponseEn<VersionInfo>> getVersionInfo(@Query("where") String where,@Query("limit") int limit, @Query("order") String order);
     /**获取红包列表数据,分页**/
-    @Headers("Cache-Control: public, max-age=600")//10分钟刷新一次
+    /*@Headers("Cache-Control: public, max-age=600")//10分钟刷新一次*/
     @GET("1/classes/RedBomb")
     Observable<ResponseEn<RedBomb>> getRedBomb(@Query("where") String where,@Query("skip") int skip,@Query("limit") int limit,@Query("order") String order);
     /**批量添加数据(一次只能操作50条)**/
@@ -65,7 +65,7 @@ public interface APIService {
     Observable<BmobObject> postRedBomb(@Body RequestBody data);
     /**获取组别*/
     @GET("1/classes/Category")
-    Observable<ResponseEn<Category>> getCategory(@Query("where") String where,@Query("limit") int limit);
+    Observable<ResponseEn<Category>> getCategory(@Query("where") String where,@Query("limit") int limit,@Query("order") String order);
     /**统计组别*/
     @GET("1/classes/Category")
     Observable<ResponseEn<Category>> countCategory(@Query("where") String where,@Query("limit") int limit,@Query("count") String count);
@@ -75,4 +75,7 @@ public interface APIService {
     /**更新分组*/
     @PUT("1/classes/Category/{objectId}")
     Observable<BmobObject> putCategory(@Path("objectId") String id,@Body RequestBody body);
+    /**删除分组*/
+    @DELETE("1/classes/Category/{objectId}")
+    Observable<BmobObject> deleteCategory(@Path("objectId") String id);
 }

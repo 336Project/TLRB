@@ -7,9 +7,11 @@ import android.widget.EditText;
 
 import com.ttm.tlrb.R;
 import com.ttm.tlrb.api.APIManager;
+import com.ttm.tlrb.api.e.HttpExceptionHandle;
 import com.ttm.tlrb.ui.entity.Account;
 import com.ttm.tlrb.utils.ToastUtil;
 
+import retrofit2.adapter.rxjava.HttpException;
 import rx.Subscriber;
 
 public class RegisterActivity extends BaseActivity implements View.OnClickListener{
@@ -41,7 +43,10 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
             }
             @Override
             public void onError(Throwable e) {
-                ToastUtil.showToast(RegisterActivity.this,"注册错误，请重试");
+                if(e instanceof HttpException){
+                    HttpExceptionHandle handle = new HttpExceptionHandle((HttpException) e,RegisterActivity.this);
+                    handle.handle();
+                }
             }
             @Override
             public void onNext(Account account) {

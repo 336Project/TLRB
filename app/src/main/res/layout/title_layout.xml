@@ -16,7 +16,7 @@
         android:clipToPadding="false"
         android:background="?attr/colorPrimary"
         app:layout_scrollFlags="scroll|enterAlways"
-        app:logoDescription="@string/app_name"
+        app:title="@string/app_name"
         app:navigationIcon="?attr/homeAsUpIndicator"
         app:popupTheme="@style/AppTheme.PopupOverlay"/>
 

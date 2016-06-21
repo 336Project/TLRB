@@ -52,4 +52,21 @@
     <string name="update">更新</string>
     <string name="share_tip">红包不只是钱的问题，这是一场包含人情世故的游戏，请记录下游戏里的每一个人！快来下载吧！http://helengray.github.io/</string>
     <string name="force_to_update">该版本需要更新后才能使用</string>
+    <string name="title_group">组别</string>
+    <string name="hint_add_group">添加组别</string>
+    <string name="save">保存</string>
+    <string name="tag_exist">标签已存在</string>
+    <string name="tag_not_empty">标签不能为空</string>
+    <string name="add_fail">添加失败</string>
+    <string name="add_success">添加成功</string>
+    <string name="delete_fail">删除失败</string>
+    <string name="delete_success">删除成功</string>
+    <string name="update_fail">修改失败</string>
+    <string name="update_success">修改成功</string>
+    <string name="default_tag_not_update">\'默认\'组别不能修改</string>
+    <string name="default_tag_not_delete">\'默认\'组别不能删除</string>
+    <string name="default_tag">默认</string>
+    <string name="tag_count_limit">标签最多%d个</string>
+    <string name="tag_delete_tip">删除分组后，原组别数据还保留着，确定要删除吗？</string>
+    <string name="tag_update_tip">组别变更后，原组别数据还保留着，确定要修改吗？</string>
 </resources>

@@ -472,7 +472,7 @@ public class APIManager {
         where.put("userName",map);
         where.put("name",name);
         final RequestBody body = RequestBody.create(Constant.JSON,category.toString());
-        getAPIService().getCategory(GsonUtil.fromMap2Json(where),Category.LIMIT_COUNT)
+        getAPIService().getCategory(GsonUtil.fromMap2Json(where),Category.LIMIT_COUNT,null)
                 //先查看是否已经存在相同的组名
                 .flatMap(new Func1<ResponseEn<Category>, Observable<ResponseEn<Category>>>() {
                     @Override
@@ -513,13 +513,20 @@ public class APIManager {
         Map<String,Object> map = new HashMap<>();
         map.put("$in",new String[]{userName,"-1"});
         where.put("userName",map);
-        getAPIService().getCategory(GsonUtil.fromMap2Json(where),Category.LIMIT_COUNT)
+        getAPIService().getCategory(GsonUtil.fromMap2Json(where),Category.LIMIT_COUNT,"createdAt")
                 .map(new Func1<ResponseEn<Category>, List<Category>>() {
                     @Override
                     public List<Category> call(ResponseEn<Category> categoryResponseEn) {
                         return categoryResponseEn.results;
                     }
                 })
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(subscriber);
+    }
+
+    public void deleteCategory(String objectId, Subscriber<BmobObject> subscriber){
+        getAPIService().deleteCategory(objectId)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(subscriber);
@@ -538,7 +545,7 @@ public class APIManager {
         map.put("$in",new String[]{userName,"-1"});
         where.put("userName",map);
         where.put("name",name);
-        getAPIService().getCategory(GsonUtil.fromMap2Json(where),Category.LIMIT_COUNT)
+        getAPIService().getCategory(GsonUtil.fromMap2Json(where),Category.LIMIT_COUNT,null)
                 //先查看是否已经存在相同的组名
                 .flatMap(new Func1<ResponseEn<Category>, Observable<BmobObject>>() {
                     @Override
