@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android" >
+    
+    <!-- 圆角 -->
+    <corners
+        android:topLeftRadius="@dimen/select_buttom_radio"
+        android:bottomLeftRadius="@dimen/select_buttom_radio"/><!-- 设置圆角半径 -->
+    
+    <!-- 填充 -->
+    <solid
+        android:color="@color/Red_400"/><!-- 填充的颜色 -->
+
+</shape>
