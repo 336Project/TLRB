@@ -3,7 +3,23 @@ apply plugin: 'com.android.application'
 android {
     compileSdkVersion 23
     buildToolsVersion "23.0.3"
-    useLibrary 'org.apache.http.legacy'
+    //useLibrary 'org.apache.http.legacy'
+
+
+    Properties properties = new Properties()
+    properties.load(project.rootProject.file('local.properties').newDataInputStream())
+    def keyAliasStr = properties.getProperty("keyAlias","")
+    def keyPasswordStr = properties.getProperty("keyPassword","")
+    def fileUrl = properties.getProperty("storeFile","")
+
+    signingConfigs {
+        myConfig {
+            keyAlias keyAliasStr
+            keyPassword keyPasswordStr
+            storeFile file(fileUrl)
+            storePassword keyPasswordStr
+        }
+    }
 
     defaultConfig {
         applicationId "com.ttm.tlrb"
@@ -11,14 +27,7 @@ android {
         targetSdkVersion 23
         versionCode 1
         versionName "1.0"
-    }
-    buildTypes {
-        release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-        }
-    }
-    defaultConfig{
+        multiDexEnabled true
         /*ndk {
             abiFilter 'armeabi-v7a'
         }*/
@@ -31,7 +40,18 @@ android {
             }
         }*/
     }
+    buildTypes {
+        release {
+            minifyEnabled true
+            shrinkResources true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.myConfig
+        }
+    }
 
+    lintOptions {
+        abortOnError false
+    }
 }
 
 dependencies {

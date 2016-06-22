@@ -61,11 +61,13 @@ public class APIManager {
     private UserManager mUserManager;
     private APIManager(){
         File cacheFile = new File(EnvironmentUtil.getCacheFile(), Constant.CACHE_HTTP);
-        OkHttpClient client = new OkHttpClient().newBuilder()
-                .addNetworkInterceptor(new NetworkInterceptor())
-                .addNetworkInterceptor(new LogInterceptor())
-                .cache(new Cache(cacheFile, Constant.MAX_CACHE_SIZE))
-                .build();
+        OkHttpClient.Builder builder = new OkHttpClient().newBuilder();
+        builder.addNetworkInterceptor(new NetworkInterceptor());
+        builder.cache(new Cache(cacheFile, Constant.MAX_CACHE_SIZE));
+        if(BuildConfig.DEBUG){
+            builder.addNetworkInterceptor(new LogInterceptor());
+        }
+        OkHttpClient client = builder.build();
         retrofit = new Retrofit.Builder()
                 .baseUrl(APIService.BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create())
