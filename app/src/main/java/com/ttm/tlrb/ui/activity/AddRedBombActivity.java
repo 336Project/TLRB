@@ -27,6 +27,7 @@ import java.util.List;
 import rx.Subscriber;
 
 public class AddRedBombActivity extends TitlebarActivity implements View.OnClickListener{
+    public static final int GO_GROUP=1001;
 
     private TextInputLayout mLayoutName;//姓名
     private TextInputLayout mLayoutGift;//随礼
@@ -89,7 +90,7 @@ public class AddRedBombActivity extends TitlebarActivity implements View.OnClick
 
             @Override
             public void onError(Throwable e) {
-                ToastUtil.showToast(AddRedBombActivity.this,"获取组别失败");
+//                ToastUtil.showToast(AddRedBombActivity.this,"获取组别失败");
             }
 
             @Override
@@ -104,10 +105,15 @@ public class AddRedBombActivity extends TitlebarActivity implements View.OnClick
                 final ArrayAdapter<String> adapter = new ArrayAdapter<String>(AddRedBombActivity.this, android.R.layout.simple_spinner_item, list);
                 adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                 mSpAddType.setAdapter(adapter);
-                mSpAddType.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                mSpAddType.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                     @Override
-                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                         type=adapter.getItem(position);
+                    }
+
+                    @Override
+                    public void onNothingSelected(AdapterView<?> parent) {
+
                     }
                 });
             }
@@ -226,10 +232,20 @@ public class AddRedBombActivity extends TitlebarActivity implements View.OnClick
                 mTvIncome.setBackgroundDrawable(getResources().getDrawable(R.drawable.shape_rectangular_white_radiusleft));
                 mTvIncome.setTextColor(getResources().getColor(R.color.black_de));
                 break;
+            case R.id.tv_addType:
+                Intent intent =new Intent(AddRedBombActivity.this,GroupActivity.class);
+                startActivityForResult(intent,GO_GROUP);
+                break;
             default:
                 break;
         }
     }
 
-
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode==GO_GROUP){
+            findAddType();
+        }
+    }
 }
