@@ -71,4 +71,5 @@
     <string name="tag_delete_tip">删除分组后，原组别数据还保留着，确定要删除吗？</string>
     <string name="tag_update_tip">组别变更后，原组别数据还保留着，确定要修改吗？</string>
     <string name="confirm_to_exit">确定要退出吗？</string>
+    <string name="group_update_tip">长按标签可进行修改</string>
 </resources>
