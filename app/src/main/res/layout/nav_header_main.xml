@@ -12,21 +12,55 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     android:theme="@style/ThemeOverlay.AppCompat.Dark">
 
-    <com.facebook.drawee.view.SimpleDraweeView
-        android:id="@+id/iv_portrait"
-        style="@style/style_circle_header"
-        />
-
-    <TextView
-        android:id="@+id/tv_username"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textAppearance="@style/TextAppearance.AppCompat.Body1"/>
+        android:layout_height="match_parent">
 
-    <TextView
-        android:id="@+id/tv_nickname"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        />
+        <com.facebook.drawee.view.SimpleDraweeView
+            android:id="@+id/iv_portrait"
+            style="@style/style_circle_header"
+            android:layout_alignParentTop="true"
+            />
 
+        <TextView
+            android:id="@+id/tv_username"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/iv_portrait"
+            android:layout_marginTop="5dp"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body1"/>
+
+        <TextView
+            android:id="@+id/tv_nickname"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tv_username"
+            android:layout_marginTop="5dp"
+            />
+        <TextView
+            android:id="@+id/tv_in"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawableLeft="@drawable/icon_in"
+            android:drawablePadding="5dp"
+            android:layout_toRightOf="@+id/iv_portrait"
+            android:layout_marginTop="8dp"
+            android:layout_marginLeft="15dp"
+            android:padding="5dp"
+            android:gravity="center"
+            />
+        <TextView
+            android:id="@+id/tv_out"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawableLeft="@drawable/icon_out"
+            android:layout_below="@+id/tv_in"
+            android:padding="5dp"
+            android:gravity="center"
+            android:drawablePadding="5dp"
+            android:layout_toRightOf="@+id/iv_portrait"
+            android:layout_marginTop="8dp"
+            android:layout_marginLeft="15dp"
+            />
+    </RelativeLayout>
 </LinearLayout>

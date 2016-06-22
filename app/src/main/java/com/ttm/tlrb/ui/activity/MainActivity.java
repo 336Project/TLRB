@@ -28,10 +28,15 @@ import com.ttm.tlrb.ui.adapter.RedBombPagerAdapter;
 import com.ttm.tlrb.ui.application.RBApplication;
 import com.ttm.tlrb.ui.entity.Account;
 import com.ttm.tlrb.ui.entity.BmobFile;
+import com.ttm.tlrb.ui.entity.RedBomb;
 import com.ttm.tlrb.ui.entity.VersionInfo;
 import com.ttm.tlrb.ui.fragment.RedBombFragment;
 import com.ttm.tlrb.ui.service.DownloadService;
+import com.ttm.tlrb.utils.HLog;
 import com.ttm.tlrb.view.MaterialDialog;
+
+import java.util.List;
+import java.util.Map;
 
 import rx.Subscriber;
 
@@ -39,6 +44,9 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     private SimpleDraweeView mHeaderView;
     private TextView mTextUserName;
     private TextView mTextNickName;
+    private TextView mTextIn;
+    private TextView mTextOut;
+
 
     public static void launcher(Context context){
         context.startActivity(new Intent(context,MainActivity.class));
@@ -72,6 +80,11 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         mHeaderView = (SimpleDraweeView) header.findViewById(R.id.iv_portrait);
         mTextUserName = (TextView) header.findViewById(R.id.tv_username);
         mTextNickName = (TextView) header.findViewById(R.id.tv_nickname);
+        mTextIn = (TextView) header.findViewById(R.id.tv_in);
+        mTextOut = (TextView) header.findViewById(R.id.tv_out);
+        mTextIn.setText("0");
+        mTextOut.setText("0");
+
         initTabLayout();
         Account account = UserManager.getInstance().getAccount();
         if(account != null){
@@ -80,6 +93,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
             mTextUserName.setText(account.getUsername());
             mTextNickName.setText(account.getNickname());
         }
+        counter();
         checkUpdate();
     }
 
@@ -92,6 +106,40 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         viewPager.setAdapter(pagerAdapter);
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
         tabLayout.setupWithViewPager(viewPager);
+    }
+
+
+    Subscriber<List<Map<String,String>>> mCounterSubscriber;
+    private void counter(){
+        if(mCounterSubscriber == null || mCounterSubscriber.isUnsubscribed()){
+            mCounterSubscriber = new Subscriber<List<Map<String, String>>>() {
+                @Override
+                public void onCompleted() {
+
+                }
+
+                @Override
+                public void onError(Throwable e) {
+                    HLog.e("MainActivity","mCounterSubscriber----onError",e);
+                }
+
+                @Override
+                public void onNext(List<Map<String, String>> maps) {
+                    if(maps != null && maps.size() == 2){
+                        for (Map<String,String> map:maps){
+                            String money = map.get("_sumMoney");
+                            int type = Integer.valueOf(map.get("type"));
+                            if(type == RedBomb.TYPE_IN){
+                                mTextIn.setText(money);
+                            }else if(type == RedBomb.TYPE_OUT){
+                                mTextOut.setText(money);
+                            }
+                        }
+                    }
+                }
+            };
+        }
+        APIManager.getInstance().countRedBombMoney(mCounterSubscriber);
     }
 
     /**
@@ -108,7 +156,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 
                 @Override
                 public void onError(Throwable e) {
-
+                    HLog.e("MainActivity","mVersionInfoSubscriber----onError",e);
                 }
 
                 @Override
@@ -165,6 +213,9 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     protected void onDestroy() {
         if(mVersionInfoSubscriber != null && !mVersionInfoSubscriber.isUnsubscribed()){
             mVersionInfoSubscriber.unsubscribe();
+        }
+        if(mCounterSubscriber != null && !mCounterSubscriber.isUnsubscribed()){
+            mCounterSubscriber.unsubscribe();
         }
         super.onDestroy();
     }

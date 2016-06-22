@@ -238,6 +238,25 @@ public class APIManager {
     }
 
     /**
+     * 统计红包收入支出
+     */
+    public void countRedBombMoney(Subscriber<List<Map<String,String>>> subscriber){
+        getAPIService().countRedBombMoney("money","type")
+                .map(new Func1<ResponseEn<Map<String,String>>, List<Map<String,String>>>() {
+                    @Override
+                    public List<Map<String, String>> call(ResponseEn<Map<String, String>> responseEn) {
+                        if(responseEn != null){
+                            return responseEn.results;
+                        }
+                        return null;
+                    }
+                })
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(subscriber);
+    }
+
+    /**
      * 文件上传
      * @param file 要上传的文件
      * @param subscriber 回调
@@ -297,6 +316,9 @@ public class APIManager {
                 .subscribe(subscriber);
     }
 
+    /**
+     * 登录时进行检测更新
+     */
     private boolean isCheck = false;
     public void loginCheckVersion(Subscriber<VersionInfo> subscriber){
         if (isCheck) return;
@@ -330,16 +352,6 @@ public class APIManager {
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(subscriber);
-                /*.map(new Func1<ResponseEn<VersionInfo>, VersionInfo>() {
-                    @Override
-                    public VersionInfo call(ResponseEn<VersionInfo> responseEn) {
-                        List<VersionInfo> versionInfoList = responseEn.results;
-                        if(versionInfoList != null && !versionInfoList.isEmpty()){
-                            return versionInfoList.get(0);
-                        }
-                        return null;
-                    }
-                })*/
     }
 
     /**
