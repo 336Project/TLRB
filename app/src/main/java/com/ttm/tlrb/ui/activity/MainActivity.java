@@ -192,7 +192,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main, menu);
+        //getMenuInflater().inflate(R.menu.main, menu);
         return true;
     }
 
@@ -213,27 +213,41 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_camera) {
-            // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
-
-        } else if (id == R.id.nav_slideshow) {
-
-        } else if (id == R.id.nav_manage) {
+        if (id == R.id.nav_group) {
             GroupActivity.launcher(this);
         } else if (id == R.id.nav_feedback) {
             FeedBackActivity.launcher(this);
         } else if (id == R.id.nav_about) {
             AboutActivity.launcher(this);
         } else if (id == R.id.nav_exit){
-            UserManager.getInstance().logout();
-            LoginActivity.launcher(MainActivity.this);
-            finish();
+            final MaterialDialog dialog = new MaterialDialog(this);
+            dialog.setTitle(getString(R.string.alert));
+            dialog.setMessage(getString(R.string.confirm_to_exit));
+            dialog.setPositiveButton(R.string.sure, new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    dialog.dismiss();
+                    logout();
+                }
+            });
+            dialog.setNegativeButton(R.string.cancel, new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    dialog.dismiss();
+                }
+            });
+            dialog.show();
         }
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
+        /*DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer.closeDrawer(GravityCompat.START);*/
         return true;
+    }
+
+    private void logout(){
+        UserManager.getInstance().logout();
+        LoginActivity.launcher(MainActivity.this);
+        finish();
     }
 
 }

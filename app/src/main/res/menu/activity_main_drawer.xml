@@ -1,22 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <group android:checkableBehavior="single">
+    <group >
         <item
-            android:id="@+id/nav_camera"
-            android:icon="@drawable/ic_menu_camera"
-            android:title="Import"/>
-        <item
-            android:id="@+id/nav_gallery"
-            android:icon="@drawable/ic_menu_gallery"
-            android:title="Gallery"/>
-        <item
-            android:id="@+id/nav_slideshow"
-            android:icon="@drawable/ic_menu_slideshow"
-            android:title="Slideshow"/>
-        <item
-            android:id="@+id/nav_manage"
-            android:icon="@drawable/ic_menu_manage"
+            android:id="@+id/nav_group"
+            android:icon="@drawable/icon_group"
             android:title="@string/title_group"/>
     </group>
 
@@ -24,15 +12,15 @@
         <menu>
             <item
                 android:id="@+id/nav_feedback"
-                android:icon="@drawable/ic_menu_share"
+                android:icon="@drawable/icon_feedback"
                 android:title="@string/title_feedback"/>
             <item
                 android:id="@+id/nav_about"
-                android:icon="@drawable/ic_menu_send"
+                android:icon="@drawable/icon_about"
                 android:title="@string/title_about"/>
             <item
                 android:id="@+id/nav_exit"
-                android:icon="@drawable/ic_menu_send"
+                android:icon="@drawable/icon_logout"
                 android:title="@string/title_exit"/>
         </menu>
     </item>
