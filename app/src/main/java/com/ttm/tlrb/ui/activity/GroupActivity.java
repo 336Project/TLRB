@@ -76,7 +76,7 @@ public class GroupActivity extends TitlebarActivity implements TagGroup.OnTagCha
                 @Override
                 public void onError(Throwable e) {
                     mEmptyLayoutManager.setType(EmptyEmbeddedContainer.EmptyStyle.EmptyStyle_RETRY);
-                    ToastUtil.showToast(GroupActivity.this,"请求失败");
+                    ToastUtil.showToast(GroupActivity.this,getString(R.string.request_fail));
                 }
 
                 @Override
@@ -312,6 +312,10 @@ public class GroupActivity extends TitlebarActivity implements TagGroup.OnTagCha
 
                 @Override
                 public void onNext(BmobObject object) {
+                    Category category = getCategoryByTagName(oldTag);
+                    if(category != null){
+                        category.setName(newTag);
+                    }
                     mEmptyLayoutManager.setType(EmptyEmbeddedContainer.EmptyStyle.EmptyStyle_NORMAL);
                     mTagGroup.updateTag(tagView,newTag);
                     ToastUtil.showToast(GroupActivity.this,getString(R.string.update_success));
@@ -331,6 +335,17 @@ public class GroupActivity extends TitlebarActivity implements TagGroup.OnTagCha
             for (Category category:mCategoryList){
                 if(category.getName().equals(tag)){
                     return category.getObjectId();
+                }
+            }
+        }
+        return null;
+    }
+
+    private Category getCategoryByTagName(String tag){
+        if(mCategoryList != null){
+            for (Category category:mCategoryList){
+                if(category.getName().equals(tag)){
+                    return category;
                 }
             }
         }

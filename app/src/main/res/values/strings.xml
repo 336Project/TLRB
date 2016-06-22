@@ -72,4 +72,5 @@
     <string name="tag_update_tip">组别变更后，原组别数据还保留着，确定要修改吗？</string>
     <string name="confirm_to_exit">确定要退出吗？</string>
     <string name="group_update_tip">长按标签可进行修改</string>
+    <string name="request_fail">请求失败</string>
 </resources>
