@@ -16,6 +16,7 @@ import com.ttm.tlrb.ui.adapter.BaseRecyclerAdapter;
 import com.ttm.tlrb.ui.adapter.RedBombAdapter;
 import com.ttm.tlrb.ui.application.Constant;
 import com.ttm.tlrb.ui.entity.RedBomb;
+import com.ttm.tlrb.utils.MyToast;
 import com.ttm.tlrb.view.EmptyEmbeddedContainer;
 
 import java.util.ArrayList;
@@ -27,7 +28,7 @@ import rx.Subscriber;
  * Created by Helen on 2016/4/29.
  *
  */
-public class RedBombFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener,EmptyEmbeddedContainer.EmptyInterface{
+public class RedBombFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener,EmptyEmbeddedContainer.EmptyInterface,RedBombAdapter.MyItemClickListener {
     private List<RedBomb> mRedBombs = new ArrayList<>();
     private RedBombAdapter mAdapter;
     private SwipeRefreshLayout mRefreshLayout;
@@ -62,6 +63,7 @@ public class RedBombFragment extends Fragment implements SwipeRefreshLayout.OnRe
         mRecyclerView.setLayoutManager(linearLayoutManager);
         mAdapter = new RedBombAdapter(mRedBombs);
         mAdapter.setEmptyInterface(this);
+        mAdapter.setOnItemClickListener(this);
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             private int lastVisibleItem = -1;
@@ -160,5 +162,10 @@ public class RedBombFragment extends Fragment implements SwipeRefreshLayout.OnRe
     public void doRetry() {
         mEmptyContainer.setType(EmptyEmbeddedContainer.EmptyStyle.EmptyStyle_LOADING);
         requestData();
+    }
+
+    @Override
+    public void onItemClick(View view, int postion) {
+        MyToast.showShort(getActivity(),""+postion);
     }
 }
