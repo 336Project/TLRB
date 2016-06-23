@@ -4,11 +4,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/login_home_page"
+    android:orientation="vertical"
     android:paddingBottom="@dimen/activity_vertical_margin"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    android:orientation="vertical"
     tools:context="com.ttm.tlrb.ui.activity.LoginActivity">
 
     <RelativeLayout
@@ -27,89 +28,109 @@
             android:text="注册"
             android:id="@+id/textView_register"
             android:layout_alignParentRight="true"
+            android:textColor="@color/white"
             />
     </RelativeLayout>
-
-    <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:layout_marginTop="80dp"
-        >
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/imageView3"
-            android:src="@drawable/icon"
-            />
-
-        <LinearLayout
-            android:orientation="vertical"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:gravity="center|left"
-            >
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="小红本"
-                android:id="@+id/textView3"
-                android:textColor="#000000"
-                android:textSize="20sp"
-                />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="管你多少红包"
-                android:id="@+id/textView4"/>
-        </LinearLayout>
-    </LinearLayout>
-
-    <LinearLayout
-        android:orientation="vertical"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        >
-
-        <android.support.design.widget.TextInputLayout
-            android:id="@+id/layout_name"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            >
-            <com.ttm.tlrb.view.CleanableEditText
-                android:id="@+id/editText_username"
-                style="@style/add_red_bomb_edittext"
-                android:hint="账号"/>
-        </android.support.design.widget.TextInputLayout>
-        <android.support.design.widget.TextInputLayout
-            android:id="@+id/layout_password"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-            <com.ttm.tlrb.view.CleanableEditText
-                android:id="@+id/editText_password"
-                style="@style/add_red_bomb_edittext"
-                android:hint="密码"/>
-        </android.support.design.widget.TextInputLayout>
-
-    </LinearLayout>
-
-    <Button
+    <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="登录"
-        android:id="@+id/btn_login"
-        android:layout_gravity="center"
+        android:textSize="@dimen/font_24"
+        android:textColor="@color/white"
+        android:layout_marginTop="80dp"
+        android:layout_marginBottom="50dp"
+        />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/register_bg_shape"
+        android:orientation="vertical"
+        >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_weight="20"
+                android:src="@drawable/login_main_phone"
+                />
+
+            <EditText
+                android:id="@+id/editText_username"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="80"
+                android:background="@color/transparent"
+                android:layout_marginTop="15dp"
+                android:layout_marginBottom="15dp"
+                android:singleLine="true"
+                android:hint="请填写账号"
+                android:textSize="@dimen/font_14"
+                android:textCursorDrawable="@drawable/register_cursor_color"
+                android:inputType=""
+                />
+        </LinearLayout>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#E7E7E7"
+            ></View>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:src="@drawable/login_main_code"
+                android:layout_weight="20"
+                android:layout_gravity="center_vertical"
+                />
+
+            <EditText
+                android:id="@+id/editText_password"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="80"
+                android:background="@color/transparent"
+                android:layout_marginTop="15dp"
+                android:layout_marginBottom="15dp"
+                android:singleLine="true"
+                android:hint="请填写密码"
+                android:textSize="@dimen/font_14"
+                android:textCursorDrawable="@drawable/register_cursor_color"
+                />
+        </LinearLayout>
+    </LinearLayout>
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="找回密码"
+        android:id="@+id/tv_retrieve_password"
+        android:layout_gravity="right"
+        android:textSize="@dimen/font_16"
+        android:textColor="@color/white"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
         />
 
     <Button
-        android:layout_width="wrap_content"
+        android:id="@+id/btn_login"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="跳过"
-        android:id="@+id/button"
-        android:layout_gravity="center"
+        android:background="@drawable/btn_login_selector"
+        android:text="登录"
+        android:textColor="@color/white"
+        android:textSize="@dimen/font_16"
         />
+
 </LinearLayout>
