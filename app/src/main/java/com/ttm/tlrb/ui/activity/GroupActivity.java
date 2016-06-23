@@ -13,6 +13,7 @@ import com.ttm.tlrb.R;
 import com.ttm.tlrb.api.APIManager;
 import com.ttm.tlrb.api.e.CategoryExistException;
 import com.ttm.tlrb.api.e.CategoryOverCountException;
+import com.ttm.tlrb.ui.application.Constant;
 import com.ttm.tlrb.ui.entity.BmobObject;
 import com.ttm.tlrb.ui.entity.Category;
 import com.ttm.tlrb.utils.HLog;
@@ -20,6 +21,7 @@ import com.ttm.tlrb.utils.ToastUtil;
 import com.ttm.tlrb.view.EmptyEmbeddedContainer;
 import com.ttm.tlrb.view.MaterialDialog;
 import com.ttm.tlrb.view.TagGroup;
+import com.umeng.analytics.MobclickAgent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -218,6 +220,7 @@ public class GroupActivity extends TitlebarActivity implements TagGroup.OnTagCha
     //添加
     private Subscriber<BmobObject> mCategoryAddSubscriber;
     private void add(String tag){
+        MobclickAgent.onEvent(GroupActivity.this, Constant.Event.EVENT_ID_GROUP_ADD);
         mEmptyLayoutManager.setType(EmptyEmbeddedContainer.EmptyStyle.EmptyStyle_LOADING_WITH_VIEW);
         final Category category = new Category();
         category.setName(tag);
@@ -256,6 +259,7 @@ public class GroupActivity extends TitlebarActivity implements TagGroup.OnTagCha
     //删除
     private Subscriber<BmobObject> mCategoryDeleteSubscriber;
     private void delete(final TagGroup.TagView tagView, final String tag){
+        MobclickAgent.onEvent(GroupActivity.this, Constant.Event.EVENT_ID_GROUP_DELETE);
         mEmptyLayoutManager.setType(EmptyEmbeddedContainer.EmptyStyle.EmptyStyle_LOADING_WITH_VIEW);
         if(mCategoryDeleteSubscriber == null || mCategoryDeleteSubscriber.isUnsubscribed()){
             mCategoryDeleteSubscriber = new Subscriber<BmobObject>() {
@@ -290,6 +294,7 @@ public class GroupActivity extends TitlebarActivity implements TagGroup.OnTagCha
     //修改
     private Subscriber<BmobObject> mCategoryUpdateSubscriber;
     private void update(final TagGroup.TagView tagView,final String newTag, final String oldTag){
+        MobclickAgent.onEvent(GroupActivity.this, Constant.Event.EVENT_ID_GROUP_UPDATE);
         mEmptyLayoutManager.setType(EmptyEmbeddedContainer.EmptyStyle.EmptyStyle_LOADING_WITH_VIEW);
         if(mCategoryUpdateSubscriber == null || mCategoryUpdateSubscriber.isUnsubscribed()){
             mCategoryUpdateSubscriber = new Subscriber<BmobObject>() {

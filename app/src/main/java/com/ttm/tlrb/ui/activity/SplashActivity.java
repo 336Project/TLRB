@@ -13,8 +13,10 @@ import com.baidu.mobads.AdView;
 import com.baidu.mobads.SplashAd;
 import com.baidu.mobads.SplashAdListener;
 import com.ttm.tlrb.R;
+import com.ttm.tlrb.ui.application.Constant;
 import com.ttm.tlrb.ui.application.RBApplication;
 import com.ttm.tlrb.utils.FileUtil;
+import com.umeng.analytics.MobclickAgent;
 
 import java.io.File;
 
@@ -67,7 +69,7 @@ public class SplashActivity extends BaseActivity{
 
             @Override
             public void onAdClick() {
-
+                MobclickAgent.onEvent(SplashActivity.this, Constant.Event.EVENT_ID_SPLASH_AD_CLICK);
             }
         },"2600711",true);
     }

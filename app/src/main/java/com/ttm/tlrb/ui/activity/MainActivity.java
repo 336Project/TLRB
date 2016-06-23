@@ -25,6 +25,7 @@ import com.ttm.tlrb.R;
 import com.ttm.tlrb.api.APIManager;
 import com.ttm.tlrb.api.UserManager;
 import com.ttm.tlrb.ui.adapter.RedBombPagerAdapter;
+import com.ttm.tlrb.ui.application.Constant;
 import com.ttm.tlrb.ui.application.RBApplication;
 import com.ttm.tlrb.ui.entity.Account;
 import com.ttm.tlrb.ui.entity.BmobFile;
@@ -34,6 +35,7 @@ import com.ttm.tlrb.ui.fragment.RedBombFragment;
 import com.ttm.tlrb.ui.service.DownloadService;
 import com.ttm.tlrb.utils.HLog;
 import com.ttm.tlrb.view.MaterialDialog;
+import com.umeng.analytics.MobclickAgent;
 
 import java.util.List;
 import java.util.Map;
@@ -297,6 +299,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 
     private void logout(){
         UserManager.getInstance().logout();
+        MobclickAgent.onEvent(this, Constant.Event.EVENT_ID_LOGOUT);
         LoginActivity.launcher(MainActivity.this);
         finish();
     }

@@ -8,17 +8,18 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
-import android.widget.RadioButton;
 import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.ttm.tlrb.R;
 import com.ttm.tlrb.api.APIManager;
+import com.ttm.tlrb.ui.application.Constant;
 import com.ttm.tlrb.ui.entity.BmobObject;
 import com.ttm.tlrb.ui.entity.Category;
 import com.ttm.tlrb.ui.entity.RedBomb;
 import com.ttm.tlrb.utils.ToastUtil;
 import com.ttm.tlrb.view.DatePickerView;
+import com.umeng.analytics.MobclickAgent;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -152,7 +153,7 @@ public class AddRedBombActivity extends TitlebarActivity implements View.OnClick
 
             @Override
             public void onNext(BmobObject bmobObject) {
-
+                
             }
         });
     }
@@ -195,6 +196,7 @@ public class AddRedBombActivity extends TitlebarActivity implements View.OnClick
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.btn_commit:
+                MobclickAgent.onEvent(AddRedBombActivity.this, Constant.Event.EVENT_ID_BOMB_ADD);
                 saveData();
                 break;
             case R.id.iv_time:

@@ -11,11 +11,13 @@ import android.widget.TextView;
 import com.ttm.tlrb.BuildConfig;
 import com.ttm.tlrb.R;
 import com.ttm.tlrb.api.APIManager;
+import com.ttm.tlrb.ui.application.Constant;
 import com.ttm.tlrb.ui.entity.BmobFile;
 import com.ttm.tlrb.ui.entity.VersionInfo;
 import com.ttm.tlrb.ui.service.DownloadService;
 import com.ttm.tlrb.utils.ToastUtil;
 import com.ttm.tlrb.view.MaterialDialog;
+import com.umeng.analytics.MobclickAgent;
 
 import rx.Subscriber;
 
@@ -87,6 +89,7 @@ public class AboutActivity extends TitlebarActivity implements View.OnClickListe
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.layout_check_update:
+                MobclickAgent.onEvent(this, Constant.Event.EVENT_ID_UPDATE_CHECK);
                 final MaterialDialog materialDialog = new MaterialDialog(this);
                 materialDialog.setTitle(getString(R.string.alert));
 
@@ -124,6 +127,7 @@ public class AboutActivity extends TitlebarActivity implements View.OnClickListe
                 materialDialog.show();
                 break;
             case R.id.layout_share:
+                MobclickAgent.onEvent(this, Constant.Event.EVENT_ID_SOFT_SHARE);
                 String message = getString(R.string.share_tip);
                 shareIntent(this,getString(R.string.app_name),message);
                 break;

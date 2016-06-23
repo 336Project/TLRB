@@ -27,7 +27,7 @@ android {
         targetSdkVersion 23
         versionCode 1
         versionName "1.0"
-        multiDexEnabled true
+        //multiDexEnabled true
         /*ndk {
             abiFilter 'armeabi-v7a'
         }*/
@@ -46,6 +46,12 @@ android {
             shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.myConfig
+        }
+    }
+
+    productFlavors {
+        baidu {
+            manifestPlaceholders = [UMENG_CHANNEL_VALUE: "baidu"]
         }
     }
 
@@ -80,4 +86,6 @@ dependencies {
     compile 'com.android.support:cardview-v7:23.3.0'
     compile 'com.alipay.euler:andfix:0.4.0@aar'
     //compile 'me.gujun.android.taggroup:library:1.4@aar'
+    //友盟统计
+    compile 'com.umeng.analytics:analytics:latest.integration'
 }

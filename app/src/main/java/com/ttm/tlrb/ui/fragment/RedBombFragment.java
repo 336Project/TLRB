@@ -35,6 +35,7 @@ public class RedBombFragment extends Fragment implements SwipeRefreshLayout.OnRe
     private int page = 1;
     private boolean hasMore = true;
     private int type = 0;
+    //private String mPageName;
 
 
     public static RedBombFragment newInstance(int type) {
@@ -57,6 +58,13 @@ public class RedBombFragment extends Fragment implements SwipeRefreshLayout.OnRe
 
     private void initView(View view){
         type = getArguments().getInt("type");
+        /*if(type == 1){
+            mPageName = getString(R.string.income);
+        }else if(type == 2){
+            mPageName = getString(R.string.action_out);
+        }else {
+            mPageName = getString(R.string.action_out);
+        }*/
         RecyclerView mRecyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
         final LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
         mRecyclerView.setLayoutManager(linearLayoutManager);
@@ -161,4 +169,16 @@ public class RedBombFragment extends Fragment implements SwipeRefreshLayout.OnRe
         mEmptyContainer.setType(EmptyEmbeddedContainer.EmptyStyle.EmptyStyle_LOADING);
         requestData();
     }
+
+    /*@Override
+    public void onPause() {
+        super.onPause();
+        MobclickAgent.onPageEnd(mPageName);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        MobclickAgent.onPageStart(mPageName);
+    }*/
 }

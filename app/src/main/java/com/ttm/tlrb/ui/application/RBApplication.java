@@ -10,6 +10,7 @@ import com.facebook.imagepipeline.core.ImagePipelineConfig;
 import com.ttm.tlrb.BuildConfig;
 import com.ttm.tlrb.api.UserManager;
 import com.ttm.tlrb.utils.EnvironmentUtil;
+import com.umeng.analytics.MobclickAgent;
 
 
 /**
@@ -48,6 +49,14 @@ public class RBApplication extends Application{
         initFresco();
         initAD();
         initPatchManager();
+        initUmeng();
+    }
+
+    private void initUmeng() {
+        MobclickAgent.setDebugMode(BuildConfig.DEBUG);
+        //MobclickAgent.openActivityDurationTrack(false);
+        MobclickAgent.enableEncrypt(true);
+        MobclickAgent.setScenarioType(this, MobclickAgent.EScenarioType.E_UM_NORMAL);
     }
 
     private void initAD() {

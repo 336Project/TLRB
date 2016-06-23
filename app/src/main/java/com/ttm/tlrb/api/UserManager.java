@@ -4,6 +4,7 @@ import com.ttm.tlrb.ui.entity.Account;
 import com.ttm.tlrb.ui.entity.BmobACL;
 import com.ttm.tlrb.utils.GsonUtil;
 import com.ttm.tlrb.utils.SPUtil;
+import com.umeng.analytics.MobclickAgent;
 
 /**
  * Created by Helen on 2016/6/7.
@@ -68,6 +69,7 @@ public class UserManager {
      * 登出
      */
     public void logout(){
+        MobclickAgent.onProfileSignOff();
         mAccount = null;
         SPUtil.getInstance()
                 .remove(KEY_SP_USER)

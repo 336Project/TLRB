@@ -21,6 +21,7 @@ import com.ttm.tlrb.ui.entity.FileBodyEn;
 import com.ttm.tlrb.utils.EnvironmentUtil;
 import com.ttm.tlrb.utils.FileUtil;
 import com.ttm.tlrb.utils.ToastUtil;
+import com.umeng.analytics.MobclickAgent;
 
 import java.io.File;
 
@@ -68,6 +69,7 @@ public class FeedBackActivity extends TitlebarActivity implements View.OnClickLi
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.btn_send:
+                MobclickAgent.onEvent(FeedBackActivity.this, Constant.Event.EVENT_ID_FEEDBACK);
                 send();
                 break;
             default:break;

@@ -23,6 +23,7 @@ import com.ttm.tlrb.utils.EnvironmentUtil;
 import com.ttm.tlrb.utils.GsonUtil;
 import com.ttm.tlrb.utils.HLog;
 import com.ttm.tlrb.utils.MD5;
+import com.umeng.analytics.MobclickAgent;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -107,6 +108,8 @@ public class APIManager {
                     public void call(Account account) {
                         RBApplication.getInstance().setSession(account.getSessionToken());
                         mUserManager.updateAccount(account);
+                        MobclickAgent.onProfileSignIn(account.getUsername());
+                        //MobclickAgent.onProfileSignIn("WB",account.getUsername());
                     }
                 })
                 .subscribeOn(Schedulers.io())
