@@ -35,4 +35,42 @@ public class Constant {
     public static final MediaType JSON = MediaType.parse("application/json");
     /**页数*/
     public static final int PAGE_SIZE = 10;
+
+    /**友盟事件ID*/
+    public class Event{
+        /**账号登录*/
+        public static final String EVENT_ID_LOGIN_NORMAL = "10000_1";
+        /**微博登录*/
+        public static final String EVENT_ID_LOGIN_WB = "10000_2";
+        /**qq登录*/
+        public static final String EVENT_ID_LOGIN_QQ = "10000_3";
+        /**微信登录*/
+        public static final String EVENT_ID_LOGIN_WX = "10000_4";
+        /**退出*/
+        public static final String EVENT_ID_LOGOUT = "10001";
+        /**注册*/
+        public static final String EVENT_ID_REGISTER = "10002";
+        /**检测更新*/
+        public static final String EVENT_ID_UPDATE_CHECK = "20000";
+        /**分享软件*/
+        public static final String EVENT_ID_SOFT_SHARE = "20001";
+        /**意见反馈*/
+        public static final String EVENT_ID_FEEDBACK = "30000";
+        /**组别添加*/
+        public static final String EVENT_ID_GROUP_ADD= "40000";
+        /**组别修改*/
+        public static final String EVENT_ID_GROUP_UPDATE= "40001";
+        /**组别删除*/
+        public static final String EVENT_ID_GROUP_DELETE= "40002";
+        /**红包添加*/
+        public static final String EVENT_ID_BOMB_ADD= "50000";
+        /**红包修改*/
+        public static final String EVENT_ID_BOMB_UPDATE= "50001";
+        /**红包删除*/
+        public static final String EVENT_ID_BOMB_DELETE= "50002";
+        /**红包查看*/
+        public static final String EVENT_ID_BOMB_LOOK= "50003";
+        /**开屏广告点击*/
+        public static final String EVENT_ID_SPLASH_AD_CLICK= "60000";
+    }
 }

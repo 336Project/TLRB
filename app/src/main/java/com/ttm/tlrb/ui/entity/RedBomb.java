@@ -7,6 +7,9 @@ import com.google.gson.Gson;
  * time: 2016/5/19 0019.
  */
 public class RedBomb extends BmobObject {
+    public static final int TYPE_IN = 1;
+    public static final int TYPE_OUT = 2;
+
     private String userName;//数据关联的数据账号
     private String name;//姓名
     private String time;//时间

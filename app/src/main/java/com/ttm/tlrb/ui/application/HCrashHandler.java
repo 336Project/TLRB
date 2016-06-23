@@ -12,6 +12,7 @@ import android.widget.Toast;
 import com.ttm.tlrb.R;
 import com.ttm.tlrb.ui.activity.BaseActivity;
 import com.ttm.tlrb.utils.EnvironmentUtil;
+import com.umeng.analytics.MobclickAgent;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -64,6 +65,7 @@ public class HCrashHandler implements Thread.UncaughtExceptionHandler {
             }
             //退出程序
             BaseActivity.finishAll();
+            MobclickAgent.onKillProcess(mContext);
             System.exit(0);
         }
     }

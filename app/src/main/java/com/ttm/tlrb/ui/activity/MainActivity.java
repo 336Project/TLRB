@@ -25,13 +25,20 @@ import com.ttm.tlrb.R;
 import com.ttm.tlrb.api.APIManager;
 import com.ttm.tlrb.api.UserManager;
 import com.ttm.tlrb.ui.adapter.RedBombPagerAdapter;
+import com.ttm.tlrb.ui.application.Constant;
 import com.ttm.tlrb.ui.application.RBApplication;
 import com.ttm.tlrb.ui.entity.Account;
 import com.ttm.tlrb.ui.entity.BmobFile;
+import com.ttm.tlrb.ui.entity.RedBomb;
 import com.ttm.tlrb.ui.entity.VersionInfo;
 import com.ttm.tlrb.ui.fragment.RedBombFragment;
 import com.ttm.tlrb.ui.service.DownloadService;
+import com.ttm.tlrb.utils.HLog;
 import com.ttm.tlrb.view.MaterialDialog;
+import com.umeng.analytics.MobclickAgent;
+
+import java.util.List;
+import java.util.Map;
 
 import rx.Subscriber;
 
@@ -39,6 +46,9 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     private SimpleDraweeView mHeaderView;
     private TextView mTextUserName;
     private TextView mTextNickName;
+    private TextView mTextIn;
+    private TextView mTextOut;
+
 
     public static void launcher(Context context){
         context.startActivity(new Intent(context,MainActivity.class));
@@ -72,6 +82,11 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         mHeaderView = (SimpleDraweeView) header.findViewById(R.id.iv_portrait);
         mTextUserName = (TextView) header.findViewById(R.id.tv_username);
         mTextNickName = (TextView) header.findViewById(R.id.tv_nickname);
+        mTextIn = (TextView) header.findViewById(R.id.tv_in);
+        mTextOut = (TextView) header.findViewById(R.id.tv_out);
+        mTextIn.setText("0");
+        mTextOut.setText("0");
+
         initTabLayout();
         Account account = UserManager.getInstance().getAccount();
         if(account != null){
@@ -80,6 +95,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
             mTextUserName.setText(account.getUsername());
             mTextNickName.setText(account.getNickname());
         }
+        counter();
         checkUpdate();
     }
 
@@ -92,6 +108,40 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         viewPager.setAdapter(pagerAdapter);
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
         tabLayout.setupWithViewPager(viewPager);
+    }
+
+
+    Subscriber<List<Map<String,String>>> mCounterSubscriber;
+    private void counter(){
+        if(mCounterSubscriber == null || mCounterSubscriber.isUnsubscribed()){
+            mCounterSubscriber = new Subscriber<List<Map<String, String>>>() {
+                @Override
+                public void onCompleted() {
+
+                }
+
+                @Override
+                public void onError(Throwable e) {
+                    HLog.e("MainActivity","mCounterSubscriber----onError",e);
+                }
+
+                @Override
+                public void onNext(List<Map<String, String>> maps) {
+                    if(maps != null && maps.size() == 2){
+                        for (Map<String,String> map:maps){
+                            String money = map.get("_sumMoney");
+                            int type = Integer.valueOf(map.get("type"));
+                            if(type == RedBomb.TYPE_IN){
+                                mTextIn.setText(money);
+                            }else if(type == RedBomb.TYPE_OUT){
+                                mTextOut.setText(money);
+                            }
+                        }
+                    }
+                }
+            };
+        }
+        APIManager.getInstance().countRedBombMoney(mCounterSubscriber);
     }
 
     /**
@@ -108,7 +158,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 
                 @Override
                 public void onError(Throwable e) {
-
+                    HLog.e("MainActivity","mVersionInfoSubscriber----onError",e);
                 }
 
                 @Override
@@ -166,6 +216,9 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         if(mVersionInfoSubscriber != null && !mVersionInfoSubscriber.isUnsubscribed()){
             mVersionInfoSubscriber.unsubscribe();
         }
+        if(mCounterSubscriber != null && !mCounterSubscriber.isUnsubscribed()){
+            mCounterSubscriber.unsubscribe();
+        }
         super.onDestroy();
     }
 
@@ -192,7 +245,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-//        getMenuInflater().inflate(R.menu.main, menu);
+        //getMenuInflater().inflate(R.menu.main, menu);
         return true;
     }
 
@@ -213,27 +266,42 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_camera) {
-            // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
-
-        } else if (id == R.id.nav_slideshow) {
-
-        } else if (id == R.id.nav_manage) {
+        if (id == R.id.nav_group) {
             GroupActivity.launcher(this);
         } else if (id == R.id.nav_feedback) {
             FeedBackActivity.launcher(this);
         } else if (id == R.id.nav_about) {
             AboutActivity.launcher(this);
         } else if (id == R.id.nav_exit){
-            UserManager.getInstance().logout();
-            LoginActivity.launcher(MainActivity.this);
-            finish();
+            final MaterialDialog dialog = new MaterialDialog(this);
+            dialog.setTitle(getString(R.string.alert));
+            dialog.setMessage(getString(R.string.confirm_to_exit));
+            dialog.setPositiveButton(R.string.sure, new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    dialog.dismiss();
+                    logout();
+                }
+            });
+            dialog.setNegativeButton(R.string.cancel, new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    dialog.dismiss();
+                }
+            });
+            dialog.show();
         }
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
+        /*DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer.closeDrawer(GravityCompat.START);*/
         return true;
+    }
+
+    private void logout(){
+        UserManager.getInstance().logout();
+        MobclickAgent.onEvent(this, Constant.Event.EVENT_ID_LOGOUT);
+        LoginActivity.launcher(MainActivity.this);
+        finish();
     }
 
 }

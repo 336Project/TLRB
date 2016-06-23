@@ -10,9 +10,11 @@ import android.view.View;
 import com.ttm.tlrb.R;
 import com.ttm.tlrb.api.APIManager;
 import com.ttm.tlrb.api.e.HttpExceptionHandle;
+import com.ttm.tlrb.ui.application.Constant;
 import com.ttm.tlrb.ui.entity.Account;
 import com.ttm.tlrb.utils.ToastUtil;
 import com.ttm.tlrb.view.CleanableEditText;
+import com.umeng.analytics.MobclickAgent;
 
 import retrofit2.adapter.rxjava.HttpException;
 import rx.Subscriber;
@@ -55,6 +57,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener{
                 startActivity(intent);
                 break;
             case R.id.btn_login:
+                MobclickAgent.onEvent(LoginActivity.this, Constant.Event.EVENT_ID_LOGIN_NORMAL);
                 login();
                 break;
         }

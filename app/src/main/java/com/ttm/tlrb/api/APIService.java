@@ -9,6 +9,8 @@ import com.ttm.tlrb.ui.entity.RedBomb;
 import com.ttm.tlrb.ui.entity.ResponseEn;
 import com.ttm.tlrb.ui.entity.VersionInfo;
 
+import java.util.Map;
+
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import retrofit2.Response;
@@ -63,6 +65,9 @@ public interface APIService {
     /**添加单条数据**/
     @POST("1/classes/RedBomb")
     Observable<BmobObject> postRedBomb(@Body RequestBody data);
+    /**统计红包收入、支出*/
+    @GET("1/classes/RedBomb")
+    Observable<ResponseEn<Map<String,String>>> countRedBombMoney(@Query("sum") String sumColumn,@Query("groupby") String groupByColumn);
     /**获取组别*/
     @GET("1/classes/Category")
     Observable<ResponseEn<Category>> getCategory(@Query("where") String where,@Query("limit") int limit,@Query("order") String order);

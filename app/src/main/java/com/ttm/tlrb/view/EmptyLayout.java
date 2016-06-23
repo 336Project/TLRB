@@ -83,6 +83,7 @@ public class EmptyLayout extends LinearLayout {
                 mProgressBar.setVisibility(View.VISIBLE);
                 break;
             case EmptyStyle_RETRY:
+                mNoDataTextView.setCompoundDrawablesWithIntrinsicBounds(0,R.drawable.error,0,0);
                 mNoDataTextView.setVisibility(View.VISIBLE);
                 mNoDataTextView.setText(R.string.error);
                 AnimationDrawable anim = (AnimationDrawable) mNoDataTextView.getCompoundDrawables()[1];
@@ -91,12 +92,9 @@ public class EmptyLayout extends LinearLayout {
                 }
                 break;
             case EmptyStyle_NODATA:
+                mNoDataTextView.setCompoundDrawablesWithIntrinsicBounds(0,R.drawable.icon_not_data,0,0);
                 mNoDataTextView.setVisibility(View.VISIBLE);
                 mNoDataTextView.setText(R.string.no_data);
-                anim = (AnimationDrawable) mNoDataTextView.getCompoundDrawables()[1];
-                if(anim != null){
-                    anim.start();
-                }
                 break;
             case EmptyStyle_NORMAL:
                 if (mPeerView != null) {

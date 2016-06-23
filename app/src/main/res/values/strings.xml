@@ -33,14 +33,14 @@
     <string name="new_version_download">新版本下载</string>
     <string name="loading">正在加载中…</string>
     <string name="load_fail_retry">加载失败，点击重新加载</string>
-    <string name="title_feedback">建议反馈</string>
+    <string name="title_feedback">反馈</string>
     <string name="hint_input_feedback">请输入您的反馈意见</string>
     <string name="hint_input_contact">请留下您的联系方式(如QQ),方便我联系您!</string>
     <string name="hint_upload_log">上传程序错误日志,帮助我们改进吧。</string>
     <string name="send">发送</string>
     <string name="thanks_to_feedback">提交成功,感谢您的建议!</string>
     <string name="title_about">关于</string>
-    <string name="title_exit">退出账号</string>
+    <string name="title_exit">退出</string>
     <string name="setting">系统</string>
     <string name="check_update">检测更新</string>
     <string name="new_version">最新版本</string>
@@ -70,4 +70,7 @@
     <string name="tag_count_limit">标签最多%d个</string>
     <string name="tag_delete_tip">删除分组后，原组别数据还保留着，确定要删除吗？</string>
     <string name="tag_update_tip">组别变更后，原组别数据还保留着，确定要修改吗？</string>
+    <string name="confirm_to_exit">确定要退出吗？</string>
+    <string name="group_update_tip">长按标签可进行修改</string>
+    <string name="request_fail">请求失败</string>
 </resources>

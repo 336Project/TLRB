@@ -26,6 +26,9 @@ public class BmobUser extends BmobObject{
     }
 
     public String getSessionToken() {
+        if(sessionToken == null){
+            return "";
+        }
         return sessionToken;
     }
 
