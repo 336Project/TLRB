@@ -60,6 +60,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
         findViewById(R.id.btn_login).setOnClickListener(this);
         findViewById(R.id.iv_sina).setOnClickListener(this);
         findViewById(R.id.iv_qq).setOnClickListener(this);
+        findViewById(R.id.iv_weixin).setOnClickListener(this);
         mEditTextUserName = (EditText) findViewById(R.id.editText_username);
         mEditTextPassword = (EditText) findViewById(R.id.editText_password);
     }
@@ -85,6 +86,11 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
                 MobclickAgent.onEvent(LoginActivity.this, Constant.Event.EVENT_ID_LOGIN_QQ);
                 umShareAPI = UMShareAPI.get(RBApplication.getInstance());
                 umShareAPI.doOauthVerify(this, SHARE_MEDIA.QQ, this);
+                break;
+            case R.id.iv_weixin:
+                MobclickAgent.onEvent(LoginActivity.this, Constant.Event.EVENT_ID_LOGIN_WX);
+                umShareAPI = UMShareAPI.get(RBApplication.getInstance());
+                umShareAPI.doOauthVerify(this, SHARE_MEDIA.WEIXIN, this);
                 break;
         }
     }
@@ -191,6 +197,25 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
                 HLog.d("LoginActivity", "getUser--qq--onComplete" + " action = " + action + " map = " + map.toString());
                 String nickName = map.get("screen_name");
                 String portrait = map.get("profile_image_url");
+                loginWithAuth(nickName,portrait);
+            }
+        }else if(share_media == SHARE_MEDIA.WEIXIN){
+            if(action == 0){
+                HLog.d("LoginActivity", "doOauthVerify--weixin--onComplete" + " action = " + action + " map = " + map.toString());
+                String openid = map.get("openid");
+                String expires_in = map.get("expires_in");
+                String access_token = map.get("access_token");
+
+                mAuthData = new AuthData(AuthData.Platform.PLATFORM_WX);
+                mAuthData.setUid(openid);
+                mAuthData.setAccess_token(access_token);
+                mAuthData.setExpires_in(Long.valueOf(expires_in));
+
+                umShareAPI.getPlatformInfo(LoginActivity.this, SHARE_MEDIA.WEIXIN, this);
+            }else if(action == 2){
+                HLog.d("LoginActivity", "getUser--weixin--onComplete" + " action = " + action + " map = " + map.toString());
+                String nickName = map.get("nickname");
+                String portrait = map.get("headimgurl");
                 loginWithAuth(nickName,portrait);
             }
         }
