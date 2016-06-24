@@ -94,7 +94,8 @@ dependencies {
     //compile 'me.gujun.android.taggroup:library:1.4@aar'
     //友盟统计
     compile 'com.umeng.analytics:analytics:latest.integration'
-
     //Bmob
     //compile 'cn.bmob.android:bmob-sdk:3.4.7-aar'
+    //控件
+    compile 'com.pnikosis:materialish-progress:1.7'
 }

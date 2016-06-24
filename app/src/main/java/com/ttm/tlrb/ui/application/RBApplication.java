@@ -50,7 +50,7 @@ public class RBApplication extends Application{
         HCrashHandler.init(this);
         initFresco();
         initAD();
-        initPatchManager();
+//        initPatchManager();
         initUmeng();
         initSocial();
     }

@@ -5,7 +5,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
+import android.widget.EditText;
 
 import com.ttm.tlrb.R;
 import com.ttm.tlrb.api.APIManager;
@@ -15,7 +17,7 @@ import com.ttm.tlrb.ui.entity.Account;
 import com.ttm.tlrb.ui.entity.AuthData;
 import com.ttm.tlrb.utils.HLog;
 import com.ttm.tlrb.utils.ToastUtil;
-import com.ttm.tlrb.view.CleanableEditText;
+import com.ttm.tlrb.view.MaterialDialog;
 import com.umeng.analytics.MobclickAgent;
 import com.umeng.socialize.UMAuthListener;
 import com.umeng.socialize.UMShareAPI;
@@ -31,8 +33,9 @@ import rx.Subscriber;
 
 public class LoginActivity extends BaseActivity implements View.OnClickListener,UMAuthListener{
 
-    private CleanableEditText mEditTextUserName;
-    private CleanableEditText mEditTextPassword;
+    private EditText mEditTextUserName;
+    private EditText mEditTextPassword;
+    private MaterialDialog mMaterialDialog;
 
     public static void launcher(Context context){
         context.startActivity(new Intent(context,LoginActivity.class));
@@ -43,26 +46,26 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         initView();
+        initDialog();
+    }
+
+    private void initDialog() {
+        mMaterialDialog =new MaterialDialog(LoginActivity.this).setContentView(R.layout.material_dialog_login);
+        mMaterialDialog.setCanceledOnTouchOutside(true);
     }
 
     private void initView() {
-        findViewById(R.id.button).setOnClickListener(this);
         findViewById(R.id.textView_register).setOnClickListener(this);
         findViewById(R.id.btn_login).setOnClickListener(this);
         findViewById(R.id.iv_sina).setOnClickListener(this);
-        mEditTextUserName = (CleanableEditText) findViewById(R.id.editText_username);
-        mEditTextPassword = (CleanableEditText) findViewById(R.id.editText_password);
-
+        mEditTextUserName = (EditText) findViewById(R.id.editText_username);
+        mEditTextPassword = (EditText) findViewById(R.id.editText_password);
     }
     UMShareAPI umShareAPI;
     @Override
     public void onClick(View v) {
         Intent intent = new Intent();
         switch (v.getId()){
-            case R.id.button:
-                intent.setClass(this, MainActivity.class);
-                startActivity(intent);
-                break;
             case R.id.textView_register:
                 intent.setClass(this,RegisterActivity.class);
                 startActivity(intent);
@@ -107,8 +110,13 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
         }
         APIManager.getInstance().login(userName, password, new Subscriber<Account>() {
             @Override
-            public void onCompleted() {
+            public void onStart() {
+                super.onStart();
+                mMaterialDialog.show();
+            }
 
+            @Override
+            public void onCompleted() {
             }
             @Override
             public void onError(Throwable e) {
@@ -116,10 +124,12 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
                     HttpExceptionHandle handle = new HttpExceptionHandle((HttpException) e,LoginActivity.this);
                     handle.handle();
                 }
+                mMaterialDialog.dismiss();
             }
             @Override
             public void onNext(Account account) {
                 Log.e("success","success");
+                mMaterialDialog.dismiss();
                 loginSuccess();
             }
         });
@@ -159,6 +169,13 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
                         mAuthData.setUserNickname(nickName);
                         mAuthData.setUserPortrait(portrait);
                         APIManager.getInstance().loginWithAuthData(mAuthData, new Subscriber<Account>() {
+
+                            @Override
+                            public void onStart() {
+                                super.onStart();
+                                mMaterialDialog.show();
+                            }
+
                             @Override
                             public void onCompleted() {
 
@@ -166,11 +183,13 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
 
                             @Override
                             public void onError(Throwable e) {
+                                mMaterialDialog.dismiss();
                                 ToastUtil.showToast(LoginActivity.this,getString(R.string.auth_fail));
                             }
 
                             @Override
                             public void onNext(Account account) {
+                                mMaterialDialog.dismiss();
                                 loginSuccess();
                             }
                         });
@@ -189,6 +208,16 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
 
     @Override
     public void onCancel(SHARE_MEDIA share_media, int i) {
-        ToastUtil.showToast(LoginActivity.this,getString(R.string.cancel_auth));
+        ToastUtil.showToast(LoginActivity.this, getString(R.string.cancel_auth));
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if(keyCode ==KeyEvent.KEYCODE_BACK){
+            if(mMaterialDialog!=null){
+                mMaterialDialog.dismiss();
+            }
+        }
+        return super.onKeyDown(keyCode, event);
     }
 }
