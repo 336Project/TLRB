@@ -65,6 +65,12 @@ public interface APIService {
     /**添加单条数据**/
     @POST("1/classes/RedBomb")
     Observable<BmobObject> postRedBomb(@Body RequestBody data);
+    /**修改单条数据**/
+    @PUT("1/classes/RedBomb/{objectId}")
+    Observable<BmobObject> putRedBomb(@Path("objectId") String id,@Body RequestBody body);
+    /**删除分组*/
+    @DELETE("1/classes/RedBomb/{objectId}")
+    Observable<BmobObject> deleteRedBomb(@Path("objectId") String id);
     /**统计红包收入、支出*/
     @GET("1/classes/RedBomb")
     Observable<ResponseEn<Map<String,String>>> countRedBombMoney(@Query("sum") String sumColumn,@Query("groupby") String groupByColumn);
