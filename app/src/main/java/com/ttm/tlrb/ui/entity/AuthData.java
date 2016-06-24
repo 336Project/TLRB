@@ -70,7 +70,11 @@ public class AuthData extends BaseEn{
     public Map<String,Object> getAuthData(){
         Map<String,Object> platMap = new HashMap<>();
         Map<String,Object> map = new HashMap<>();
-        map.put("uid",getUid());
+        if(platform == Platform.PLATFORM_WB){
+            map.put("uid",getUid());
+        }else {
+            map.put("openid",getUid());
+        }
         map.put("access_token",getAccess_token());
         map.put("expires_in",getExpires_in());
         platMap.put(platform.getName(),map);

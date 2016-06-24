@@ -50,7 +50,7 @@ public class RBApplication extends Application{
         HCrashHandler.init(this);
         initFresco();
         initAD();
-//        initPatchManager();
+        initPatchManager();
         initUmeng();
         initSocial();
     }
@@ -60,7 +60,7 @@ public class RBApplication extends Application{
         Config.REDIRECT_URL = "http://sns.whalecloud.com/sina2/callback";
         PlatformConfig.setSinaWeibo("1248844603", "05a4661638e0973fab354c4561ee693f");
         //QQ
-        //PlatformConfig.setQQZone("1105419691","0Ap15PWrubt2QEzu");
+        PlatformConfig.setQQZone("1105419691","0Ap15PWrubt2QEzu");
         //微信
         //PlatformConfig.setWeixin("","");
     }
