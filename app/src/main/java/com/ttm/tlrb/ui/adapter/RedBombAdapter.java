@@ -16,14 +16,15 @@ import java.util.List;
  *
  */
 public class RedBombAdapter extends BaseRecyclerAdapter<RedBomb>{
-
+    private MyItemClickListener mItemClickListener;
     public RedBombAdapter(List<RedBomb> dataList) {
         super(dataList);
     }
 
     @Override
     protected RecyclerView.ViewHolder onCreateContentViewHolder(ViewGroup parent) {
-        return new RedBombViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.adapter_item_red_bomb,parent,false));
+        return new RedBombViewHolder(
+                LayoutInflater.from(parent.getContext()).inflate(R.layout.adapter_item_red_bomb,parent,false));
     }
 
     @Override
@@ -58,7 +59,7 @@ public class RedBombAdapter extends BaseRecyclerAdapter<RedBomb>{
 
     }
 
-    private class RedBombViewHolder extends RecyclerView.ViewHolder{
+    private class RedBombViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
         TextView mTextViewName;
         TextView mTextViewGroupName;
         TextView mTextViewTarget;
@@ -76,6 +77,27 @@ public class RedBombAdapter extends BaseRecyclerAdapter<RedBomb>{
             mTextViewMoney = (TextView) itemView.findViewById(R.id.item_money);
             mTextViewTime = (TextView) itemView.findViewById(R.id.item_time);
             mTextViewCreateTime = (TextView) itemView.findViewById(R.id.item_create_time);
+            itemView.setOnClickListener(this);
         }
+
+        @Override
+        public void onClick(View v) {
+            if(mItemClickListener != null){
+                mItemClickListener.onItemClick(v,getPosition());
+            }
+        }
+
+    }
+
+    /**
+     * 设置Item点击监听
+     * @param listener
+     */
+    public void setOnItemClickListener(MyItemClickListener listener){
+        this.mItemClickListener = listener;
+    }
+
+    public interface MyItemClickListener {
+        void onItemClick(View view,int postion);
     }
 }

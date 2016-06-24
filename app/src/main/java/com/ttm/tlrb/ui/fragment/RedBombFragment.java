@@ -1,21 +1,28 @@
 package com.ttm.tlrb.ui.fragment;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.ttm.tlrb.R;
 import com.ttm.tlrb.api.APIManager;
+import com.ttm.tlrb.ui.activity.AddRedBombActivity;
 import com.ttm.tlrb.ui.adapter.BaseRecyclerAdapter;
 import com.ttm.tlrb.ui.adapter.RedBombAdapter;
 import com.ttm.tlrb.ui.application.Constant;
 import com.ttm.tlrb.ui.entity.RedBomb;
+import com.ttm.tlrb.utils.MyToast;
 import com.ttm.tlrb.view.EmptyEmbeddedContainer;
 
 import java.util.ArrayList;
@@ -27,7 +34,8 @@ import rx.Subscriber;
  * Created by Helen on 2016/4/29.
  *
  */
-public class RedBombFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener,EmptyEmbeddedContainer.EmptyInterface{
+public class RedBombFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener,EmptyEmbeddedContainer.EmptyInterface,RedBombAdapter.MyItemClickListener {
+    public static final String REFRESH_INFORM="ui_fragment_redbombfragment_refresh";
     private List<RedBomb> mRedBombs = new ArrayList<>();
     private RedBombAdapter mAdapter;
     private SwipeRefreshLayout mRefreshLayout;
@@ -70,6 +78,7 @@ public class RedBombFragment extends Fragment implements SwipeRefreshLayout.OnRe
         mRecyclerView.setLayoutManager(linearLayoutManager);
         mAdapter = new RedBombAdapter(mRedBombs);
         mAdapter.setEmptyInterface(this);
+        mAdapter.setOnItemClickListener(this);
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             private int lastVisibleItem = -1;
@@ -101,6 +110,9 @@ public class RedBombFragment extends Fragment implements SwipeRefreshLayout.OnRe
         //背景
         mRefreshLayout.setProgressBackgroundColorSchemeResource(R.color.color_refresh_progress);
         mRefreshLayout.setOnRefreshListener(this);
+        IntentFilter counterActionFilter = new IntentFilter();
+        counterActionFilter.addAction(RedBombFragment.REFRESH_INFORM);
+        getActivity().registerReceiver(mReceiver, counterActionFilter);
     }
 
 
@@ -147,7 +159,7 @@ public class RedBombFragment extends Fragment implements SwipeRefreshLayout.OnRe
                 }
             };
         }
-        APIManager.getInstance().getRedBombList(type, page, Constant.PAGE_SIZE,subscriber);
+        APIManager.getInstance().getRedBombList(type, page, Constant.PAGE_SIZE, subscriber);
     }
 
     @Override
@@ -169,6 +181,26 @@ public class RedBombFragment extends Fragment implements SwipeRefreshLayout.OnRe
         mEmptyContainer.setType(EmptyEmbeddedContainer.EmptyStyle.EmptyStyle_LOADING);
         requestData();
     }
+
+    @Override
+    public void onItemClick(View view, int postion) {
+        Intent intent=new Intent(getActivity(), AddRedBombActivity.class);
+        intent.putExtra("redBomb",mRedBombs.get(postion));
+        getActivity().startActivity(intent);
+    }
+
+    private BroadcastReceiver mReceiver=new BroadcastReceiver() {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
+            if(action.equals(RedBombFragment.REFRESH_INFORM))
+            {
+                requestData();
+            }
+        }
+    };
+
 
     /*@Override
     public void onPause() {

@@ -7,6 +7,7 @@ import com.ttm.tlrb.api.APIManager;
 import com.ttm.tlrb.ui.application.RBApplication;
 import com.ttm.tlrb.ui.entity.Account;
 import com.ttm.tlrb.ui.entity.BmobACL;
+import com.ttm.tlrb.ui.entity.BmobObject;
 import com.ttm.tlrb.ui.entity.Category;
 import com.ttm.tlrb.ui.entity.RedBomb;
 import com.ttm.tlrb.utils.GsonUtil;

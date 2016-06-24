@@ -19,6 +19,7 @@ import com.ttm.tlrb.ui.entity.Category;
 import com.ttm.tlrb.ui.entity.FileBodyEn;
 import com.ttm.tlrb.ui.entity.RedBomb;
 import com.ttm.tlrb.ui.entity.ResponseEn;
+import com.ttm.tlrb.ui.entity.UpdateRedBomb;
 import com.ttm.tlrb.ui.entity.VersionInfo;
 import com.ttm.tlrb.utils.EnvironmentUtil;
 import com.ttm.tlrb.utils.GsonUtil;
@@ -211,8 +212,8 @@ public class APIManager {
                         Account a = new Account();
                         a.setObjectId(objectId);
                         BmobACL acl = new BmobACL();
-                        acl.setReadAccess(objectId,true);
-                        acl.setWriteAccess(objectId,true);
+                        acl.setReadAccess(objectId, true);
+                        acl.setWriteAccess(objectId, true);
                         a.setACL(acl);
                         updateUser(a, new Subscriber<BmobObject>() {
                             @Override
@@ -245,7 +246,7 @@ public class APIManager {
     public void updateUser(final Account account, Subscriber<BmobObject> subscriber){
         RequestBody body = RequestBody.create(Constant.JSON, account.getUpdateString());
         getAPIService()
-                .putUser(account.getObjectId(),body)
+                .putUser(account.getObjectId(), body)
                 /*.doOnNext(new Action1<BmobObject>() {
                     @Override
                     public void call(BmobObject object) {
@@ -267,6 +268,40 @@ public class APIManager {
 
         RequestBody body = RequestBody.create(Constant.JSON,redBomb.toString());
         getAPIService().postRedBomb(body)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(subscriber);
+    }
+
+    /**
+     * 修改红包数据到服务器
+     * @param redBomb 添加对象
+     * @param subscriber 回调监听
+     */
+    public void updateRedBomb(RedBomb redBomb, Subscriber<BmobObject> subscriber){
+        UpdateRedBomb updateRedBomb=new UpdateRedBomb();
+        updateRedBomb.setCategoryName(redBomb.getCategoryName());
+        updateRedBomb.setGift(redBomb.getGift());
+        updateRedBomb.setMoney(redBomb.getMoney());
+        updateRedBomb.setName(redBomb.getName());
+        updateRedBomb.setRemark(redBomb.getRemark());
+        updateRedBomb.setTarget(redBomb.getTarget());
+        updateRedBomb.setTime(redBomb.getTime());
+        updateRedBomb.setType(redBomb.getType());
+        updateRedBomb.setUserName(redBomb.getUserName());
+        RequestBody body = RequestBody.create(Constant.JSON,updateRedBomb.toString());
+        getAPIService().putRedBomb(redBomb.getObjectId(), body)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(subscriber);
+    }
+
+    /**
+     * 删除红包数据到服务器
+     * @param objectId 要删除的红包数据的id
+     */
+    public void deleteRedBomb(String objectId, Subscriber<BmobObject> subscriber){
+        getAPIService().deleteRedBomb(objectId)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(subscriber);

@@ -17,6 +17,7 @@ import com.ttm.tlrb.ui.application.Constant;
 import com.ttm.tlrb.ui.entity.BmobObject;
 import com.ttm.tlrb.ui.entity.Category;
 import com.ttm.tlrb.ui.entity.RedBomb;
+import com.ttm.tlrb.ui.fragment.RedBombFragment;
 import com.ttm.tlrb.utils.ToastUtil;
 import com.ttm.tlrb.view.DatePickerView;
 import com.umeng.analytics.MobclickAgent;
@@ -44,6 +45,7 @@ public class AddRedBombActivity extends TitlebarActivity implements View.OnClick
     private TextView mTvSpending;//支出
     private int target=1;//属于哪方
     private int IntOutType=1;//收入支出类型
+    private RedBomb redBomb;//列表传递过来的参数
 
     public static void launcher(Context context){
         context.startActivity(new Intent(context, AddRedBombActivity.class));
@@ -58,6 +60,7 @@ public class AddRedBombActivity extends TitlebarActivity implements View.OnClick
 
     private void initView(){
         setTitle("添加红包信息");
+        redBomb= (RedBomb) getIntent().getSerializableExtra("redBomb");
         mLayoutName=(TextInputLayout)findViewById(R.id.layout_name);
         mLayoutMoney=(TextInputLayout)findViewById(R.id.layout_money);
         mLayoutGift=(TextInputLayout)findViewById(R.id.layout_gift);
@@ -76,8 +79,27 @@ public class AddRedBombActivity extends TitlebarActivity implements View.OnClick
         findViewById(R.id.iv_time).setOnClickListener(this);
         mLayoutNote=(TextInputLayout)findViewById(R.id.layout_remark);
         findViewById(R.id.btn_commit).setOnClickListener(this);
+        findViewById(R.id.btn_update).setOnClickListener(this);
+        findViewById(R.id.btn_delete).setOnClickListener(this);
         findViewById(R.id.tv_addType).setOnClickListener(this);
         mSpAddType=(Spinner)findViewById(R.id.sp_addType);
+        if(redBomb!=null){
+            findViewById(R.id.btn_commit).setVisibility(View.GONE);
+            findViewById(R.id.layout_updateAndDelete).setVisibility(View.VISIBLE);
+            mLayoutName.getEditText().setText(redBomb.getName());
+            mLayoutMoney.getEditText().setText(redBomb.getMoney()+"");
+            mLayoutGift.getEditText().setText(redBomb.getGift());
+            mLayoutTime.getEditText().setText(redBomb.getTime());
+            mLayoutNote.getEditText().setText(redBomb.getRemark());
+            if(redBomb.getTarget()==2){
+                mTvWomen.performClick();
+            }else if(redBomb.getTarget()==3){
+                mTvAll.performClick();
+            }
+            if(redBomb.getType()==2){
+                mTvSpending.performClick();
+            }
+        }
         findAddType();
     }
 
@@ -96,9 +118,13 @@ public class AddRedBombActivity extends TitlebarActivity implements View.OnClick
 
             @Override
             public void onNext(List<Category> categories) {
+                int selection=0;
                 List<String> list = new ArrayList<String>();
                 for (int i=0;i<categories.size();i++){
-                    if(i==0){
+                    if(redBomb!=null&&redBomb.getCategoryName().equals(categories.get(i).getName())){
+                        type=categories.get(i).getName();
+                        selection=i;
+                    }else if(i==0){
                         type=categories.get(0).getName();
                     }
                     list.add(categories.get(i).getName());
@@ -109,7 +135,7 @@ public class AddRedBombActivity extends TitlebarActivity implements View.OnClick
                 mSpAddType.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                     @Override
                     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                        type=adapter.getItem(position);
+                        type = adapter.getItem(position);
                     }
 
                     @Override
@@ -117,20 +143,99 @@ public class AddRedBombActivity extends TitlebarActivity implements View.OnClick
 
                     }
                 });
+                mSpAddType.setSelection(selection);
             }
         });
     }
 
     //保存数据
     private void saveData(){
-        if(mLayoutMoney.getEditText().getText().toString().equals("")){
-            ToastUtil.showToast(AddRedBombActivity.this,"金额不能为空");
-            return;
-        }else if(Double.valueOf(mLayoutMoney.getEditText().getText().toString())<=0){
-            ToastUtil.showToast(AddRedBombActivity.this,"金额要大于0元");
+        RedBomb redBomb=new RedBomb();
+        if(checkInput(redBomb)==null){
             return;
         }
-        RedBomb redBomb=new RedBomb();
+        APIManager.getInstance().addRedBomb(redBomb, new Subscriber<BmobObject>() {
+            @Override
+            public void onCompleted() {
+                refreshFragmentInfrom();
+                ToastUtil.showToast(AddRedBombActivity.this, "添加成功");
+                finish();
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                ToastUtil.showToast(AddRedBombActivity.this, "保存数据失败，请重试");
+            }
+
+            @Override
+            public void onNext(BmobObject bmobObject) {
+
+            }
+        });
+    }
+
+    //更新数据
+    private void updateData(){
+        if(checkInput(redBomb)==null){
+            return;
+        }
+        APIManager.getInstance().updateRedBomb(redBomb, new Subscriber<BmobObject>() {
+            @Override
+            public void onCompleted() {
+                refreshFragmentInfrom();
+                ToastUtil.showToast(AddRedBombActivity.this, "修改数据成功");
+                finish();
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                ToastUtil.showToast(AddRedBombActivity.this, "修改数据失败，请重试");
+            }
+
+            @Override
+            public void onNext(BmobObject bmobObject) {
+
+            }
+        });
+    }
+
+    //删除数据
+    private void deleteData(){
+        APIManager.getInstance().deleteRedBomb(redBomb.getObjectId(), new Subscriber<BmobObject>() {
+            @Override
+            public void onCompleted() {
+                refreshFragmentInfrom();
+                ToastUtil.showToast(AddRedBombActivity.this, "删除成功");
+                finish();
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                ToastUtil.showToast(AddRedBombActivity.this, "删除数据失败，请重试");
+            }
+
+            @Override
+            public void onNext(BmobObject bmobObject) {
+
+            }
+        });
+    }
+
+    //更新片段中的信息
+    private void refreshFragmentInfrom(){
+        Intent intent=new Intent(RedBombFragment.REFRESH_INFORM);
+        sendBroadcast(intent);
+    }
+
+    //检查用户输入是否正确，并赋值redBomb
+    private RedBomb checkInput(RedBomb redBomb){
+        if(mLayoutMoney.getEditText().getText().toString().equals("")){
+            ToastUtil.showToast(AddRedBombActivity.this,"金额不能为空");
+            return null;
+        }else if(Double.valueOf(mLayoutMoney.getEditText().getText().toString())<=0){
+            ToastUtil.showToast(AddRedBombActivity.this,"金额要大于0元");
+            return null;
+        }
         redBomb.setName(mLayoutName.getEditText().getText().toString());
         redBomb.setMoney(Double.valueOf(mLayoutMoney.getEditText().getText().toString()));
         redBomb.setGift(mLayoutGift.getEditText().getText().toString());
@@ -139,25 +244,10 @@ public class AddRedBombActivity extends TitlebarActivity implements View.OnClick
         redBomb.setCategoryName(type);
         redBomb.setTime(mLayoutTime.getEditText().getText().toString());
         redBomb.setRemark(mLayoutNote.getEditText().getText().toString());
-        APIManager.getInstance().addRedBomb(redBomb, new Subscriber<BmobObject>() {
-            @Override
-            public void onCompleted() {
-                ToastUtil.showToast(AddRedBombActivity.this, "添加成功");
-                finish();
-            }
-
-            @Override
-            public void onError(Throwable e) {
-                ToastUtil.showToast(AddRedBombActivity.this, "注册错误，请重试");
-            }
-
-            @Override
-            public void onNext(BmobObject bmobObject) {
-                
-            }
-        });
+        return redBomb;
     }
 
+    //设置开始时间
     private void setStartDate() {
         Calendar c = Calendar.getInstance();
         int year = c.get(Calendar.YEAR);
@@ -198,6 +288,14 @@ public class AddRedBombActivity extends TitlebarActivity implements View.OnClick
             case R.id.btn_commit:
                 MobclickAgent.onEvent(AddRedBombActivity.this, Constant.Event.EVENT_ID_BOMB_ADD);
                 saveData();
+                break;
+            case R.id.btn_update:
+                MobclickAgent.onEvent(AddRedBombActivity.this, Constant.Event.EVENT_ID_BOMB_UPDATE);
+                updateData();
+                break;
+            case R.id.btn_delete:
+                MobclickAgent.onEvent(AddRedBombActivity.this, Constant.Event.EVENT_ID_BOMB_DELETE);
+                deleteData();
                 break;
             case R.id.iv_time:
                 setStartDate();
