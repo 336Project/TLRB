@@ -1,6 +1,8 @@
 package com.ttm.tlrb.ui.activity;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TextInputLayout;
@@ -20,6 +22,7 @@ import com.ttm.tlrb.ui.entity.RedBomb;
 import com.ttm.tlrb.ui.fragment.RedBombFragment;
 import com.ttm.tlrb.utils.ToastUtil;
 import com.ttm.tlrb.view.DatePickerView;
+import com.ttm.tlrb.view.MaterialDialog;
 import com.umeng.analytics.MobclickAgent;
 
 import java.util.ArrayList;
@@ -291,11 +294,41 @@ public class AddRedBombActivity extends TitlebarActivity implements View.OnClick
                 break;
             case R.id.btn_update:
                 MobclickAgent.onEvent(AddRedBombActivity.this, Constant.Event.EVENT_ID_BOMB_UPDATE);
-                updateData();
+                final MaterialDialog mMaterialDialog = new MaterialDialog(this);
+                mMaterialDialog.setTitle("提示");
+                mMaterialDialog.setMessage("您确定更新红包信息？");
+                mMaterialDialog.setPositiveButton("确定",new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        updateData();
+                    }
+                });
+                mMaterialDialog.setNegativeButton("取消", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        mMaterialDialog.dismiss();
+                    }
+                });
+                mMaterialDialog.show();
                 break;
             case R.id.btn_delete:
                 MobclickAgent.onEvent(AddRedBombActivity.this, Constant.Event.EVENT_ID_BOMB_DELETE);
-                deleteData();
+                final MaterialDialog deleteBuilder = new MaterialDialog(this);
+                deleteBuilder.setTitle("提示");
+                deleteBuilder.setMessage("您确定删除红包信息？");
+                deleteBuilder.setPositiveButton("确定", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        deleteData();
+                    }
+                });
+                deleteBuilder.setNegativeButton("取消", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        deleteBuilder.dismiss();
+                    }
+                });
+                deleteBuilder.show();
                 break;
             case R.id.iv_time:
                 setStartDate();
