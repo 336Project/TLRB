@@ -11,6 +11,7 @@ import com.ttm.tlrb.api.interceptor.NetworkInterceptor;
 import com.ttm.tlrb.ui.application.Constant;
 import com.ttm.tlrb.ui.application.RBApplication;
 import com.ttm.tlrb.ui.entity.Account;
+import com.ttm.tlrb.ui.entity.AuthData;
 import com.ttm.tlrb.ui.entity.BmobACL;
 import com.ttm.tlrb.ui.entity.BmobFile;
 import com.ttm.tlrb.ui.entity.BmobObject;
@@ -118,6 +119,67 @@ public class APIManager {
     }
 
     /**
+     * 授权登录
+     * @param authData 授权信息
+     * @param subscriber 回调
+     */
+    public void loginWithAuthData(final AuthData authData, Subscriber<Account> subscriber){
+        Map<String,Object> map = new HashMap<>();
+        map.put("authData",authData.getAuthData());
+        final RequestBody body = RequestBody.create(Constant.JSON,GsonUtil.fromMap2Json(map));
+        getAPIService().loginWithAuth(body)
+                .doOnNext(new Action1<Account>() {
+                    @Override
+                    public void call(Account account) {
+
+                        account.setNickname(authData.getUserNickname());
+                        account.setPortrait(authData.getUserPortrait());
+                        RBApplication.getInstance().setSession(account.getSessionToken());
+                        mUserManager.updateAccount(account);
+                        MobclickAgent.onProfileSignIn(account.getUsername());
+
+                        //修改用户信息
+                        String objectId = account.getObjectId();
+                        Account a = new Account();
+                        a.setNickname(account.getNickname());
+                        a.setPortrait(account.getPortrait());
+                        AuthData.Platform platform = authData.getPlatform();
+                        if(platform == AuthData.Platform.PLATFORM_WB){
+                            a.setType(1);
+                        }else if(platform == AuthData.Platform.PLATFORM_QQ){
+                            a.setType(3);
+                        }else if(platform == AuthData.Platform.PLATFORM_WX){
+                            a.setType(2);
+                        }
+                        a.setObjectId(objectId);
+                        BmobACL acl = new BmobACL();
+                        acl.setReadAccess(objectId,true);
+                        acl.setWriteAccess(objectId,true);
+                        a.setACL(acl);
+                        updateUser(a, new Subscriber<BmobObject>() {
+                            @Override
+                            public void onCompleted() {
+
+                            }
+
+                            @Override
+                            public void onError(Throwable e) {
+                                //do nothing
+                            }
+
+                            @Override
+                            public void onNext(BmobObject object) {
+                                //do nothing
+                            }
+                        });
+                    }
+                })
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(subscriber);
+    }
+
+    /**
      * 注册
      * @param account 用户对象
      * @param subscriber 回调
@@ -184,12 +246,12 @@ public class APIManager {
         RequestBody body = RequestBody.create(Constant.JSON, account.getUpdateString());
         getAPIService()
                 .putUser(account.getObjectId(),body)
-                .doOnNext(new Action1<BmobObject>() {
+                /*.doOnNext(new Action1<BmobObject>() {
                     @Override
                     public void call(BmobObject object) {
                         mUserManager.updateAccount(account);
                     }
-                })
+                })*/
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(subscriber);
@@ -542,6 +604,11 @@ public class APIManager {
                 .subscribe(subscriber);
     }
 
+    /**
+     * 删除组别
+     * @param objectId 组别id
+     * @param subscriber 回调
+     */
     public void deleteCategory(String objectId, Subscriber<BmobObject> subscriber){
         getAPIService().deleteCategory(objectId)
                 .subscribeOn(Schedulers.io())
@@ -571,7 +638,7 @@ public class APIManager {
                         if(categoryList != null && categoryList.size() > 0){
                             throw new CategoryExistException(name);
                         }
-                        Map<String,String> bodyMap = new HashMap<String, String>();
+                        Map<String,String> bodyMap = new HashMap<String,String>();
                         bodyMap.put("name",name);
                         RequestBody body = RequestBody.create(Constant.JSON,GsonUtil.fromMap2Json(bodyMap));
                         return getAPIService().putCategory(objectId,body);
