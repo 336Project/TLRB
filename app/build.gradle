@@ -41,11 +41,16 @@ android {
         }*/
     }
     buildTypes {
+        debug{
+            manifestPlaceholders = [UMENG_APPKEY_VALUE: "573ecc24e0f55aec6b000976"]
+        }
+
         release {
             minifyEnabled true
             shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.myConfig
+            manifestPlaceholders = [UMENG_APPKEY_VALUE: "576b3c8c67e58eaff4001e99"]
         }
     }
 
@@ -63,6 +68,7 @@ android {
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     testCompile 'junit:junit:4.12'
+    compile 'com.android.support:support-v4:23.3.0'
     compile 'com.android.support:appcompat-v7:23.3.0'
     compile 'com.android.support:design:23.3.0'
     compile 'io.reactivex:rxandroid:1.1.0'
@@ -88,4 +94,8 @@ dependencies {
     //compile 'me.gujun.android.taggroup:library:1.4@aar'
     //友盟统计
     compile 'com.umeng.analytics:analytics:latest.integration'
+    //Bmob
+    //compile 'cn.bmob.android:bmob-sdk:3.4.7-aar'
+    //控件
+    compile 'com.pnikosis:materialish-progress:1.7'
 }

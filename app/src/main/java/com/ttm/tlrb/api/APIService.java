@@ -34,6 +34,9 @@ public interface APIService {
     /**登录*/
     @GET("1/login")
     Observable<Account> login(@Query("username") String username, @Query("password") String password);
+    /**授权登录*/
+    @POST("1/users")
+    Observable<Account> loginWithAuth(@Body RequestBody body);
     /**注册*/
     @POST("1/users")
     Observable<Account> register(@Body RequestBody body);

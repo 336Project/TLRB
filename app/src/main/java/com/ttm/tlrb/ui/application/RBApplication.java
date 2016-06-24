@@ -11,6 +11,8 @@ import com.ttm.tlrb.BuildConfig;
 import com.ttm.tlrb.api.UserManager;
 import com.ttm.tlrb.utils.EnvironmentUtil;
 import com.umeng.analytics.MobclickAgent;
+import com.umeng.socialize.Config;
+import com.umeng.socialize.PlatformConfig;
 
 
 /**
@@ -48,14 +50,26 @@ public class RBApplication extends Application{
         HCrashHandler.init(this);
         initFresco();
         initAD();
-        initPatchManager();
+//        initPatchManager();
         initUmeng();
+        initSocial();
+    }
+
+    private void initSocial() {
+        //新浪微博
+        Config.REDIRECT_URL = "http://sns.whalecloud.com/sina2/callback";
+        PlatformConfig.setSinaWeibo("1248844603", "05a4661638e0973fab354c4561ee693f");
+        //QQ
+        //PlatformConfig.setQQZone("1105419691","0Ap15PWrubt2QEzu");
+        //微信
+        //PlatformConfig.setWeixin("","");
     }
 
     private void initUmeng() {
         MobclickAgent.setDebugMode(BuildConfig.DEBUG);
         //MobclickAgent.openActivityDurationTrack(false);
         MobclickAgent.enableEncrypt(true);
+        MobclickAgent.setCheckDevice(false);
         MobclickAgent.setScenarioType(this, MobclickAgent.EScenarioType.E_UM_NORMAL);
     }
 
