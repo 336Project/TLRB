@@ -53,9 +53,10 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     private RedBombFragment mSpendingFragment;
     private RedBombFragment mIncomeFragment;
 
-    public static void launcher(Context context){
-        context.startActivity(new Intent(context,MainActivity.class));
+    public static void launcher(Context context) {
+        context.startActivity(new Intent(context, MainActivity.class));
     }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -93,7 +94,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 
         initTabLayout();
         Account account = UserManager.getInstance().getAccount();
-        if(account != null){
+        if (account != null) {
             RBApplication.getInstance().setSession(account.getSessionToken());
             mHeaderView.setImageURI(Uri.parse(account.getPortrait()));
             mTextUserName.setText(account.getUsername());
@@ -101,6 +102,9 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         }
         counter();
         checkUpdate();
+
+        //location
+
     }
 
     private void initTabLayout(){
@@ -319,10 +323,10 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
             if(mAllInformFragment!=null&&mAllInformFragment.isAdded()){
                 mAllInformFragment.onRefresh();
             }
-            if(mIncomeFragment!=null&&mAllInformFragment.isAdded()){
+            if(mIncomeFragment!=null&&mIncomeFragment.isAdded()){
                 mIncomeFragment.onRefresh();
             }
-            if(mSpendingFragment!=null&&mAllInformFragment.isAdded()){
+            if(mSpendingFragment!=null&&mSpendingFragment.isAdded()){
                 mSpendingFragment.onRefresh();
             }
 //            initTabLayout();
