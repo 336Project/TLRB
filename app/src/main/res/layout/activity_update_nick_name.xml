@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#EFEFEF"
+    tools:context="com.ttm.tlrb.ui.activity.UserInfoActivity">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:background="@color/white"
+        >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:text="主页"
+            android:drawableLeft="@drawable/ic_back"
+            android:textSize="@dimen/font_20"
+            android:gravity="center_vertical"
+            android:textColor="@color/Black"
+            android:layout_gravity="center_vertical"
+            android:id="@+id/textView_back"
+            android:paddingRight="@dimen/font_16"
+            android:background="@drawable/userinfo_back"
+            />
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="#DFDFDF"></View>
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_marginTop="15dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp"
+        android:background="@color/white"
+        >
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/linearLayout_portrait"
+            >
+
+            <TextView
+                android:layout_height="wrap_content"
+                android:text="头像"
+                style="@style/UserInfoTextViewTitle"
+                />
+            <com.facebook.drawee.view.SimpleDraweeView
+                android:id="@+id/iv_portrait"
+                style="@style/style_circle_header"
+                android:layout_alignParentTop="true"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_marginTop="15dp"
+                android:layout_marginBottom="15dp"
+                />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/imageView"
+                style="@style/UserInfoImageView"
+                />
+        </LinearLayout>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#EFEFEF"
+            ></View>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/linearLayout_nick"
+            >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Nick Name"
+                android:id="@+id/textView_nick"
+                style="@style/UserInfoTextViewTitle"
+                />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="修改"
+                style="@style/UserInfoTextViewContent"
+                />
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                style="@style/UserInfoImageView"
+                />
+        </LinearLayout>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#EFEFEF"
+            ></View>
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/linearLayout_password"
+            >
+
+            <TextView
+                android:layout_height="wrap_content"
+                android:text="修改账户密码"
+                style="@style/UserInfoTextViewTitle"
+                />
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                style="@style/UserInfoImageView"
+                />
+        </LinearLayout>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#EFEFEF"
+            ></View>
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/linearLayout_phone"
+            >
+
+            <TextView
+                android:layout_height="wrap_content"
+                android:text="已绑定手机号"
+                style="@style/UserInfoTextViewTitle"
+                />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                style="@style/UserInfoTextViewContent"
+                android:id="@+id/textView_phone"
+                />
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                style="@style/UserInfoImageView"
+                />
+        </LinearLayout>
+    </LinearLayout>
+
+</LinearLayout>
