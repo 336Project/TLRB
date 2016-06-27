@@ -7,7 +7,6 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
@@ -44,7 +43,6 @@
         </activity>
         <activity
             android:name=".ui.activity.SplashActivity"
-
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
@@ -52,17 +50,25 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name=".ui.activity.RegisterActivity" android:screenOrientation="portrait">
+        <activity
+            android:name=".ui.activity.RegisterActivity"
+            android:screenOrientation="portrait">
         </activity>
-        <activity android:name=".ui.activity.LoginActivity" android:screenOrientation="portrait" android:launchMode="singleTop">
+        <activity
+            android:name=".ui.activity.LoginActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait">
         </activity>
-        <activity android:name=".ui.activity.GroupActivity" android:screenOrientation="portrait">
+        <activity
+            android:name=".ui.activity.GroupActivity"
+            android:screenOrientation="portrait">
         </activity>
-
+        <activity android:name=".ui.activity.UserInfoActivity" android:screenOrientation="portrait"/>
         <service android:name=".ui.service.DownloadService"/>
 
-        <!--有米广告-->
-        <!--<activity
+        <!-- 有米广告 -->
+        <!--
+        <activity
             android:name="net.youmi.android.AdBrowser"
             android:configChanges="keyboard|keyboardHidden|orientation|screenSize"
             android:theme="@android:style/Theme.Light.NoTitleBar" >
@@ -77,40 +83,46 @@
                 <action android:name="android.intent.action.PACKAGE_ADDED" />
                 <data android:scheme="package" />
             </intent-filter>
-        </receiver>-->
+        </receiver>
+        -->
 
-        <!--百度广告-->
-        <!--<meta-data	android:name="BaiduMobAd_APP_ID"	android:value="f57536be"/>-->
-        <activity android:name="com.baidu.mobads.AppActivity"
-                     android:configChanges="keyboard|keyboardHidden|orientation"
-                     android:theme="@android:style/Theme.Translucent.NoTitleBar" />
-        <!--新浪微博-->
+
+        <!-- 百度广告 -->
+        <!-- <meta-data	android:name="BaiduMobAd_APP_ID"	android:value="f57536be"/> -->
+        <activity
+            android:name="com.baidu.mobads.AppActivity"
+            android:configChanges="keyboard|keyboardHidden|orientation"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"/>
+        <!-- 新浪微博 -->
         <activity
             android:name="com.sina.weibo.sdk.component.WeiboSdkBrowser"
             android:configChanges="keyboardHidden|orientation"
-            android:windowSoftInputMode="adjustResize"
-            android:exported="false" >
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize">
         </activity>
+
         <service
             android:name="com.sina.weibo.sdk.net.DownloadService"
             android:exported="false"/>
-        <!--微信-->
+        <!-- 微信 -->
         <activity
             android:name=".wxapi.WXEntryActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:exported="true"
             android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
-        <!--qq-->
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"/>
+        <!-- qq -->
         <activity
             android:name="com.tencent.tauth.AuthActivity"
             android:launchMode="singleTask"
-            android:noHistory="true" >
+            android:noHistory="true">
             <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
-                <data android:scheme="tencent100424468" />
+                <action android:name="android.intent.action.VIEW"/>
+
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+
+                <data android:scheme="tencent100424468"/>
             </intent-filter>
         </activity>
         <activity
@@ -120,6 +132,7 @@
 
         <!--高德地图-->
         <service android:name="com.amap.api.location.APSService"/>
+
     </application>
 
 </manifest>

@@ -1,9 +1,6 @@
 package com.ttm.tlrb.ui.fragment;
 
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -22,8 +19,8 @@ import com.ttm.tlrb.ui.adapter.BaseRecyclerAdapter;
 import com.ttm.tlrb.ui.adapter.RedBombAdapter;
 import com.ttm.tlrb.ui.application.Constant;
 import com.ttm.tlrb.ui.entity.RedBomb;
-import com.ttm.tlrb.utils.MyToast;
 import com.ttm.tlrb.view.EmptyEmbeddedContainer;
+import com.umeng.analytics.MobclickAgent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,7 +32,7 @@ import rx.Subscriber;
  *
  */
 public class RedBombFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener,EmptyEmbeddedContainer.EmptyInterface,RedBombAdapter.MyItemClickListener {
-    public static final String REFRESH_INFORM="ui_fragment_redbombfragment_refresh";
+    public static final int GO_ADD_RED_BOMB=1001;//去添加红包界面
     private List<RedBomb> mRedBombs = new ArrayList<>();
     private RedBombAdapter mAdapter;
     private SwipeRefreshLayout mRefreshLayout;
@@ -110,9 +107,9 @@ public class RedBombFragment extends Fragment implements SwipeRefreshLayout.OnRe
         //背景
         mRefreshLayout.setProgressBackgroundColorSchemeResource(R.color.color_refresh_progress);
         mRefreshLayout.setOnRefreshListener(this);
-        IntentFilter counterActionFilter = new IntentFilter();
-        counterActionFilter.addAction(RedBombFragment.REFRESH_INFORM);
-        getActivity().registerReceiver(mReceiver, counterActionFilter);
+//        IntentFilter counterActionFilter = new IntentFilter();
+//        counterActionFilter.addAction(RedBombFragment.REFRESH_INFORM);
+//        getActivity().registerReceiver(mReceiver, counterActionFilter);
     }
 
 
@@ -184,12 +181,13 @@ public class RedBombFragment extends Fragment implements SwipeRefreshLayout.OnRe
 
     @Override
     public void onItemClick(View view, int postion) {
+        MobclickAgent.onEvent(getActivity(), Constant.Event.EVENT_ID_BOMB_LOOK);
         Intent intent=new Intent(getActivity(), AddRedBombActivity.class);
         intent.putExtra("redBomb",mRedBombs.get(postion));
-        getActivity().startActivity(intent);
+        getActivity().startActivityForResult(intent,GO_ADD_RED_BOMB);
     }
 
-    private BroadcastReceiver mReceiver=new BroadcastReceiver() {
+    /*private BroadcastReceiver mReceiver=new BroadcastReceiver() {
 
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -199,7 +197,7 @@ public class RedBombFragment extends Fragment implements SwipeRefreshLayout.OnRe
                 requestData();
             }
         }
-    };
+    };*/
 
 
     /*@Override
