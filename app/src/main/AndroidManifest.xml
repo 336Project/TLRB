@@ -9,6 +9,10 @@
     <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE"/>
+    <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE"/>
     <!--保持CPU 运转，屏幕和键盘灯有可能是关闭的,用于文件上传和下载 -->
     <uses-permission android:name="android.permission.WAKE_LOCK" />
 
@@ -21,6 +25,7 @@
         android:theme="@style/AppTheme.NoActionBar">
         <meta-data android:value="${UMENG_APPKEY_VALUE}" android:name="UMENG_APPKEY"/>
         <meta-data android:value="${UMENG_CHANNEL_VALUE}" android:name="UMENG_CHANNEL"/>
+        <meta-data android:name="com.amap.api.v2.apikey" android:value="2d71b810c4b24f3ff5ef7e6f02e272cf"/>
 
         <activity
             android:name=".ui.activity.MainActivity"
@@ -112,6 +117,9 @@
             android:name="com.tencent.connect.common.AssistActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+
+        <!--高德地图-->
+        <service android:name="com.amap.api.location.APSService"/>
     </application>
 
 </manifest>

@@ -42,7 +42,7 @@ import java.util.Map;
 
 import rx.Subscriber;
 
-public class MainActivity extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener{
+public class MainActivity extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener {
     private SimpleDraweeView mHeaderView;
     private TextView mTextUserName;
     private TextView mTextNickName;
@@ -50,9 +50,10 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     private TextView mTextOut;
 
 
-    public static void launcher(Context context){
-        context.startActivity(new Intent(context,MainActivity.class));
+    public static void launcher(Context context) {
+        context.startActivity(new Intent(context, MainActivity.class));
     }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -89,7 +90,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 
         initTabLayout();
         Account account = UserManager.getInstance().getAccount();
-        if(account != null){
+        if (account != null) {
             RBApplication.getInstance().setSession(account.getSessionToken());
             mHeaderView.setImageURI(Uri.parse(account.getPortrait()));
             mTextUserName.setText(account.getUsername());
@@ -97,6 +98,9 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         }
         counter();
         checkUpdate();
+
+        //location
+
     }
 
     private void initTabLayout(){

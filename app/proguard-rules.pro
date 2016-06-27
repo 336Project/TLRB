@@ -97,3 +97,10 @@ public static final int *;
     public static **[] values();
     public static ** valueOf(java.lang.String);
 }
+
+#高德地图
+-keep class com.amap.api.location.**{*;}
+
+-keep class com.amap.api.fence.**{*;}
+
+-keep class com.autonavi.aps.amapapi.model.**{*;}
