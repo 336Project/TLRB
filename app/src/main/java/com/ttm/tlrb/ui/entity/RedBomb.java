@@ -19,6 +19,42 @@ public class RedBomb extends BmobObject {
     private Double money;//金额
     private String gift;//随礼
     private String remark;//备注
+    private String province;//省
+    private String city;//市
+    private String district;//区
+    private BmobGeoPoint location;//地理位置点
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    public BmobGeoPoint getLocation() {
+        return location;
+    }
+
+    public void setLocation(BmobGeoPoint location) {
+        this.location = location;
+    }
+
+    public String getProvince() {
+        return province;
+    }
+
+    public void setProvince(String province) {
+        this.province = province;
+    }
+
+    public String getDistrict() {
+        return district;
+    }
+
+    public void setDistrict(String district) {
+        this.district = district;
+    }
 
     public String getUserName() {
         return userName;
