@@ -7,12 +7,18 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.ttm.tlrb.R;
+import com.ttm.tlrb.api.APIManager;
+import com.ttm.tlrb.api.e.HttpExceptionHandle;
 import com.ttm.tlrb.ui.application.Constant;
 import com.ttm.tlrb.ui.entity.Account;
+import com.ttm.tlrb.utils.ToastUtil;
 import com.umeng.analytics.MobclickAgent;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import retrofit2.adapter.rxjava.HttpException;
+import rx.Subscriber;
 
 public class RegisterActivity extends BaseActivity implements View.OnClickListener{
 
@@ -37,40 +43,30 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
         account.setUsername(mEditTextUsername.getText().toString().trim());
         account.setPassword(mEditTextPassword.getText().toString().trim());
 
-        String txt = mEditTextUsername.getText().toString();
-        Pattern p = Pattern.compile("[0-9]*");
-        Matcher m = p.matcher(txt);
-        if(m.matches() ){
-            Toast.makeText(RegisterActivity.this,"输入的是数字", Toast.LENGTH_SHORT).show();
-        }
-        p=Pattern.compile("[a-zA-Z0-9]");
-        m=p.matcher(txt);
+        String userName = mEditTextUsername.getText().toString();
+        Pattern p = Pattern.compile("[a-zA-Z0-9]");
+        Matcher m = p.matcher(userName);
         if(!m.matches()){
             Toast.makeText(RegisterActivity.this,"输入有中文", Toast.LENGTH_SHORT).show();
+            return;
         }
-//        p=Pattern.compile("[\u4e00-\u9fa5]");
-//        m=p.matcher(txt);
-//        if(m.matches()){
-//            Toast.makeText(RegisterActivity.this,"输入的是汉字", Toast.LENGTH_SHORT).show();
-//        }
-
-//        APIManager.getInstance().register(account, new Subscriber<Account>() {
-//            @Override
-//            public void onCompleted() {
-//            }
-//            @Override
-//            public void onError(Throwable e) {
-//                if(e instanceof HttpException){
-//                    HttpExceptionHandle handle = new HttpExceptionHandle((HttpException) e,RegisterActivity.this);
-//                    handle.handle();
-//                }
-//            }
-//            @Override
-//            public void onNext(Account account) {
-//                ToastUtil.showToast(RegisterActivity.this,"注册成功");
-//                finish();
-//            }
-//        });
+        APIManager.getInstance().register(account, new Subscriber<Account>() {
+            @Override
+            public void onCompleted() {
+            }
+            @Override
+            public void onError(Throwable e) {
+                if(e instanceof HttpException){
+                    HttpExceptionHandle handle = new HttpExceptionHandle((HttpException) e,RegisterActivity.this);
+                    handle.handle();
+                }
+            }
+            @Override
+            public void onNext(Account account) {
+                ToastUtil.showToast(RegisterActivity.this,"注册成功");
+                finish();
+            }
+        });
 
     }
     @Override

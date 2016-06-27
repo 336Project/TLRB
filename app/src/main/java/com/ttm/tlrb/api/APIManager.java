@@ -243,7 +243,7 @@ public class APIManager {
      * @param subscriber 回调
      */
     public void updateUser(final Account account, Subscriber<BmobObject> subscriber){
-        RequestBody body = RequestBody.create(Constant.JSON, account.getUpdateString());
+        RequestBody body = RequestBody.create(Constant.JSON, account.toString());
         getAPIService()
                 .putUser(account.getObjectId(), body)
                 /*.doOnNext(new Action1<BmobObject>() {
