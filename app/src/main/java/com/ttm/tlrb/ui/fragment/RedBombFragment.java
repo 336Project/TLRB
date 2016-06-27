@@ -183,8 +183,14 @@ public class RedBombFragment extends Fragment implements SwipeRefreshLayout.OnRe
     public void onItemClick(View view, int postion) {
         MobclickAgent.onEvent(getActivity(), Constant.Event.EVENT_ID_BOMB_LOOK);
         Intent intent=new Intent(getActivity(), AddRedBombActivity.class);
-        intent.putExtra("redBomb",mRedBombs.get(postion));
-        getActivity().startActivityForResult(intent,GO_ADD_RED_BOMB);
+        intent.putExtra("redBomb", mRedBombs.get(postion));
+        getActivity().startActivityForResult(intent, GO_ADD_RED_BOMB);
+    }
+
+    //添加红包数据后，进行更新数据
+    public void addNewInform(RedBomb redBomb){
+        mRedBombs.add(0,redBomb);
+        mAdapter.notifyDataSetChanged();
     }
 
     /*private BroadcastReceiver mReceiver=new BroadcastReceiver() {
