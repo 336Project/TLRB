@@ -43,7 +43,7 @@ import java.util.Map;
 
 import rx.Subscriber;
 
-public class MainActivity extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener{
+public class MainActivity extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener,View.OnClickListener{
     private SimpleDraweeView mHeaderView;
     private TextView mTextUserName;
     private TextView mTextNickName;
@@ -87,6 +87,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         mTextNickName = (TextView) header.findViewById(R.id.tv_nickname);
         mTextIn = (TextView) header.findViewById(R.id.tv_in);
         mTextOut = (TextView) header.findViewById(R.id.tv_out);
+        mHeaderView.setOnClickListener(this);
         mTextIn.setText("0");
         mTextOut.setText("0");
 
@@ -325,6 +326,17 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                 mSpendingFragment.onRefresh();
             }
 //            initTabLayout();
+        }
+    }
+
+    @Override
+    public void onClick(View v) {
+        Intent intent = new Intent();
+        switch (v.getId()){
+            case R.id.iv_portrait:
+                intent.setClass(MainActivity.this,UserInfoActivity.class);
+                startActivity(intent);
+                break;
         }
     }
 }

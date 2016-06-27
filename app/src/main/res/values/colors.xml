@@ -9,6 +9,7 @@
     <color name="alertdialog_line">#c6c6c6</color>
     <color name="trans_pop_blue">#408ed6</color>
     <color name="Black">#000000</color>
+    <color name="Gray">#A6A6A6</color>
     <!--RED 红色-->
     <color name="Red_50">#fde0dc</color>
     <color name="Red_100">#f9bdbb</color>
