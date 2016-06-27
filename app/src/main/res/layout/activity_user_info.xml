@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#EFEFEF"
+    tools:context="com.ttm.tlrb.ui.activity.UserInfoActivity">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:background="@color/white"
+        >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:text="主页"
+            android:drawableLeft="@drawable/ic_back"
+            android:textSize="@dimen/font_20"
+            android:gravity="center_vertical"
+            android:textColor="@color/Black"
+            android:layout_gravity="center_vertical"
+            android:id="@+id/textView2"
+            android:paddingRight="@dimen/font_16"
+            />
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="#DFDFDF"></View>
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_marginTop="15dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp"
+        >
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="头像"
+                android:id="@+id/textView3"/>
+            <com.facebook.drawee.view.SimpleDraweeView
+                android:id="@+id/iv_portrait"
+                style="@style/style_circle_header"
+                android:layout_alignParentTop="true"
+                />
+
+        </LinearLayout>
+    </LinearLayout>
+
+</LinearLayout>
