@@ -14,6 +14,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -48,7 +49,9 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     private TextView mTextNickName;
     private TextView mTextIn;
     private TextView mTextOut;
-
+    private RedBombFragment mAllInformFragment;
+    private RedBombFragment mSpendingFragment;
+    private RedBombFragment mIncomeFragment;
 
     public static void launcher(Context context){
         context.startActivity(new Intent(context,MainActivity.class));
@@ -101,9 +104,13 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 
     private void initTabLayout(){
         RedBombPagerAdapter pagerAdapter = new RedBombPagerAdapter(getSupportFragmentManager());
-        pagerAdapter.addFragment(RedBombFragment.newInstance(0),getString(R.string.action_all));
-        pagerAdapter.addFragment(RedBombFragment.newInstance(2),getString(R.string.action_out));
-        pagerAdapter.addFragment(RedBombFragment.newInstance(1),getString(R.string.action_in));
+        mAllInformFragment=RedBombFragment.newInstance(0);
+        Log.e("","");
+        mSpendingFragment=RedBombFragment.newInstance(2);
+        mIncomeFragment=RedBombFragment.newInstance(1);
+        pagerAdapter.addFragment(mAllInformFragment,getString(R.string.action_all));
+        pagerAdapter.addFragment(mSpendingFragment,getString(R.string.action_out));
+        pagerAdapter.addFragment(mIncomeFragment,getString(R.string.action_in));
         ViewPager viewPager = (ViewPager) findViewById(R.id.view_pager);
         viewPager.setAdapter(pagerAdapter);
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
@@ -304,4 +311,20 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         finish();
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(resultCode==AddRedBombActivity.REFRESH_REDBOMBFRAGMENT){
+            if(mAllInformFragment!=null&&mAllInformFragment.isAdded()){
+                mAllInformFragment.onRefresh();
+            }
+            if(mIncomeFragment!=null&&mAllInformFragment.isAdded()){
+                mIncomeFragment.onRefresh();
+            }
+            if(mSpendingFragment!=null&&mAllInformFragment.isAdded()){
+                mSpendingFragment.onRefresh();
+            }
+//            initTabLayout();
+        }
+    }
 }
