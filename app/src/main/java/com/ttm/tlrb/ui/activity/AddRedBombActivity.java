@@ -1,8 +1,6 @@
 package com.ttm.tlrb.ui.activity;
 
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TextInputLayout;
@@ -13,13 +11,19 @@ import android.widget.DatePicker;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.amap.api.location.AMapLocation;
+import com.amap.api.location.AMapLocationClient;
+import com.amap.api.location.AMapLocationClientOption;
+import com.amap.api.location.AMapLocationListener;
 import com.ttm.tlrb.R;
 import com.ttm.tlrb.api.APIManager;
 import com.ttm.tlrb.ui.application.Constant;
+import com.ttm.tlrb.ui.application.RBApplication;
+import com.ttm.tlrb.ui.entity.BmobGeoPoint;
 import com.ttm.tlrb.ui.entity.BmobObject;
 import com.ttm.tlrb.ui.entity.Category;
 import com.ttm.tlrb.ui.entity.RedBomb;
-import com.ttm.tlrb.ui.fragment.RedBombFragment;
+import com.ttm.tlrb.utils.HLog;
 import com.ttm.tlrb.utils.ToastUtil;
 import com.ttm.tlrb.view.DatePickerView;
 import com.ttm.tlrb.view.MaterialDialog;
@@ -31,7 +35,7 @@ import java.util.List;
 
 import rx.Subscriber;
 
-public class AddRedBombActivity extends TitlebarActivity implements View.OnClickListener{
+public class AddRedBombActivity extends TitlebarActivity implements View.OnClickListener,AMapLocationListener{
     public static final int GO_GROUP=1001;
     public static final int REFRESH_REDBOMBFRAGMENT=2001;
 
@@ -60,6 +64,7 @@ public class AddRedBombActivity extends TitlebarActivity implements View.OnClick
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_red_bomb);
         initView();
+        initLocation();
     }
 
     private void initView(){
@@ -242,6 +247,11 @@ public class AddRedBombActivity extends TitlebarActivity implements View.OnClick
         redBomb.setCategoryName(type);
         redBomb.setTime(mLayoutTime.getEditText().getText().toString());
         redBomb.setRemark(mLayoutNote.getEditText().getText().toString());
+        if(locationPoint != null){
+            redBomb.setDistrict(district);
+            redBomb.setProvince(province);
+            redBomb.setLocation(locationPoint);
+        }
         return redBomb;
     }
 
@@ -375,5 +385,86 @@ public class AddRedBombActivity extends TitlebarActivity implements View.OnClick
         if(requestCode==GO_GROUP){
             findAddType();
         }
+    }
+
+
+    private AMapLocationClient mLocationClient = null;
+    private void initLocation(){
+        //初始化定位
+        mLocationClient = new AMapLocationClient(RBApplication.getInstance());
+        //设置定位回调监听
+        mLocationClient.setLocationListener(this);
+        //初始化定位参数
+        AMapLocationClientOption mLocationOption = new AMapLocationClientOption();
+        //设置定位模式为高精度模式，Battery_Saving为低功耗模式，Device_Sensors是仅设备模式
+        mLocationOption.setLocationMode(AMapLocationClientOption.AMapLocationMode.Battery_Saving);
+        //设置是否返回地址信息（默认返回地址信息）
+        mLocationOption.setNeedAddress(true);
+        //设置是否只定位一次,默认为false
+        mLocationOption.setOnceLocation(true);
+        //设置是否强制刷新WIFI，默认为强制刷新
+        mLocationOption.setWifiActiveScan(true);
+        //设置是否允许模拟位置,默认为false，不允许模拟位置
+        mLocationOption.setMockEnable(false);
+        //设置定位间隔,单位毫秒,默认为2000ms
+        mLocationOption.setInterval(2000);
+        //给定位客户端对象设置定位参数
+        mLocationClient.setLocationOption(mLocationOption);
+        //启动定位
+        mLocationClient.startLocation();
+    }
+
+    private String province;
+    private String city;
+    private String district;
+    private BmobGeoPoint locationPoint;
+    @Override
+    public void onLocationChanged(AMapLocation amapLocation) {
+        if (amapLocation != null) {
+            if (amapLocation.getErrorCode() == 0) {
+
+                //定位成功回调信息，设置相关消息
+                amapLocation.getLocationType();//获取当前定位结果来源，如网络定位结果，详见定位类型表
+                double lat = amapLocation.getLatitude();//获取纬度
+                double lng = amapLocation.getLongitude();//获取经度
+
+                amapLocation.getAccuracy();//获取精度信息
+                amapLocation.getAddress();//地址，如果option中设置isNeedAddress为false，则没有此结果，网络定位结果中会有地址信息，GPS定位不返回地址信息。
+                amapLocation.getCountry();//国家信息
+                province = amapLocation.getProvince();//省信息
+                city = amapLocation.getCity();//城市信息
+                district = amapLocation.getDistrict();//城区信息
+                amapLocation.getStreet();//街道信息
+                amapLocation.getStreetNum();//街道门牌号信息
+                amapLocation.getCityCode();//城市编码
+                amapLocation.getAdCode();//地区编码
+                amapLocation.getAoiName();//获取当前定位点的AOI信息
+                if(lat <= 90.0D && lat >= -90.0D && lng <= 180.0D && lng >= -180.0D){
+                    locationPoint = new BmobGeoPoint(lng,lat);
+                }
+                HLog.d("onLocationChanged",amapLocation.toString());
+            } else {
+                //显示错误信息ErrCode是错误码，errInfo是错误信息，详见错误码表。
+                HLog.e("AmapError","location Error, ErrCode:"
+                        + amapLocation.getErrorCode() + ", errInfo:"
+                        + amapLocation.getErrorInfo());
+            }
+        }
+    }
+
+    @Override
+    protected void onStop() {
+        if(mLocationClient != null) {
+            mLocationClient.stopLocation();//停止定位
+        }
+        super.onStop();
+    }
+
+    @Override
+    protected void onDestroy() {
+        if(mLocationClient != null){
+            mLocationClient.onDestroy();//销毁定位客户端。
+        }
+        super.onDestroy();
     }
 }
