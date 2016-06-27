@@ -33,6 +33,7 @@ import rx.Subscriber;
 
 public class AddRedBombActivity extends TitlebarActivity implements View.OnClickListener{
     public static final int GO_GROUP=1001;
+    public static final int REFRESH_REDBOMBFRAGMENT=2001;
 
     private TextInputLayout mLayoutName;//姓名
     private TextInputLayout mLayoutGift;//随礼
@@ -62,7 +63,7 @@ public class AddRedBombActivity extends TitlebarActivity implements View.OnClick
     }
 
     private void initView(){
-        setTitle("添加红包信息");
+        setTitle("红包信息");
         redBomb= (RedBomb) getIntent().getSerializableExtra("redBomb");
         mLayoutName=(TextInputLayout)findViewById(R.id.layout_name);
         mLayoutMoney=(TextInputLayout)findViewById(R.id.layout_money);
@@ -160,7 +161,7 @@ public class AddRedBombActivity extends TitlebarActivity implements View.OnClick
         APIManager.getInstance().addRedBomb(redBomb, new Subscriber<BmobObject>() {
             @Override
             public void onCompleted() {
-                refreshFragmentInfrom();
+                setResult(REFRESH_REDBOMBFRAGMENT);
                 ToastUtil.showToast(AddRedBombActivity.this, "添加成功");
                 finish();
             }
@@ -185,7 +186,7 @@ public class AddRedBombActivity extends TitlebarActivity implements View.OnClick
         APIManager.getInstance().updateRedBomb(redBomb, new Subscriber<BmobObject>() {
             @Override
             public void onCompleted() {
-                refreshFragmentInfrom();
+                setResult(REFRESH_REDBOMBFRAGMENT);
                 ToastUtil.showToast(AddRedBombActivity.this, "修改数据成功");
                 finish();
             }
@@ -207,7 +208,7 @@ public class AddRedBombActivity extends TitlebarActivity implements View.OnClick
         APIManager.getInstance().deleteRedBomb(redBomb.getObjectId(), new Subscriber<BmobObject>() {
             @Override
             public void onCompleted() {
-                refreshFragmentInfrom();
+                setResult(REFRESH_REDBOMBFRAGMENT);
                 ToastUtil.showToast(AddRedBombActivity.this, "删除成功");
                 finish();
             }
@@ -222,12 +223,6 @@ public class AddRedBombActivity extends TitlebarActivity implements View.OnClick
 
             }
         });
-    }
-
-    //更新片段中的信息
-    private void refreshFragmentInfrom(){
-        Intent intent=new Intent(RedBombFragment.REFRESH_INFORM);
-        sendBroadcast(intent);
     }
 
     //检查用户输入是否正确，并赋值redBomb
