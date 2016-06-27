@@ -110,7 +110,6 @@ public class APIManager {
                         RBApplication.getInstance().setSession(account.getSessionToken());
                         mUserManager.updateAccount(account);
                         MobclickAgent.onProfileSignIn(account.getUsername());
-                        //MobclickAgent.onProfileSignIn("WB",account.getUsername());
                     }
                 })
                 .subscribeOn(Schedulers.io())
@@ -136,42 +135,49 @@ public class APIManager {
                         account.setPortrait(authData.getUserPortrait());
                         RBApplication.getInstance().setSession(account.getSessionToken());
                         mUserManager.updateAccount(account);
-                        MobclickAgent.onProfileSignIn(account.getUsername());
+                        //判断平台
+                        AuthData.Platform platform = authData.getPlatform();
+                        int type = 0;
+                        if(platform == AuthData.Platform.PLATFORM_WB){
+                            MobclickAgent.onProfileSignIn("WB",account.getUsername());
+                            type = 1;
+                        }else if(platform == AuthData.Platform.PLATFORM_QQ){
+                            MobclickAgent.onProfileSignIn("QQ",account.getUsername());
+                            type = 3;
+                        }else if(platform == AuthData.Platform.PLATFORM_WX){
+                            MobclickAgent.onProfileSignIn("WX",account.getUsername());
+                            type = 2;
+                        }
 
                         //修改用户信息
-                        String objectId = account.getObjectId();
-                        Account a = new Account();
-                        a.setNickname(account.getNickname());
-                        a.setPortrait(account.getPortrait());
-                        AuthData.Platform platform = authData.getPlatform();
-                        if(platform == AuthData.Platform.PLATFORM_WB){
-                            a.setType(1);
-                        }else if(platform == AuthData.Platform.PLATFORM_QQ){
-                            a.setType(3);
-                        }else if(platform == AuthData.Platform.PLATFORM_WX){
-                            a.setType(2);
+                        if(account.getACL() == null) {
+                            String objectId = account.getObjectId();
+                            Account a = new Account();
+                            a.setNickname(account.getNickname());
+                            a.setPortrait(account.getPortrait());
+                            a.setType(type);
+                            a.setObjectId(objectId);
+                            BmobACL acl = new BmobACL();
+                            acl.setReadAccess(objectId, true);
+                            acl.setWriteAccess(objectId, true);
+                            a.setACL(acl);
+                            updateUser(a, new Subscriber<BmobObject>() {
+                                @Override
+                                public void onCompleted() {
+
+                                }
+
+                                @Override
+                                public void onError(Throwable e) {
+                                    //do nothing
+                                }
+
+                                @Override
+                                public void onNext(BmobObject object) {
+                                    //do nothing
+                                }
+                            });
                         }
-                        a.setObjectId(objectId);
-                        BmobACL acl = new BmobACL();
-                        acl.setReadAccess(objectId,true);
-                        acl.setWriteAccess(objectId,true);
-                        a.setACL(acl);
-                        updateUser(a, new Subscriber<BmobObject>() {
-                            @Override
-                            public void onCompleted() {
-
-                            }
-
-                            @Override
-                            public void onError(Throwable e) {
-                                //do nothing
-                            }
-
-                            @Override
-                            public void onNext(BmobObject object) {
-                                //do nothing
-                            }
-                        });
                     }
                 })
                 .subscribeOn(Schedulers.io())
@@ -243,7 +249,7 @@ public class APIManager {
      * @param subscriber 回调
      */
     public void updateUser(final Account account, Subscriber<BmobObject> subscriber){
-        RequestBody body = RequestBody.create(Constant.JSON, account.getUpdateString());
+        RequestBody body = RequestBody.create(Constant.JSON, account.toString());
         getAPIService()
                 .putUser(account.getObjectId(), body)
                 /*.doOnNext(new Action1<BmobObject>() {

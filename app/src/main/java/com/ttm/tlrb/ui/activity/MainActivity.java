@@ -322,10 +322,10 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
             if(mAllInformFragment!=null&&mAllInformFragment.isAdded()){
                 mAllInformFragment.onRefresh();
             }
-            if(mIncomeFragment!=null&&mAllInformFragment.isAdded()){
+            if(mIncomeFragment!=null&&mIncomeFragment.isAdded()){
                 mIncomeFragment.onRefresh();
             }
-            if(mSpendingFragment!=null&&mAllInformFragment.isAdded()){
+            if(mSpendingFragment!=null&&mSpendingFragment.isAdded()){
                 mSpendingFragment.onRefresh();
             }
 //            initTabLayout();

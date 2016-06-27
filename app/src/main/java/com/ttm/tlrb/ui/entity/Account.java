@@ -44,7 +44,7 @@ public class Account extends BmobUser{
         return new Gson().toJson(this);
     }
 
-    public String getUpdateString(){//该方法用于更新用户时，上传服务器的json body
+    /*public String getUpdateString(){//该方法用于更新用户时，上传服务器的json body
         StringBuilder builder = new StringBuilder();
         builder.append("{");
 
@@ -70,5 +70,5 @@ public class Account extends BmobUser{
 
         builder.append("}");
         return builder.toString();
-    }
+    }*/
 }
