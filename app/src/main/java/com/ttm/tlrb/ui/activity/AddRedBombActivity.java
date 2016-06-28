@@ -256,6 +256,7 @@ public class AddRedBombActivity extends TitlebarActivity implements View.OnClick
         if(locationPoint != null){
             redBomb.setDistrict(district);
             redBomb.setProvince(province);
+            redBomb.setCity(city);
             redBomb.setLocation(locationPoint);
         }
         return redBomb;
