@@ -333,14 +333,19 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
             }
         }
         if(resultCode==AddRedBombActivity.ADD_INFORM){
+            RedBomb redBomb=(RedBomb) data.getSerializableExtra("redBomb");
             if(mAllInformFragment!=null&&mAllInformFragment.isAdded()){
-                mAllInformFragment.addNewInform((RedBomb) data.getSerializableExtra("redBomb"));
+                mAllInformFragment.addNewInform(redBomb);
             }
             if(mIncomeFragment!=null&&mIncomeFragment.isAdded()){
-                mIncomeFragment.addNewInform((RedBomb) data.getSerializableExtra("redBomb"));
+                if(redBomb.getType()==1){
+                    mIncomeFragment.addNewInform(redBomb);
+                }
             }
             if(mSpendingFragment!=null&&mSpendingFragment.isAdded()){
-                mSpendingFragment.addNewInform((RedBomb) data.getSerializableExtra("redBomb"));
+                if(redBomb.getType()==2){
+                    mSpendingFragment.addNewInform(redBomb);
+                }
             }
         }
     }
