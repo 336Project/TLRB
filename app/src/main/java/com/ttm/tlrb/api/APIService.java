@@ -71,7 +71,7 @@ public interface APIService {
     /**修改单条数据**/
     @PUT("1/classes/RedBomb/{objectId}")
     Observable<BmobObject> putRedBomb(@Path("objectId") String id,@Body RequestBody body);
-    /**删除分组*/
+    /**删除红包*/
     @DELETE("1/classes/RedBomb/{objectId}")
     Observable<BmobObject> deleteRedBomb(@Path("objectId") String id);
     /**统计红包收入、支出*/

@@ -66,7 +66,7 @@ public class AddRedBombActivity extends TitlebarActivity implements View.OnClick
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_red_bomb);
         initView();
-        initLocation();
+
     }
 
     private void initView(){
@@ -98,7 +98,7 @@ public class AddRedBombActivity extends TitlebarActivity implements View.OnClick
             findViewById(R.id.btn_commit).setVisibility(View.GONE);
             findViewById(R.id.layout_updateAndDelete).setVisibility(View.VISIBLE);
             mLayoutName.getEditText().setText(redBomb.getName());
-            mLayoutMoney.getEditText().setText(redBomb.getMoney()+"");
+            mLayoutMoney.getEditText().setText(String.valueOf(redBomb.getMoney()));
             mLayoutGift.getEditText().setText(redBomb.getGift());
             mLayoutTime.getEditText().setText(redBomb.getTime());
             mLayoutNote.getEditText().setText(redBomb.getRemark());
@@ -110,6 +110,9 @@ public class AddRedBombActivity extends TitlebarActivity implements View.OnClick
             if(redBomb.getType()==2){
                 mTvSpending.performClick();
             }
+        }else {
+            //添加的时候才需要定位
+            initLocation();
         }
         findAddType();
     }
