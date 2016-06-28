@@ -7,7 +7,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,7 +30,7 @@ import rx.Subscriber;
  * Created by Helen on 2016/4/29.
  *
  */
-public class RedBombFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener,EmptyEmbeddedContainer.EmptyInterface,RedBombAdapter.MyItemClickListener {
+public class RedBombFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener,EmptyEmbeddedContainer.EmptyInterface,RedBombAdapter.onItemClickListener {
     public static final int GO_ADD_RED_BOMB=1001;//去添加红包界面
     private List<RedBomb> mRedBombs = new ArrayList<>();
     private RedBombAdapter mAdapter;
@@ -180,10 +179,10 @@ public class RedBombFragment extends Fragment implements SwipeRefreshLayout.OnRe
     }
 
     @Override
-    public void onItemClick(View view, int postion) {
+    public void onItemClick(View view, int position) {
         MobclickAgent.onEvent(getActivity(), Constant.Event.EVENT_ID_BOMB_LOOK);
         Intent intent=new Intent(getActivity(), AddRedBombActivity.class);
-        intent.putExtra("redBomb", mRedBombs.get(postion));
+        intent.putExtra("redBomb", mRedBombs.get(position));
         getActivity().startActivityForResult(intent, GO_ADD_RED_BOMB);
     }
 
