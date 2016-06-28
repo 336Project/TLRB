@@ -44,7 +44,7 @@ import java.util.Map;
 import rx.Subscriber;
 
 public class MainActivity extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener,View.OnClickListener{
-    public static final int GO_ADD_RED_BOMB=1001;
+    public static final int GO_ADD_RED_BOMB=1002;
     private SimpleDraweeView mHeaderView;
     private TextView mTextUserName;
     private TextView mTextNickName;
