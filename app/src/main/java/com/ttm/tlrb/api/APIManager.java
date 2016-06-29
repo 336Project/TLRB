@@ -249,15 +249,17 @@ public class APIManager {
      * @param subscriber 回调
      */
     public void updateUser(final Account account, Subscriber<BmobObject> subscriber){
+        String id = account.getObjectId();
+        account.setObjectId(null);
         RequestBody body = RequestBody.create(Constant.JSON, account.toString());
         getAPIService()
-                .putUser(account.getObjectId(), body)
-//                .doOnNext(new Action1<BmobObject>() {
-//                    @Override
-//                    public void call(BmobObject object) {
-//                        mUserManager.updateAccount(account);
-//                    }
-//                })
+                .putUser(id, body)
+                /*.doOnNext(new Action1<BmobObject>() {
+                    @Override
+                    public void call(BmobObject object) {
+                        mUserManager.updateAccount(account);
+                    }
+                })*/
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(subscriber);
