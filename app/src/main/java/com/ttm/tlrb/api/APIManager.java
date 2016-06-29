@@ -252,12 +252,12 @@ public class APIManager {
         RequestBody body = RequestBody.create(Constant.JSON, account.toString());
         getAPIService()
                 .putUser(account.getObjectId(), body)
-                /*.doOnNext(new Action1<BmobObject>() {
-                    @Override
-                    public void call(BmobObject object) {
-                        mUserManager.updateAccount(account);
-                    }
-                })*/
+//                .doOnNext(new Action1<BmobObject>() {
+//                    @Override
+//                    public void call(BmobObject object) {
+//                        mUserManager.updateAccount(account);
+//                    }
+//                })
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(subscriber);

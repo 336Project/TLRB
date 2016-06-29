@@ -45,7 +45,7 @@
         >
 
         <EditText
-            android:id="@+id/editText"
+            android:id="@+id/editText_nick"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="请输入新的用户名"
@@ -54,7 +54,6 @@
             />
 
         <TextView
-            android:id="@+id/textView2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="限4-16个字符，一个汉字为两个字符"
@@ -63,7 +62,7 @@
             />
 
         <Button
-            android:id="@+id/btn_login"
+            android:id="@+id/btn_confirm"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/btn_login_selector"

@@ -1,5 +1,6 @@
 package com.ttm.tlrb.ui.activity;
 
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -46,12 +47,14 @@ public class UserInfoActivity extends AppCompatActivity implements View.OnClickL
 
     @Override
     public void onClick(View v) {
+        Intent intent = new Intent();
         switch (v.getId()) {
             case R.id.textView_back:
                 finish();
                 break;
             case R.id.linearLayout_nick:
-
+                intent.setClass(UserInfoActivity.this,UpdateNickNameActivity.class);
+                startActivity(intent);
                 break;
             case R.id.linearLayout_password:
                 break;
