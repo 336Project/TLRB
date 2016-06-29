@@ -70,6 +70,9 @@ public class MaterialDialog {
         mHasShow = true;
     }
 
+    public boolean isShow() {
+        return mAlertDialog!=null&&mAlertDialog.isShowing();
+    }
 
     public MaterialDialog setView(View view) {
         mView = view;
@@ -124,7 +127,9 @@ public class MaterialDialog {
 
 
     public void dismiss() {
-        mAlertDialog.dismiss();
+        if(mAlertDialog!=null && mAlertDialog.isShowing()) {
+            mAlertDialog.dismiss();
+        }
     }
 
 
@@ -344,7 +349,7 @@ public class MaterialDialog {
             if (mBackgroundDrawable != null) {
                 LinearLayout linearLayout = (LinearLayout) mAlertDialogWindow.findViewById(
                         R.id.material_background);
-                linearLayout.setBackground(mBackgroundDrawable);
+                linearLayout.setBackgroundDrawable(mBackgroundDrawable);
             }
 
             if (mMessageContentView != null) {
@@ -522,7 +527,7 @@ public class MaterialDialog {
         public void setBackground(Drawable drawable) {
             LinearLayout linearLayout = (LinearLayout) mAlertDialogWindow.findViewById(
                     R.id.material_background);
-            linearLayout.setBackground(drawable);
+            linearLayout.setBackgroundDrawable(drawable);
         }
 
 
