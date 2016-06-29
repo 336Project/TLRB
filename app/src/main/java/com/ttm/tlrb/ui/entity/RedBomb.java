@@ -105,6 +105,9 @@ public class RedBomb extends BmobObject {
     }
 
     public Double getMoney() {
+        if(money == null){
+            return 0d;
+        }
         return money;
     }
 

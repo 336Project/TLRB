@@ -44,6 +44,7 @@ import java.util.Map;
 import rx.Subscriber;
 
 public class MainActivity extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener,View.OnClickListener{
+    public static final int GO_ADD_RED_BOMB=1002;
     private SimpleDraweeView mHeaderView;
     private TextView mTextUserName;
     private TextView mTextNickName;
@@ -68,7 +69,8 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                AddRedBombActivity.launcher(MainActivity.this);
+                Intent intent=new Intent(MainActivity.this,AddRedBombActivity.class);
+                startActivityForResult(intent,GO_ADD_RED_BOMB);
             }
         });
 
@@ -329,7 +331,22 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
             if(mSpendingFragment!=null&&mSpendingFragment.isAdded()){
                 mSpendingFragment.onRefresh();
             }
-//            initTabLayout();
+        }
+        if(resultCode==AddRedBombActivity.ADD_INFORM){
+            RedBomb redBomb=(RedBomb) data.getSerializableExtra("redBomb");
+            if(mAllInformFragment!=null&&mAllInformFragment.isAdded()){
+                mAllInformFragment.addNewInform(redBomb);
+            }
+            if(mIncomeFragment!=null&&mIncomeFragment.isAdded()){
+                if(redBomb.getType()==1){
+                    mIncomeFragment.addNewInform(redBomb);
+                }
+            }
+            if(mSpendingFragment!=null&&mSpendingFragment.isAdded()){
+                if(redBomb.getType()==2){
+                    mSpendingFragment.addNewInform(redBomb);
+                }
+            }
         }
     }
 

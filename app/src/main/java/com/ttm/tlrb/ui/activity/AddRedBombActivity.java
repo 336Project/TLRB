@@ -38,6 +38,7 @@ import rx.Subscriber;
 public class AddRedBombActivity extends TitlebarActivity implements View.OnClickListener,AMapLocationListener{
     public static final int GO_GROUP=1001;
     public static final int REFRESH_REDBOMBFRAGMENT=2001;
+    public static final int ADD_INFORM=2002;
 
     private TextInputLayout mLayoutName;//姓名
     private TextInputLayout mLayoutGift;//随礼
@@ -54,6 +55,7 @@ public class AddRedBombActivity extends TitlebarActivity implements View.OnClick
     private int target=1;//属于哪方
     private int IntOutType=1;//收入支出类型
     private RedBomb redBomb;//列表传递过来的参数
+    private RedBomb mInputRedBomb=new RedBomb();
 
     public static void launcher(Context context){
         context.startActivity(new Intent(context, AddRedBombActivity.class));
@@ -64,7 +66,7 @@ public class AddRedBombActivity extends TitlebarActivity implements View.OnClick
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_red_bomb);
         initView();
-        initLocation();
+
     }
 
     private void initView(){
@@ -96,7 +98,7 @@ public class AddRedBombActivity extends TitlebarActivity implements View.OnClick
             findViewById(R.id.btn_commit).setVisibility(View.GONE);
             findViewById(R.id.layout_updateAndDelete).setVisibility(View.VISIBLE);
             mLayoutName.getEditText().setText(redBomb.getName());
-            mLayoutMoney.getEditText().setText(redBomb.getMoney()+"");
+            mLayoutMoney.getEditText().setText(String.valueOf(redBomb.getMoney()));
             mLayoutGift.getEditText().setText(redBomb.getGift());
             mLayoutTime.getEditText().setText(redBomb.getTime());
             mLayoutNote.getEditText().setText(redBomb.getRemark());
@@ -108,6 +110,9 @@ public class AddRedBombActivity extends TitlebarActivity implements View.OnClick
             if(redBomb.getType()==2){
                 mTvSpending.performClick();
             }
+        }else {
+            //添加的时候才需要定位
+            initLocation();
         }
         findAddType();
     }
@@ -159,14 +164,15 @@ public class AddRedBombActivity extends TitlebarActivity implements View.OnClick
 
     //保存数据
     private void saveData(){
-        RedBomb redBomb=new RedBomb();
-        if(checkInput(redBomb)==null){
+        if(checkInput(mInputRedBomb)==null){
             return;
         }
-        APIManager.getInstance().addRedBomb(redBomb, new Subscriber<BmobObject>() {
+        APIManager.getInstance().addRedBomb(mInputRedBomb, new Subscriber<BmobObject>() {
             @Override
             public void onCompleted() {
-                setResult(REFRESH_REDBOMBFRAGMENT);
+                Intent intent=new Intent();
+                intent.putExtra("redBomb",mInputRedBomb);
+                setResult(ADD_INFORM,intent);
                 ToastUtil.showToast(AddRedBombActivity.this, "添加成功");
                 finish();
             }
@@ -178,7 +184,10 @@ public class AddRedBombActivity extends TitlebarActivity implements View.OnClick
 
             @Override
             public void onNext(BmobObject bmobObject) {
-
+                mInputRedBomb.setObjectId(bmobObject.getObjectId());
+                mInputRedBomb.setACL(bmobObject.getACL());
+                mInputRedBomb.setCreatedAt(bmobObject.getCreatedAt());
+                mInputRedBomb.setUpdatedAt(bmobObject.getUpdatedAt());
             }
         });
     }
@@ -250,6 +259,7 @@ public class AddRedBombActivity extends TitlebarActivity implements View.OnClick
         if(locationPoint != null){
             redBomb.setDistrict(district);
             redBomb.setProvince(province);
+            redBomb.setCity(city);
             redBomb.setLocation(locationPoint);
         }
         return redBomb;

@@ -37,4 +37,5 @@
     <dimen name="actionBarSize">45dp</dimen>
 
     <dimen name="min_height">45dp</dimen>
+    <dimen name="card_radius">5dp</dimen>
 </resources>

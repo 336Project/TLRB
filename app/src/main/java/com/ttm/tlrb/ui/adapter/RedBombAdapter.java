@@ -16,7 +16,7 @@ import java.util.List;
  *
  */
 public class RedBombAdapter extends BaseRecyclerAdapter<RedBomb>{
-    private MyItemClickListener mItemClickListener;
+    private onItemClickListener mItemClickListener;
     public RedBombAdapter(List<RedBomb> dataList) {
         super(dataList);
     }
@@ -83,7 +83,7 @@ public class RedBombAdapter extends BaseRecyclerAdapter<RedBomb>{
         @Override
         public void onClick(View v) {
             if(mItemClickListener != null){
-                mItemClickListener.onItemClick(v,getPosition());
+                mItemClickListener.onItemClick(v,getAdapterPosition());
             }
         }
 
@@ -93,11 +93,11 @@ public class RedBombAdapter extends BaseRecyclerAdapter<RedBomb>{
      * 设置Item点击监听
      * @param listener
      */
-    public void setOnItemClickListener(MyItemClickListener listener){
+    public void setOnItemClickListener(onItemClickListener listener){
         this.mItemClickListener = listener;
     }
 
-    public interface MyItemClickListener {
-        void onItemClick(View view,int postion);
+    public interface onItemClickListener {
+        void onItemClick(View view,int position);
     }
 }
