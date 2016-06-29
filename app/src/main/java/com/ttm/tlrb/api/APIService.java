@@ -46,6 +46,9 @@ public interface APIService {
     /**更新用户*/
     @PUT("1/users/{objectId}")
     Observable<BmobObject> putUser(@Path("objectId") String id,@Body RequestBody body);
+    /**修改用户密码*/
+    @PUT("1/updateUserPassword/{objectId}")
+    Observable<BmobObject> putUserPassword(@Path("objectId") String id,@Body RequestBody body);
     /**文件上传**/
     @POST("2/files/{fileName}")
     Observable<FileBodyEn> postFileUpload(@Path("fileName") String fileName, @Body RequestBody file);
