@@ -16,7 +16,8 @@ public class UserInfoActivity extends AppCompatActivity implements View.OnClickL
     private SimpleDraweeView mHeaderView;
     private TextView mTextViewNick;
     private TextView mTextViewPhone;
-
+    private final int REQUEST_NICK = 0x001;
+    private final int REQUEST_PASSWORD = 0x001;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,6 +47,14 @@ public class UserInfoActivity extends AppCompatActivity implements View.OnClickL
     }
 
     @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == this.REQUEST_NICK){
+            mTextViewNick.setText(UserManager.getInstance().getAccount().getNickname());
+        }
+    }
+
+    @Override
     public void onClick(View v) {
         Intent intent = new Intent();
         switch (v.getId()) {
@@ -54,9 +63,11 @@ public class UserInfoActivity extends AppCompatActivity implements View.OnClickL
                 break;
             case R.id.linearLayout_nick:
                 intent.setClass(UserInfoActivity.this,UpdateNickNameActivity.class);
-                startActivity(intent);
+                startActivityForResult(intent,this.REQUEST_NICK);
                 break;
             case R.id.linearLayout_password:
+                intent.setClass(UserInfoActivity.this,UpdatePasswordActivity.class);
+                startActivityForResult(intent,this.REQUEST_PASSWORD);
                 break;
             case R.id.linearLayout_phone:
 
