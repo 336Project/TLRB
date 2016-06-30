@@ -2,7 +2,6 @@ package com.ttm.tlrb.ui.activity;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -42,6 +41,7 @@ public class UpdateNickNameActivity extends AppCompatActivity implements View.On
         mEditTextNick = (EditText) findViewById(R.id.editText_nick);
         findViewById(R.id.btn_confirm).setOnClickListener(this);
         mEditTextNick.setText(oldNickName);
+        findViewById(R.id.textView_back).setOnClickListener(this);
     }
     private void confirm(){
         String newNickName = mEditTextNick.getText().toString().trim();
@@ -88,7 +88,6 @@ public class UpdateNickNameActivity extends AppCompatActivity implements View.On
                 }
             };
         }
-        Log.e("sss","sss:"+ newAccount.getObjectId());
         APIManager.getInstance().updateUser(newAccount,mUpdateUserSubscriber);
     }
     public  int getWordCount(String s)

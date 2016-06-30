@@ -144,6 +144,8 @@
 
         <activity android:name=".ui.activity.UpdateNickNameActivity">
         </activity>
+        <activity android:name=".ui.activity.UpdatePasswordActivity">
+        </activity>
     </application>
 
 </manifest>
