@@ -2,7 +2,6 @@ package com.ttm.tlrb.api;
 
 
 import android.text.TextUtils;
-import android.util.Log;
 
 import com.ttm.tlrb.BuildConfig;
 import com.ttm.tlrb.api.e.CategoryExistException;
@@ -735,7 +734,14 @@ public class APIManager {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(subscriber);
     }*/
-    public void updatePicture(File file, Subscriber<String> subscriber,final Account account){
+
+    /**
+     * 更新头像
+     * @param accountId 用户id
+     * @param file 头像文件
+     * @param subscriber 回调
+     */
+    public void updatePicture(final String accountId,File file, Subscriber<BmobObject> subscriber){
         if(file == null){
             throw new NullPointerException("upload file not be null");
         }
@@ -753,41 +759,23 @@ public class APIManager {
         //构造RequestBody并发起请求
         RequestBody requestBody = RequestBody.create(mediaType,file);
         getAPIService().postFileUpload(fileName,requestBody)
-                .flatMap(new Func1<FileBodyEn, Observable<String>>() {
+                .map(new Func1<FileBodyEn, String>() {
                     @Override
-                    public Observable<String> call(FileBodyEn fileBodyEn) {
+                    public String call(FileBodyEn fileBodyEn) {
                         HLog.d("uploadFile",fileBodyEn.toString());
-                        String id = account.getObjectId();
-                        account.setObjectId(null);
-                        RequestBody body = RequestBody.create(Constant.JSON, account.toString());
-                        getAPIService()
-                                .putUser(id, body)
-                                .subscribeOn(Schedulers.io())
-                                .observeOn(AndroidSchedulers.mainThread())
-                                .subscribe(new Subscriber<BmobObject>() {
-                                    @Override
-                                    public void onCompleted() {
-                                    }
-                                    @Override
-                                    public void onError(Throwable e) {
-
-                                    }
-
-                                    @Override
-                                    public void onNext(BmobObject bmobObject) {
-                                        Log.e("ss","sss");
-                                    }
-                                });
-                        return null;
+                        return fileBodyEn.getUrl();
                     }
                 })
-//                .map(new Func1<FileBodyEn, String>() {
-//                    @Override
-//                    public String call(FileBodyEn fileBodyEn) {
-//                        HLog.d("uploadFile",fileBodyEn.toString());
-//                        return fileBodyEn.getUrl();
-//                    }
-//                })
+                .flatMap(new Func1<String, Observable<BmobObject>>() {
+                    @Override
+                    public Observable<BmobObject> call(String url) {
+                        Account account = new Account();
+                        account.setPortrait(url);
+                        RequestBody body = RequestBody.create(Constant.JSON, account.toString());
+                        return getAPIService().putUser(accountId, body);
+                    }
+                })
+
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(subscriber);
