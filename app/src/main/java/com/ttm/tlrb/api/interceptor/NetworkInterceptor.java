@@ -1,6 +1,7 @@
 package com.ttm.tlrb.api.interceptor;
 
 
+import com.ttm.tlrb.BuildConfig;
 import com.ttm.tlrb.ui.application.RBApplication;
 import com.ttm.tlrb.utils.EnvironmentUtil;
 import com.ttm.tlrb.utils.HLog;
@@ -22,8 +23,8 @@ public class NetworkInterceptor implements Interceptor {
     public Response intercept(Chain chain) throws IOException {
         Request request = chain.request();
         Request.Builder builder = request.newBuilder();
-        builder.addHeader("X-Bmob-Application-Id","c1aa552ec6d7639a92f11a362ff22b34");
-        builder.addHeader("X-Bmob-REST-API-Key","a93c8e5501c9f2ed942ae1cff46ccd77");
+        builder.addHeader("X-Bmob-Application-Id", BuildConfig.X_Bmob_Application_Id);
+        builder.addHeader("X-Bmob-REST-API-Key",BuildConfig.X_Bmob_REST_API_Key);
         builder.addHeader("X-Bmob-Session-Token", RBApplication.getInstance().getSession());
         if(!EnvironmentUtil.isNetworkConnected()){
             builder.cacheControl(CacheControl.FORCE_CACHE);
