@@ -61,6 +61,12 @@ public class APIManager {
     private Retrofit retrofit;
     private APIService apiService;
     private UserManager mUserManager;
+
+    public static String getPictureUrl() {
+        return pictureUrl;
+    }
+
+    private static String pictureUrl;
     private APIManager(){
         File cacheFile = new File(EnvironmentUtil.getCacheFile(), Constant.CACHE_HTTP);
         OkHttpClient.Builder builder = new OkHttpClient().newBuilder();
@@ -770,12 +776,12 @@ public class APIManager {
                     @Override
                     public Observable<BmobObject> call(String url) {
                         Account account = new Account();
+                        pictureUrl = url;
                         account.setPortrait(url);
                         RequestBody body = RequestBody.create(Constant.JSON, account.toString());
                         return getAPIService().putUser(accountId, body);
                     }
                 })
-
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(subscriber);

@@ -16,6 +16,7 @@ import com.ttm.tlrb.R;
 import com.ttm.tlrb.api.APIManager;
 import com.ttm.tlrb.api.UserManager;
 import com.ttm.tlrb.ui.entity.Account;
+import com.ttm.tlrb.ui.entity.BmobObject;
 import com.yancy.imageselector.ImageConfig;
 import com.yancy.imageselector.ImageSelector;
 import com.yancy.imageselector.ImageSelectorActivity;
@@ -32,6 +33,7 @@ public class UserInfoActivity extends AppCompatActivity implements View.OnClickL
     private ImageConfig mImageConfig;
     private final int REQUEST_NICK = 0x001;
     private final int REQUEST_PASSWORD = 0x001;
+    private String pictureUrl = "";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -91,7 +93,7 @@ public class UserInfoActivity extends AppCompatActivity implements View.OnClickL
     }
     private void inputPicture(String filePath){
         File file = new File(filePath);
-        Subscriber<String> mUpdatePictureSubscriber = new Subscriber<String>() {
+        Subscriber<BmobObject> mUpdatePictureSubscriber = new Subscriber<BmobObject>() {
             @Override
             public void onCompleted() {
             }
@@ -99,16 +101,19 @@ public class UserInfoActivity extends AppCompatActivity implements View.OnClickL
             public void onError(Throwable e) {
             }
             @Override
-            public void onNext(String s) {
-                Log.e("next","next");
-                mHeaderView.setImageURI(Uri.parse(s));
+            public void onNext(BmobObject bmobObject) {
+                Log.e("onNext","onNext");
+                Log.e("onNext","onNext"+APIManager.getInstance().getPictureUrl());
+                Account account = UserManager.getInstance().getAccount();
+                account.setPortrait(APIManager.getInstance().getPictureUrl());
+                UserManager.getInstance().updateAccount(account);
+                mHeaderView.setImageURI(Uri.parse(APIManager.getInstance().getPictureUrl()));
             }
         };
         Account account = UserManager.getInstance().getAccount();
         Account newAccount = new Account();
         newAccount.setObjectId(account.getObjectId());
-        APIManager.getInstance().updatePicture(file,mUpdatePictureSubscriber,newAccount);
-//        APIManager.getInstance().uploadFile(file,mUpdatePictureSubscriber);
+        APIManager.getInstance().updatePicture(account.getObjectId(),file,mUpdatePictureSubscriber);
     }
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
