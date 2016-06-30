@@ -111,7 +111,7 @@ public class ApplicationTest extends ApplicationTestCase<RBApplication> {
     public void testLogin() throws InterruptedException {
         APIManager.getInstance()
                 .getAPIService()
-                .login("test006","123456")
+                .login("test001","123456")
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Subscriber<Account>() {
@@ -177,6 +177,28 @@ public class ApplicationTest extends ApplicationTestCase<RBApplication> {
                         signal.countDown();
                     }
                 });
+        signal.await();
+    }
+
+    public void testUpdatePassword() throws InterruptedException {
+        RBApplication.getInstance().setSession("c65df57e40b26b2e80e858c5c799c9f6");
+        APIManager.getInstance().updateUserPassword("40b6c198a1", "123", "456", new Subscriber<BmobObject>() {
+            @Override
+            public void onCompleted() {
+
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                signal.countDown();
+            }
+
+            @Override
+            public void onNext(BmobObject bmobObject) {
+                System.out.println(bmobObject);
+                signal.countDown();
+            }
+        });
         signal.await();
     }
 

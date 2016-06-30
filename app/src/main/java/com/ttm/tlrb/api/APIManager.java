@@ -264,6 +264,24 @@ public class APIManager {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(subscriber);
     }
+
+    /**
+     * 修改密码
+     * @param userObjectId 用户ID
+     * @param oldPassword 旧密码
+     * @param newPassword 新密码
+     * @param subscriber 回调
+     */
+    public void updateUserPassword(String userObjectId,String oldPassword,String newPassword,Subscriber<BmobObject> subscriber){
+        Map<String,String> map = new HashMap<>();
+        map.put("oldPassword",oldPassword);
+        map.put("newPassword",newPassword);
+        RequestBody body = RequestBody.create(Constant.JSON, GsonUtil.fromMap2Json(map));
+        getAPIService().putUserPassword(userObjectId,body)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(subscriber);
+    }
     /**
      * 添加条红包数据到服务器
      * @param redBomb 添加对象
