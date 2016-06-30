@@ -41,23 +41,37 @@ android {
         }*/
     }
     buildTypes {
-        debug{
-            manifestPlaceholders = [UMENG_APPKEY_VALUE: "573ecc24e0f55aec6b000976"]
-        }
 
         release {
             minifyEnabled true
             shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.myConfig
-            manifestPlaceholders = [UMENG_APPKEY_VALUE: "576b3c8c67e58eaff4001e99"]
         }
     }
 
     productFlavors {
-        baidu {
-            manifestPlaceholders = [UMENG_CHANNEL_VALUE: "baidu"]
+        /**测试环境*/
+        dev{
+            buildConfigField "int","SERVER_TYPE","0"
+            buildConfigField "String","X_Bmob_Application_Id","\"c1aa552ec6d7639a92f11a362ff22b34\""
+            buildConfigField "String","X_Bmob_REST_API_Key","\"a93c8e5501c9f2ed942ae1cff46ccd77\""
+            manifestPlaceholders = [UMENG_CHANNEL_VALUE: "dev",UMENG_APPKEY_VALUE: "573ecc24e0f55aec6b000976"]
         }
+        /**正式环境*/
+        pro{
+            buildConfigField "int","SERVER_TYPE","1"
+            buildConfigField "String","X_Bmob_Application_Id","\"7886715d834d24b15f1b0947d51b0c6e\""
+            buildConfigField "String","X_Bmob_REST_API_Key","\"1487aca64c5144719d49ed9408bc6fa8\""
+            manifestPlaceholders = [UMENG_CHANNEL_VALUE: "product",UMENG_APPKEY_VALUE: "576b3c8c67e58eaff4001e99"]
+        }
+
+        /*baidu {
+            buildConfigField "int","SERVER_TYPE","1"
+            buildConfigField "String","X_Bmob_Application_Id","\"7886715d834d24b15f1b0947d51b0c6e\""
+            buildConfigField "String","X_Bmob_REST_API_Key","\"1487aca64c5144719d49ed9408bc6fa8\""
+            manifestPlaceholders = [UMENG_CHANNEL_VALUE: "baidu",UMENG_APPKEY_VALUE: "576b3c8c67e58eaff4001e99"]
+        }*/
     }
 
     lintOptions {
