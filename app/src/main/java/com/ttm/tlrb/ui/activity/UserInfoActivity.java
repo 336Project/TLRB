@@ -13,9 +13,6 @@ import com.ttm.tlrb.R;
 import com.ttm.tlrb.api.UserManager;
 import com.ttm.tlrb.ui.entity.Account;
 
-import io.valuesfeng.picker.Picker;
-import io.valuesfeng.picker.engine.GlideEngine;
-
 public class UserInfoActivity extends AppCompatActivity implements View.OnClickListener {
     private SimpleDraweeView mHeaderView;
     private TextView mTextViewNick;
@@ -27,6 +24,11 @@ public class UserInfoActivity extends AppCompatActivity implements View.OnClickL
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_info);
         initView();
+        initImageConfig();
+    }
+
+    private void initImageConfig() {
+
     }
 
     private void initView() {
@@ -75,11 +77,6 @@ public class UserInfoActivity extends AppCompatActivity implements View.OnClickL
                 break;
             case R.id.linearLayout_portrait:
                 Log.e("sdsd","sdsd");
-                Picker.from(this)
-                        .count(1)
-                        .enableCamera(true)
-                        .setEngine(new GlideEngine())
-                        .forResult(6464);
                 break;
 
         }
