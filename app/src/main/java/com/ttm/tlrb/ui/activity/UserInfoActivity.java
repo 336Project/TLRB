@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
@@ -11,6 +12,9 @@ import com.facebook.drawee.view.SimpleDraweeView;
 import com.ttm.tlrb.R;
 import com.ttm.tlrb.api.UserManager;
 import com.ttm.tlrb.ui.entity.Account;
+
+import io.valuesfeng.picker.Picker;
+import io.valuesfeng.picker.engine.GlideEngine;
 
 public class UserInfoActivity extends AppCompatActivity implements View.OnClickListener {
     private SimpleDraweeView mHeaderView;
@@ -27,13 +31,13 @@ public class UserInfoActivity extends AppCompatActivity implements View.OnClickL
 
     private void initView() {
         findViewById(R.id.textView_back).setOnClickListener(this);
+        findViewById(R.id.linearLayout_portrait).setOnClickListener(this);
         findViewById(R.id.linearLayout_nick).setOnClickListener(this);
         findViewById(R.id.linearLayout_password).setOnClickListener(this);
         findViewById(R.id.linearLayout_phone).setOnClickListener(this);
         mHeaderView = (SimpleDraweeView) findViewById(R.id.iv_portrait);
         mTextViewNick = (TextView) findViewById(R.id.textView_nick);
         mTextViewPhone = (TextView) findViewById(R.id.textView_phone);
-
         Account account = UserManager.getInstance().getAccount();
         if(account != null){
             mHeaderView.setImageURI(Uri.parse(account.getPortrait()));
@@ -69,8 +73,13 @@ public class UserInfoActivity extends AppCompatActivity implements View.OnClickL
                 intent.setClass(UserInfoActivity.this,UpdatePasswordActivity.class);
                 startActivityForResult(intent,this.REQUEST_PASSWORD);
                 break;
-            case R.id.linearLayout_phone:
-
+            case R.id.linearLayout_portrait:
+                Log.e("sdsd","sdsd");
+                Picker.from(this)
+                        .count(1)
+                        .enableCamera(true)
+                        .setEngine(new GlideEngine())
+                        .forResult(6464);
                 break;
 
         }
