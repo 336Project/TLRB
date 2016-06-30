@@ -97,4 +97,5 @@ dependencies {
     //compile 'cn.bmob.android:bmob-sdk:3.4.7-aar'
     //控件
     compile 'com.pnikosis:materialish-progress:1.7'
+    compile 'com.yancy.imageselector:imageselector:1.3.3'
 }
