@@ -2,6 +2,7 @@ package com.ttm.tlrb.api;
 
 
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.ttm.tlrb.BuildConfig;
 import com.ttm.tlrb.api.e.CategoryExistException;
@@ -710,7 +711,7 @@ public class APIManager {
 
     /**
      * 批量添加红包数据
-     * @param redBombs 添加对象
+//     * @param redBombs 添加对象
      * @param subscriber 回调监听
      *
      */
@@ -734,5 +735,61 @@ public class APIManager {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(subscriber);
     }*/
+    public void updatePicture(File file, Subscriber<String> subscriber,final Account account){
+        if(file == null){
+            throw new NullPointerException("upload file not be null");
+        }
+        HLog.d("uploadFile","File is exist " + file.exists());
+        //获取文件类型
+        FileNameMap fileNameMap = URLConnection.getFileNameMap();
+        String contentType = fileNameMap.getContentTypeFor(file.getAbsolutePath());
+        HLog.d("uploadFile","ContentType = " + contentType);
+        MediaType mediaType = MediaType.parse(contentType);
+        //生成文件名称
+        String name = file.getName();
+        int index = name.lastIndexOf(".");
+        String suffix = name.substring(index);
+        String fileName = MD5.toMd5(name)+suffix;
+        //构造RequestBody并发起请求
+        RequestBody requestBody = RequestBody.create(mediaType,file);
+        getAPIService().postFileUpload(fileName,requestBody)
+                .flatMap(new Func1<FileBodyEn, Observable<String>>() {
+                    @Override
+                    public Observable<String> call(FileBodyEn fileBodyEn) {
+                        HLog.d("uploadFile",fileBodyEn.toString());
+                        String id = account.getObjectId();
+                        account.setObjectId(null);
+                        RequestBody body = RequestBody.create(Constant.JSON, account.toString());
+                        getAPIService()
+                                .putUser(id, body)
+                                .subscribeOn(Schedulers.io())
+                                .observeOn(AndroidSchedulers.mainThread())
+                                .subscribe(new Subscriber<BmobObject>() {
+                                    @Override
+                                    public void onCompleted() {
+                                    }
+                                    @Override
+                                    public void onError(Throwable e) {
 
+                                    }
+
+                                    @Override
+                                    public void onNext(BmobObject bmobObject) {
+                                        Log.e("ss","sss");
+                                    }
+                                });
+                        return null;
+                    }
+                })
+//                .map(new Func1<FileBodyEn, String>() {
+//                    @Override
+//                    public String call(FileBodyEn fileBodyEn) {
+//                        HLog.d("uploadFile",fileBodyEn.toString());
+//                        return fileBodyEn.getUrl();
+//                    }
+//                })
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(subscriber);
+    }
 }
