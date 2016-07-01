@@ -10,7 +10,6 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.ttm.tlrb.R;
 import com.ttm.tlrb.api.APIManager;
@@ -62,12 +61,10 @@ public class UserInfoActivity extends AppCompatActivity implements View.OnClickL
     class FrescoLoad implements com.yancy.imageselector.ImageLoader {
 
         @Override
-        public void displayImage(Context context, String path, ImageView imageView) {
-            Glide.with(context)
-                    .load(path)
-                    .placeholder(com.yancy.imageselector.R.mipmap.imageselector_photo)
-                    .centerCrop()
-                    .into(imageView);
+        public void displayImage(Context context, String path, final ImageView imageView) {
+            SimpleDraweeView image = (SimpleDraweeView) imageView;
+            File file = new File(path);
+            image.setImageURI(Uri.fromFile(file));
         }
 
     }
@@ -152,7 +149,6 @@ public class UserInfoActivity extends AppCompatActivity implements View.OnClickL
                 startActivityForResult(intent,this.REQUEST_PASSWORD);
                 break;
             case R.id.linearLayout_portrait:
-                Log.e("sdsd","sdsd");
                 ImageSelector.open(UserInfoActivity.this, mImageConfig);   // 开启图片选择器
                 break;
         }
