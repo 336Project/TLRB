@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
@@ -25,7 +24,7 @@ import java.util.List;
 
 import rx.Subscriber;
 
-public class UserInfoActivity extends AppCompatActivity implements View.OnClickListener {
+public class UserInfoActivity extends TitlebarActivity implements View.OnClickListener {
     private SimpleDraweeView mHeaderView;
     private TextView mTextViewNick;
     private TextView mTextViewPhone;
@@ -37,6 +36,7 @@ public class UserInfoActivity extends AppCompatActivity implements View.OnClickL
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_info);
+        setTitle("我的");
         initView();
         initImageConfig();
     }
@@ -69,7 +69,6 @@ public class UserInfoActivity extends AppCompatActivity implements View.OnClickL
 
     }
     private void initView() {
-        findViewById(R.id.textView_back).setOnClickListener(this);
         findViewById(R.id.linearLayout_portrait).setOnClickListener(this);
         findViewById(R.id.linearLayout_nick).setOnClickListener(this);
         findViewById(R.id.linearLayout_password).setOnClickListener(this);
@@ -137,9 +136,6 @@ public class UserInfoActivity extends AppCompatActivity implements View.OnClickL
     public void onClick(View v) {
         Intent intent = new Intent();
         switch (v.getId()) {
-            case R.id.textView_back:
-                finish();
-                break;
             case R.id.linearLayout_nick:
                 intent.setClass(UserInfoActivity.this,UpdateNickNameActivity.class);
                 startActivityForResult(intent,this.REQUEST_NICK);

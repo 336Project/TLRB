@@ -1,7 +1,6 @@
 package com.ttm.tlrb.ui.activity;
 
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -20,7 +19,7 @@ import java.util.regex.Pattern;
 import retrofit2.adapter.rxjava.HttpException;
 import rx.Subscriber;
 
-public class UpdateNickNameActivity extends AppCompatActivity implements View.OnClickListener{
+public class UpdateNickNameActivity extends TitlebarActivity implements View.OnClickListener{
 
     private EditText mEditTextNick;
     private Account mAccount;
@@ -29,6 +28,7 @@ public class UpdateNickNameActivity extends AppCompatActivity implements View.On
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_update_nick_name);
+        setTitle("修改昵称");
         initView();
     }
 
@@ -41,7 +41,6 @@ public class UpdateNickNameActivity extends AppCompatActivity implements View.On
         mEditTextNick = (EditText) findViewById(R.id.editText_nick);
         findViewById(R.id.btn_confirm).setOnClickListener(this);
         mEditTextNick.setText(oldNickName);
-        findViewById(R.id.textView_back).setOnClickListener(this);
     }
     private void confirm(){
         String newNickName = mEditTextNick.getText().toString().trim();
@@ -99,9 +98,6 @@ public class UpdateNickNameActivity extends AppCompatActivity implements View.On
     @Override
     public void onClick(View v) {
         switch (v.getId()){
-            case R.id.textView_back:
-                finish();
-                break;
             case R.id.btn_confirm:
                 confirm();
                 break;

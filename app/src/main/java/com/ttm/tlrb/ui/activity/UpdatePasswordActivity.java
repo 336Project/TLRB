@@ -1,7 +1,6 @@
 package com.ttm.tlrb.ui.activity;
 
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.EditText;
 
@@ -19,7 +18,7 @@ import java.util.regex.Pattern;
 import retrofit2.adapter.rxjava.HttpException;
 import rx.Subscriber;
 
-public class UpdatePasswordActivity extends AppCompatActivity implements View.OnClickListener {
+public class UpdatePasswordActivity extends TitlebarActivity implements View.OnClickListener {
     private EditText mEditTextOldPassword;
     private EditText mEditTextNewPassword;
     private EditText mEditTextAgainPassword;
@@ -28,11 +27,11 @@ public class UpdatePasswordActivity extends AppCompatActivity implements View.On
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_update_password);
+        setTitle("修改密码");
         initView();
     }
 
     private void initView() {
-        findViewById(R.id.textView_back).setOnClickListener(this);
         findViewById(R.id.btn_confirm).setOnClickListener(this);
         mEditTextOldPassword = (EditText) findViewById(R.id.editText_oldPassword);
         mEditTextNewPassword = (EditText) findViewById(R.id.editText_newPassword);
@@ -100,9 +99,6 @@ public class UpdatePasswordActivity extends AppCompatActivity implements View.On
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.textView_back:
-                finish();
-                break;
             case R.id.btn_confirm:
                 updatePassword();
                 break;

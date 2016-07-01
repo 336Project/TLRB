@@ -32,7 +32,7 @@ dependencies {
     //fresco
     compile 'com.facebook.fresco:fresco:0.10.0'
     // If your app supports Android versions before Ice Cream Sandwich (API level 14)
-    compile 'com.facebook.fresco:animated-base-support:0.10.0'
+    //compile 'com.facebook.fresco:animated-base-support:0.10.0'
     // For animated GIF support
     compile 'com.facebook.fresco:animated-gif:0.10.0'
     // For WebP support, including animated WebP

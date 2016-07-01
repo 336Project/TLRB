@@ -100,10 +100,10 @@
         <item name="android:layout_width">80dp</item>
         <item name="android:layout_height">80dp</item>
         <item name="roundingBorderColor">@color/white</item>
-        <item name="placeholderImage">@drawable/icon_portrait</item>
+        <item name="placeholderImage">@drawable/icon_user</item>
         <item name="placeholderImageScaleType">fitXY</item>
         <item name="actualImageScaleType">fitXY</item>
-        <item name="failureImage">@drawable/icon_portrait</item>
+        <item name="failureImage">@drawable/icon_user</item>
         <item name="failureImageScaleType">fitXY</item>
         <item name="roundAsCircle">true</item>
         <!--<item name="roundingBorderWidth">1dp</item>-->
