@@ -72,6 +72,10 @@
         <activity
             android:name=".ui.activity.UserInfoActivity"
             android:screenOrientation="portrait"/>
+        <activity android:name=".ui.activity.UpdateNickNameActivity" android:screenOrientation="portrait">
+        </activity>
+        <activity android:name=".ui.activity.UpdatePasswordActivity" android:screenOrientation="portrait">
+        </activity>
 
         <service android:name=".ui.service.DownloadService"/>
 
@@ -110,9 +114,9 @@
             android:windowSoftInputMode="adjustResize">
         </activity>
 
-        <service
+        <!--<service
             android:name="com.sina.weibo.sdk.net.DownloadService"
-            android:exported="false"/>
+            android:exported="false"/>-->
         <!-- 微信 -->
         <activity
             android:name=".wxapi.WXEntryActivity"
@@ -142,10 +146,6 @@
         <!-- 高德地图 -->
         <service android:name="com.amap.api.location.APSService"/>
 
-        <activity android:name=".ui.activity.UpdateNickNameActivity">
-        </activity>
-        <activity android:name=".ui.activity.UpdatePasswordActivity">
-        </activity>
     </application>
 
 </manifest>

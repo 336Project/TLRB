@@ -129,6 +129,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
             }
             @Override
             public void onError(Throwable e) {
+                System.out.println(Log.getStackTraceString(e));
                 if(e instanceof HttpException){
                     HttpExceptionHandle handle = new HttpExceptionHandle((HttpException) e,LoginActivity.this);
                     handle.handle();
@@ -137,7 +138,6 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
             }
             @Override
             public void onNext(Account account) {
-                Log.e("success","success");
                 mMaterialDialog.dismiss();
                 loginSuccess();
             }

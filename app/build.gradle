@@ -56,6 +56,7 @@ android {
             buildConfigField "int","SERVER_TYPE","0"
             buildConfigField "String","X_Bmob_Application_Id","\"c1aa552ec6d7639a92f11a362ff22b34\""
             buildConfigField "String","X_Bmob_REST_API_Key","\"a93c8e5501c9f2ed942ae1cff46ccd77\""
+            buildConfigField "String","BASE_DOWNLOAD_FILE_URL","\"http://bmob-cdn-2106.b0.upaiyun.com/\""
             manifestPlaceholders = [UMENG_CHANNEL_VALUE: "dev",UMENG_APPKEY_VALUE: "573ecc24e0f55aec6b000976"]
         }
         /**正式环境*/
@@ -63,6 +64,7 @@ android {
             buildConfigField "int","SERVER_TYPE","1"
             buildConfigField "String","X_Bmob_Application_Id","\"7886715d834d24b15f1b0947d51b0c6e\""
             buildConfigField "String","X_Bmob_REST_API_Key","\"1487aca64c5144719d49ed9408bc6fa8\""
+            buildConfigField "String","BASE_DOWNLOAD_FILE_URL","\"http://bmob-cdn-3839.b0.upaiyun.com/\""
             manifestPlaceholders = [UMENG_CHANNEL_VALUE: "product",UMENG_APPKEY_VALUE: "576b3c8c67e58eaff4001e99"]
         }
 
@@ -82,7 +84,6 @@ dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     testCompile 'junit:junit:4.12'
     compile 'com.android.support:support-v4:23.3.0'
-    compile 'com.android.support:appcompat-v7:23.3.0'
     compile 'com.android.support:design:23.3.0'
     compile 'io.reactivex:rxandroid:1.1.0'
     compile 'io.reactivex:rxjava:1.1.0'

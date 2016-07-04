@@ -62,7 +62,7 @@ public class RBApplication extends Application{
         //QQ
         PlatformConfig.setQQZone("1105419691","0Ap15PWrubt2QEzu");
         //微信
-        PlatformConfig.setWeixin("","");
+        PlatformConfig.setWeixin("wxcdc197b98763f77c","d438ff02585a119e1870482b85dc8460");
     }
 
     private void initUmeng() {
