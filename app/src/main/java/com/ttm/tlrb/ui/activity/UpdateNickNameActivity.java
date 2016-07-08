@@ -3,7 +3,6 @@ package com.ttm.tlrb.ui.activity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import com.ttm.tlrb.R;
 import com.ttm.tlrb.api.APIManager;
@@ -12,9 +11,6 @@ import com.ttm.tlrb.api.e.HttpExceptionHandle;
 import com.ttm.tlrb.ui.entity.Account;
 import com.ttm.tlrb.ui.entity.BmobObject;
 import com.ttm.tlrb.utils.ToastUtil;
-
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import retrofit2.adapter.rxjava.HttpException;
 import rx.Subscriber;
@@ -52,7 +48,7 @@ public class UpdateNickNameActivity extends TitlebarActivity implements View.OnC
             ToastUtil.showToast(UpdateNickNameActivity.this,"用户名不能为空，请重新输入");
             return;
         }
-        Pattern p = Pattern.compile("[A-Za-z0-9_\\-\\u4e00-\\u9fa5]+");
+        /*Pattern p = Pattern.compile("[A-Za-z0-9_\\-\\u4e00-\\u9fa5]+");
         Matcher m = p.matcher(newNickName);
         if(!m.matches()){
             Toast.makeText(UpdateNickNameActivity.this,"昵称中有非法字符请重新输入", Toast.LENGTH_SHORT).show();
@@ -62,7 +58,7 @@ public class UpdateNickNameActivity extends TitlebarActivity implements View.OnC
         if(!(wordCount>=4&&wordCount<=16)){
             Toast.makeText(UpdateNickNameActivity.this,"昵称大小不符合请重新输入", Toast.LENGTH_SHORT).show();
             return;
-        }
+        }*/
         mAccount.setNickname(newNickName);
         Account newAccount = new Account();
         newAccount.setObjectId(mAccount.getObjectId());
@@ -70,10 +66,18 @@ public class UpdateNickNameActivity extends TitlebarActivity implements View.OnC
         if(mUpdateUserSubscriber == null || mUpdateUserSubscriber.isUnsubscribed()){
             mUpdateUserSubscriber = new Subscriber<BmobObject>() {
                 @Override
+                public void onStart() {
+                    super.onStart();
+                    showLoadingDialog();
+                }
+
+                @Override
                 public void onCompleted() {
+
                 }
                 @Override
                 public void onError(Throwable e) {
+                    hideLoadingDialog();
                     if(e instanceof HttpException){
                         HttpExceptionHandle handle = new HttpExceptionHandle((HttpException) e,UpdateNickNameActivity.this);
                         handle.handle();
@@ -81,9 +85,10 @@ public class UpdateNickNameActivity extends TitlebarActivity implements View.OnC
                 }
                 @Override
                 public void onNext(BmobObject bmobObject) {
+                    hideLoadingDialog();
                     UserManager.getInstance().updateAccount(mAccount);
-                    finish();
                     ToastUtil.showToast(UpdateNickNameActivity.this,"更新成功");
+                    finish();
                 }
             };
         }

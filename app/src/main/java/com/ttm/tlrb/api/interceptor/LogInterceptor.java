@@ -24,9 +24,26 @@ public class LogInterceptor implements Interceptor{
         String url = request.url().toString();
         //the request method
         String method = request.method();
+
         long t1 = System.nanoTime();
         HLog.d(TAG,String.format(Locale.getDefault(),"Sending %s request [url = %s]",method,url));
+        /*//the request body
+        RequestBody requestBody = request.body();
+        if(requestBody!= null) {
+            StringBuilder sb = new StringBuilder("Request Body [");
+            if(requestBody instanceof FormBody){
+                FormBody fb = (FormBody)requestBody;
+                for (int i=0;i<fb.size();i++){
+                    sb.append(fb.name(i)).append("=").append(fb.value(i)).append(",");
+                }
+            }else if(requestBody instanceof MultipartBody){
+                MultipartBody mb = (MultipartBody) requestBody;
+                sb.append(mb.boundary());
+            }
 
+            sb.append("]");
+            HLog.d(TAG, String.format(Locale.getDefault(), "%s %s", method, sb.toString()));
+        }*/
         Response response = chain.proceed(request);
         long t2 = System.nanoTime();
         //the response time

@@ -12,9 +12,6 @@ import com.ttm.tlrb.ui.entity.Account;
 import com.ttm.tlrb.ui.entity.BmobObject;
 import com.ttm.tlrb.utils.ToastUtil;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import retrofit2.adapter.rxjava.HttpException;
 import rx.Subscriber;
 
@@ -36,7 +33,6 @@ public class UpdatePasswordActivity extends TitlebarActivity implements View.OnC
         mEditTextOldPassword = (EditText) findViewById(R.id.editText_oldPassword);
         mEditTextNewPassword = (EditText) findViewById(R.id.editText_newPassword);
         mEditTextAgainPassword = (EditText) findViewById(R.id.editText_againPassword);
-        Account mAccount = UserManager.getInstance().getAccount();
     }
 
     private void updatePassword() {
@@ -59,13 +55,13 @@ public class UpdatePasswordActivity extends TitlebarActivity implements View.OnC
             ToastUtil.showToast(UpdatePasswordActivity.this,"新密码与确认密码需要一致");
             return;
         }
-        Pattern p = Pattern.compile("[A-Za-z0-9_]+");
+        /*Pattern p = Pattern.compile("[A-Za-z0-9_]+");
         Matcher m = p.matcher(newPassword);
-        int wordCount = newPassword.length();
         if(!m.matches()){
             ToastUtil.showToast(UpdatePasswordActivity.this,"新密码含有特殊字符，建议使用数字，字母，下划线组成密码");
             return;
-        }
+        }*/
+        int wordCount = newPassword.length();
         if(!(wordCount>=6&&wordCount<=32)){
             ToastUtil.showToast(UpdatePasswordActivity.this,"密码长度至少6个字符，最多32个字符");
             return;
@@ -74,12 +70,19 @@ public class UpdatePasswordActivity extends TitlebarActivity implements View.OnC
         Account mAccount = UserManager.getInstance().getAccount();
         if(mUpdatePasswordSubscriber == null || mUpdatePasswordSubscriber.isUnsubscribed()){
             mUpdatePasswordSubscriber = new Subscriber<BmobObject>() {
+
+                @Override
+                public void onStart() {
+                    super.onStart();
+                    showLoadingDialog();
+                }
+
                 @Override
                 public void onCompleted() {
-
                 }
                 @Override
                 public void onError(Throwable e) {
+                    hideLoadingDialog();
                     if(e instanceof HttpException){
                         HttpExceptionHandle handle = new HttpExceptionHandle((HttpException) e,UpdatePasswordActivity.this);
                         handle.handle();
@@ -87,8 +90,9 @@ public class UpdatePasswordActivity extends TitlebarActivity implements View.OnC
                 }
                 @Override
                 public void onNext(BmobObject bmobObject) {
-                    finish();
+                    hideLoadingDialog();
                     ToastUtil.showToast(UpdatePasswordActivity.this,"更新成功");
+                    finish();
                 }
             };
         }

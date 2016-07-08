@@ -26,19 +26,22 @@
 
         <TextView
             android:id="@+id/tv_username"
+            style="@style/TitleStyle.Light"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/iv_portrait"
             android:layout_marginTop="5dp"
-            android:textAppearance="@style/TextAppearance.AppCompat.Body1"/>
+            android:singleLine="true"
+            android:ellipsize="end"
+            />
 
-        <TextView
+        <!--<TextView
             android:id="@+id/tv_nickname"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/tv_username"
             android:layout_marginTop="5dp"
-            />
+            />-->
         <TextView
             android:id="@+id/tv_in"
             android:layout_width="wrap_content"
@@ -49,10 +52,12 @@
             android:layout_marginTop="8dp"
             android:layout_marginLeft="15dp"
             android:padding="5dp"
+            style="@style/SubheadStyle.Light"
             android:gravity="center"
             />
         <TextView
             android:id="@+id/tv_out"
+            style="@style/SubheadStyle.Light"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:drawableLeft="@drawable/icon_out"

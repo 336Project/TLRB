@@ -47,7 +47,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     public static final int GO_ADD_RED_BOMB=1002;
     private SimpleDraweeView mHeaderView;
     private TextView mTextUserName;
-    private TextView mTextNickName;
+    //private TextView mTextNickName;
     private TextView mTextIn;
     private TextView mTextOut;
     private RedBombFragment mAllInformFragment;
@@ -87,7 +87,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 
         mHeaderView = (SimpleDraweeView) header.findViewById(R.id.iv_portrait);
         mTextUserName = (TextView) header.findViewById(R.id.tv_username);
-        mTextNickName = (TextView) header.findViewById(R.id.tv_nickname);
+        //mTextNickName = (TextView) header.findViewById(R.id.tv_nickname);
         mTextIn = (TextView) header.findViewById(R.id.tv_in);
         mTextOut = (TextView) header.findViewById(R.id.tv_out);
         mHeaderView.setOnClickListener(this);
@@ -98,9 +98,8 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         Account account = UserManager.getInstance().getAccount();
         if (account != null) {
             RBApplication.getInstance().setSession(account.getSessionToken());
-            mHeaderView.setImageURI(Uri.parse(account.getPortrait()));
-            mTextUserName.setText(account.getUsername());
-            mTextNickName.setText(account.getNickname());
+            refreshAccountInfo();
+            //mTextNickName.setText(account.getNickname());
         }
         counter();
         checkUpdate();
@@ -113,8 +112,13 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         Account account = UserManager.getInstance().getAccount();
         if (account != null && mHeaderView != null) {
             mHeaderView.setImageURI(Uri.parse(account.getPortrait()));
-            mTextUserName.setText(account.getUsername());
-            mTextNickName.setText(account.getNickname());
+            String nickName  = account.getNickname();
+            if(!TextUtils.isEmpty(nickName)) {
+                mTextUserName.setText(nickName);
+            }else {
+                mTextUserName.setText(account.getUsername());
+            }
+            //mTextNickName.setText(account.getNickname());
         }
     }
 

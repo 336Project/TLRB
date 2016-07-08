@@ -51,7 +51,7 @@
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:background="#EFEFEF"
-            ></View>
+            />
 
         <LinearLayout
             android:orientation="horizontal"
@@ -81,10 +81,11 @@
                 />
         </LinearLayout>
         <View
+            android:id="@+id/line1"
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:background="#EFEFEF"
-            ></View>
+            />
         <LinearLayout
             android:orientation="horizontal"
             android:layout_width="match_parent"
@@ -94,7 +95,7 @@
 
             <TextView
                 android:layout_height="wrap_content"
-                android:text="修改账户密码"
+                android:text="修改密码"
                 style="@style/UserInfoTextViewTitle"
                 />
             <ImageView
@@ -107,17 +108,16 @@
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:background="#EFEFEF"
-            ></View>
+            />
         <LinearLayout
             android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/linearLayout_phone"
             >
 
             <TextView
                 android:layout_height="wrap_content"
-                android:text="已绑定手机号"
+                android:text="账号类型"
                 style="@style/UserInfoTextViewTitle"
                 />
 
@@ -125,13 +125,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 style="@style/UserInfoTextViewContent"
-                android:id="@+id/textView_phone"
+                android:id="@+id/textView_type"
                 />
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                style="@style/UserInfoImageView"
-                />
+
         </LinearLayout>
     </LinearLayout>
 

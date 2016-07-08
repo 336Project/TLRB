@@ -60,8 +60,8 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
             ToastUtil.showToast(RegisterActivity.this,"密码不能为空");
             return;
         }
-        if(pwd.length() < 6){
-            ToastUtil.showToast(RegisterActivity.this,"密码长度不能少于6");
+        if(pwd.length() < 6 && pwd.length() > 32){
+            ToastUtil.showToast(RegisterActivity.this,"密码长度至少6个字符，最多32个字符");
             return;
         }
 

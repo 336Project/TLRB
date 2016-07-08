@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -28,11 +27,10 @@ import rx.Subscriber;
 public class UserInfoActivity extends TitlebarActivity implements View.OnClickListener {
     private SimpleDraweeView mHeaderView;
     private TextView mTextViewNick;
-    private TextView mTextViewPhone;
+    private TextView mTextViewType;
     private ImageConfig mImageConfig;
     private final int REQUEST_NICK = 0x001;
     private final int REQUEST_PASSWORD = 0x001;
-    private String pictureUrl = "";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -89,11 +87,13 @@ public class UserInfoActivity extends TitlebarActivity implements View.OnClickLi
     private void initView() {
         findViewById(R.id.linearLayout_portrait).setOnClickListener(this);
         findViewById(R.id.linearLayout_nick).setOnClickListener(this);
-        findViewById(R.id.linearLayout_password).setOnClickListener(this);
-        findViewById(R.id.linearLayout_phone).setOnClickListener(this);
+        View layoutPwd = findViewById(R.id.linearLayout_password);
+        layoutPwd.setOnClickListener(this);
+        layoutPwd.setVisibility(View.GONE);
+        findViewById(R.id.line1).setVisibility(View.GONE);
         mHeaderView = (SimpleDraweeView) findViewById(R.id.iv_portrait);
         mTextViewNick = (TextView) findViewById(R.id.textView_nick);
-        mTextViewPhone = (TextView) findViewById(R.id.textView_phone);
+        mTextViewType = (TextView) findViewById(R.id.textView_type);
         Account account = UserManager.getInstance().getAccount();
         if(account != null){
             mHeaderView.setImageURI(Uri.parse(account.getPortrait()));
@@ -103,16 +103,36 @@ public class UserInfoActivity extends TitlebarActivity implements View.OnClickLi
             else{
                 mTextViewNick.setText(account.getNickname());
             }
+            int type = account.getType();
+            if(type == 0){
+                layoutPwd.setVisibility(View.VISIBLE);
+                findViewById(R.id.line1).setVisibility(View.VISIBLE);
+                mTextViewType.setText("来自注册");
+            }else if(type == 1){
+                mTextViewType.setText("来自新浪");
+            }else if(type == 2){
+                mTextViewType.setText("来自微信");
+            }else if(type == 2){
+                mTextViewType.setText("来自QQ");
+            }
         }
     }
     private void inputPicture(String filePath){
         File file = new File(filePath);
         Subscriber<BmobObject> mUpdatePictureSubscriber = new Subscriber<BmobObject>() {
             @Override
+            public void onStart() {
+                super.onStart();
+                showLoadingDialog();
+            }
+
+            @Override
             public void onCompleted() {
+                hideLoadingDialog();
             }
             @Override
             public void onError(Throwable e) {
+                hideLoadingDialog();
             }
             @Override
             public void onNext(BmobObject bmobObject) {
@@ -123,8 +143,6 @@ public class UserInfoActivity extends TitlebarActivity implements View.OnClickLi
             }
         };
         Account account = UserManager.getInstance().getAccount();
-        Account newAccount = new Account();
-        newAccount.setObjectId(account.getObjectId());
         APIManager.getInstance().updatePicture(account.getObjectId(),file,mUpdatePictureSubscriber);
     }
     @Override
@@ -134,12 +152,10 @@ public class UserInfoActivity extends TitlebarActivity implements View.OnClickLi
             mTextViewNick.setText(UserManager.getInstance().getAccount().getNickname());
         }
         if (requestCode == ImageSelector.IMAGE_REQUEST_CODE && resultCode == RESULT_OK && data != null) {
-            Log.e("hhh","hhh");
             // Get Image Path List
             List<String> pathList = data.getStringArrayListExtra(ImageSelectorActivity.EXTRA_RESULT);
             int i=0;
             for (String path : pathList) {
-                Log.e("path","path:"+path);
                 if(i==0){
                     inputPicture(path);
                     i++;

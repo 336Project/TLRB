@@ -62,11 +62,6 @@ public class APIManager {
     private APIService apiService;
     private UserManager mUserManager;
 
-    public static String getPictureUrl() {
-        return pictureUrl;
-    }
-
-    private static String pictureUrl;
     private APIManager(){
         File cacheFile = new File(EnvironmentUtil.getCacheFile(), Constant.CACHE_HTTP);
         OkHttpClient.Builder builder = new OkHttpClient().newBuilder();
@@ -717,7 +712,6 @@ public class APIManager {
     /**
      * 批量添加红包数据
 //     * @param redBombs 添加对象
-     * @param subscriber 回调监听
      *
      */
     /*@Deprecated
@@ -741,6 +735,11 @@ public class APIManager {
                 .subscribe(subscriber);
     }*/
 
+    public String getPictureUrl() {
+        return pictureUrl;
+    }
+
+    private String pictureUrl;
     /**
      * 更新头像
      * @param accountId 用户id
@@ -778,7 +777,9 @@ public class APIManager {
                         Account account = new Account();
                         pictureUrl = url;
                         account.setPortrait(url);
-                        RequestBody body = RequestBody.create(Constant.JSON, account.toString());
+                        String json = account.toString();
+                        HLog.d("UpdateUserJson",json);
+                        RequestBody body = RequestBody.create(Constant.JSON, json);
                         return getAPIService().putUser(accountId, body);
                     }
                 })

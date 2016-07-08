@@ -7,12 +7,15 @@ import com.google.gson.Gson;
  * 账户
  */
 public class Account extends BmobUser{
-    private String nickname="";//昵称，显示名称
+    private String nickname;//昵称，显示名称
     private Integer type;//注册类型：0自注册，1新浪微博，2微信，3qq
     private String portrait;//头像地址
 
 
     public String getNickname() {
+        if(nickname == null){
+            return "";
+        }
         return nickname;
     }
 
