@@ -1,5 +1,7 @@
 package com.ttm.tlrb.ui.entity;
 
+import com.ttm.tlrb.BuildConfig;
+
 /**
  * Created by Helen on 2016/5/6.
  *
@@ -8,26 +10,29 @@ public class VersionInfo extends BaseEn{
     private String version;//版本号
     private String updateContent;//更新内容
     private BmobFile file;//下载文件
-    private Boolean isPatch;//是否是修复包
-    private Boolean isForce;//是否强制更新
+    private boolean isPatch;//是否是修复包
+    private boolean isForce;//是否强制更新
 
-    public Boolean getForce() {
+    public boolean getForce() {
         return isForce;
     }
 
-    public void setForce(Boolean force) {
+    public void setForce(boolean force) {
         isForce = force;
     }
 
-    public Boolean getPatch() {
+    public boolean getPatch() {
         return isPatch;
     }
 
-    public void setPatch(Boolean patch) {
+    public void setPatch(boolean patch) {
         isPatch = patch;
     }
 
     public String getVersion() {
+        if(version == null){
+            return BuildConfig.VERSION_NAME;
+        }
         return version;
     }
 

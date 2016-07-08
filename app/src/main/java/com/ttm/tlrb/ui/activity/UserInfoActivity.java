@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.ttm.tlrb.R;
 import com.ttm.tlrb.api.APIManager;
@@ -45,8 +46,8 @@ public class UserInfoActivity extends TitlebarActivity implements View.OnClickLi
 
          mImageConfig
                 = new ImageConfig.Builder(new FrescoLoad())
-                .steepToolBarColor(getResources().getColor(R.color.blue))
-                .titleBgColor(getResources().getColor(R.color.blue))
+                .steepToolBarColor(getResources().getColor(R.color.colorPrimary))
+                .titleBgColor(getResources().getColor(R.color.colorPrimary))
                 .titleSubmitTextColor(getResources().getColor(R.color.white))
                 .titleTextColor(getResources().getColor(R.color.white))
                  .crop() // 默认截图
@@ -62,9 +63,26 @@ public class UserInfoActivity extends TitlebarActivity implements View.OnClickLi
 
         @Override
         public void displayImage(Context context, String path, final ImageView imageView) {
-            SimpleDraweeView image = (SimpleDraweeView) imageView;
+            Glide.with(context)
+                    .load(path)
+                    .placeholder(com.yancy.imageselector.R.mipmap.imageselector_photo)
+                    .centerCrop()
+                    .into(imageView);
+            /*SimpleDraweeView image = (SimpleDraweeView) imageView;
             File file = new File(path);
-            image.setImageURI(Uri.fromFile(file));
+            DraweeController controller = Fresco.newDraweeControllerBuilder()
+                    .setOldController(image.getController())
+                    .setAutoPlayAnimations(false)
+                    .setUri(Uri.fromFile(file))
+                    .setControllerListener(new BaseControllerListener<ImageInfo>(){
+                        @Override
+                        public void onFailure(String id, Throwable throwable) {
+                            super.onFailure(id, throwable);
+                            System.out.println(Log.getStackTraceString(throwable));
+                        }
+                    }).build();
+
+            image.setController(controller);*/
         }
 
     }

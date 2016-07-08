@@ -5,10 +5,11 @@
     android:orientation="vertical"
     android:padding="8dp"
     android:layout_width="match_parent"
-    android:layout_height="250dp">
+    android:minHeight="250dp"
+    android:layout_height="wrap_content">
     <android.support.v7.widget.CardView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:foreground="@drawable/card_foreground"
         app:cardBackgroundColor="@color/white"
         app:cardCornerRadius="@dimen/card_radius"
@@ -27,17 +28,18 @@
                 android:layout_toLeftOf="@+id/item_money"
                 android:layout_alignParentLeft="true"
                 android:orientation="horizontal">
-                <TextView
+                <!--<TextView
                     style="@style/TitleStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="姓名："/>
+                    android:text="姓名："/>-->
                 <TextView
                     style="@style/TitleStyle"
                     android:id="@+id/item_name"
-                    android:layout_marginLeft="10dp"
+                    android:layout_marginLeft="20dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:textSize="@dimen/font_22"
                     />
             </LinearLayout>
             <LinearLayout
@@ -60,6 +62,8 @@
                     android:layout_marginLeft="10dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:singleLine="true"
                     />
             </LinearLayout>
 
@@ -83,6 +87,8 @@
                     android:layout_marginLeft="10dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:singleLine="true"
                     />
             </LinearLayout>
 
@@ -106,6 +112,8 @@
                     android:layout_marginLeft="10dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:singleLine="true"
                     />
             </LinearLayout>
             <LinearLayout
@@ -128,26 +136,28 @@
                     android:layout_marginLeft="10dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:maxLines="2"
+                    android:ellipsize="end"
                     />
             </LinearLayout>
             <TextView
                 android:id="@+id/item_money"
-                style="@style/TitleStyle"
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
-                android:gravity="center"
-                android:layout_above="@+id/item_create_time"
+                android:layout_centerVertical="true"
+                android:textSize="@dimen/font_22"
                 android:text="+5000"
-                android:layout_marginBottom="5dp"
                 />
+
             <TextView
                 android:id="@+id/item_create_time"
                 style="@style/CaptionStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
                 android:text="时间"
-                android:layout_alignParentBottom="true"
+                android:layout_below="@+id/layout_gift"
                 android:layout_alignParentRight="true"
                 />
         </RelativeLayout>
