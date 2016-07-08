@@ -5,6 +5,8 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 
 import com.facebook.common.logging.FLog;
+import com.ttm.tlrb.R;
+import com.ttm.tlrb.view.MaterialDialog;
 import com.umeng.analytics.MobclickAgent;
 
 import java.lang.ref.WeakReference;
@@ -18,11 +20,12 @@ import java.util.Map;
 public class BaseActivity extends AppCompatActivity {
 
     private static Map<String,WeakReference<BaseActivity>> activitiesMap = new HashMap<>();
-
+    private MaterialDialog mMaterialDialog;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         activitiesMap.put(BaseActivity.this.toString(), new WeakReference<BaseActivity>(this));
+        initDialog();
         /*Window window = getWindow();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             // Translucent status bar
@@ -46,6 +49,23 @@ public class BaseActivity extends AppCompatActivity {
     /*public static int getStatusBarHeight(Context context){
         return context.getResources().getDimensionPixelSize(R.dimen.actionBarSize);
     }*/
+
+    private void initDialog() {
+        mMaterialDialog = new MaterialDialog(this).setContentView(R.layout.material_dialog_login);
+        mMaterialDialog.setCanceledOnTouchOutside(true);
+    }
+
+    protected void showLoadingDialog(){
+        if(mMaterialDialog != null && !mMaterialDialog.isShow()) {
+            mMaterialDialog.show();
+        }
+    }
+
+    protected void hideLoadingDialog(){
+        if(mMaterialDialog != null && mMaterialDialog.isShow()) {
+            mMaterialDialog.dismiss();
+        }
+    }
 
     @Override
     protected void onDestroy() {

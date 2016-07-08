@@ -2,9 +2,10 @@ package com.ttm.tlrb.ui.activity;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import com.ttm.tlrb.R;
 import com.ttm.tlrb.api.APIManager;
@@ -28,6 +29,7 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_register);
         initView();
     }
@@ -39,30 +41,57 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
         findViewById(R.id.imageView_close).setOnClickListener(this);
     }
     private void input(){
-        Account account = new Account();
-        account.setUsername(mEditTextUsername.getText().toString().trim());
-        account.setPassword(mEditTextPassword.getText().toString().trim());
+        String userName = mEditTextUsername.getText().toString().trim();
+        String pwd = mEditTextPassword.getText().toString().trim();
 
-        String userName = mEditTextUsername.getText().toString();
-        Pattern p = Pattern.compile("[a-zA-Z0-9]");
-        Matcher m = p.matcher(userName);
-        if(!m.matches()){
-            Toast.makeText(RegisterActivity.this,"输入有中文", Toast.LENGTH_SHORT).show();
+
+        if(TextUtils.isEmpty(userName)){
+            ToastUtil.showToast(RegisterActivity.this,"账号不能为空");
             return;
         }
+        Pattern p = Pattern.compile("[\\u4e00-\\u9fa5]");
+        Matcher m = p.matcher(userName);
+        if(m.find()){
+            ToastUtil.showToast(RegisterActivity.this,"账号有非法字符,请使用字母或数字");
+            return;
+        }
+
+        if(TextUtils.isEmpty(pwd)){
+            ToastUtil.showToast(RegisterActivity.this,"密码不能为空");
+            return;
+        }
+        if(pwd.length() < 6){
+            ToastUtil.showToast(RegisterActivity.this,"密码长度不能少于6");
+            return;
+        }
+
+        Account account = new Account();
+        account.setUsername(userName);
+        account.setPassword(pwd);
         APIManager.getInstance().register(account, new Subscriber<Account>() {
+
+            @Override
+            public void onStart() {
+                super.onStart();
+                showLoadingDialog();
+            }
+
             @Override
             public void onCompleted() {
             }
             @Override
             public void onError(Throwable e) {
+                hideLoadingDialog();
                 if(e instanceof HttpException){
                     HttpExceptionHandle handle = new HttpExceptionHandle((HttpException) e,RegisterActivity.this);
                     handle.handle();
+                }else{
+                    ToastUtil.showToast(RegisterActivity.this,"注册失败");
                 }
             }
             @Override
             public void onNext(Account account) {
+                hideLoadingDialog();
                 ToastUtil.showToast(RegisterActivity.this,"注册成功");
                 finish();
             }

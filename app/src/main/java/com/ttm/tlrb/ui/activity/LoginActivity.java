@@ -7,6 +7,7 @@ import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.EditText;
 
 import com.ttm.tlrb.R;
@@ -18,7 +19,6 @@ import com.ttm.tlrb.ui.entity.Account;
 import com.ttm.tlrb.ui.entity.AuthData;
 import com.ttm.tlrb.utils.HLog;
 import com.ttm.tlrb.utils.ToastUtil;
-import com.ttm.tlrb.view.MaterialDialog;
 import com.umeng.analytics.MobclickAgent;
 import com.umeng.socialize.UMAuthListener;
 import com.umeng.socialize.UMShareAPI;
@@ -36,7 +36,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
 
     private EditText mEditTextUserName;
     private EditText mEditTextPassword;
-    private MaterialDialog mMaterialDialog;
+
 
     public static void launcher(Context context){
         context.startActivity(new Intent(context,LoginActivity.class));
@@ -45,15 +45,12 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_login);
         initView();
-        initDialog();
     }
 
-    private void initDialog() {
-        mMaterialDialog =new MaterialDialog(LoginActivity.this).setContentView(R.layout.material_dialog_login);
-        mMaterialDialog.setCanceledOnTouchOutside(true);
-    }
+
 
     private void initView() {
         findViewById(R.id.textView_register).setOnClickListener(this);
@@ -121,7 +118,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
             @Override
             public void onStart() {
                 super.onStart();
-                mMaterialDialog.show();
+                showLoadingDialog();
             }
 
             @Override
@@ -134,11 +131,11 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
                     HttpExceptionHandle handle = new HttpExceptionHandle((HttpException) e,LoginActivity.this);
                     handle.handle();
                 }
-                mMaterialDialog.dismiss();
+                hideLoadingDialog();
             }
             @Override
             public void onNext(Account account) {
-                mMaterialDialog.dismiss();
+                hideLoadingDialog();
                 loginSuccess();
             }
         });
@@ -239,7 +236,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
                 @Override
                 public void onStart() {
                     super.onStart();
-                    mMaterialDialog.show();
+                    showLoadingDialog();
                 }
 
                 @Override
@@ -249,13 +246,13 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
 
                 @Override
                 public void onError(Throwable e) {
-                    mMaterialDialog.dismiss();
+                    hideLoadingDialog();
                     ToastUtil.showToast(LoginActivity.this, getString(R.string.auth_fail));
                 }
 
                 @Override
                 public void onNext(Account account) {
-                    mMaterialDialog.dismiss();
+                    hideLoadingDialog();
                     loginSuccess();
                 }
             };
@@ -286,9 +283,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if(keyCode ==KeyEvent.KEYCODE_BACK){
-            if(mMaterialDialog!=null&&mMaterialDialog.isShow()){
-                mMaterialDialog.dismiss();
-            }
+            hideLoadingDialog();
         }
         return super.onKeyDown(keyCode, event);
     }
