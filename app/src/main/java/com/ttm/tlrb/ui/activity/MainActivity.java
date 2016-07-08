@@ -109,6 +109,21 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 
     }
 
+    private void refreshAccountInfo(){
+        Account account = UserManager.getInstance().getAccount();
+        if (account != null && mHeaderView != null) {
+            mHeaderView.setImageURI(Uri.parse(account.getPortrait()));
+            mTextUserName.setText(account.getUsername());
+            mTextNickName.setText(account.getNickname());
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        refreshAccountInfo();
+    }
+
     private void initTabLayout(){
         RedBombPagerAdapter pagerAdapter = new RedBombPagerAdapter(getSupportFragmentManager());
         mAllInformFragment=RedBombFragment.newInstance(0);

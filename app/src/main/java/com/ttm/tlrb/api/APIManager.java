@@ -137,10 +137,7 @@ public class APIManager {
                     @Override
                     public void call(Account account) {
 
-                        account.setNickname(authData.getUserNickname());
-                        account.setPortrait(authData.getUserPortrait());
                         RBApplication.getInstance().setSession(account.getSessionToken());
-                        mUserManager.updateAccount(account);
                         //判断平台
                         AuthData.Platform platform = authData.getPlatform();
                         int type = 0;
@@ -157,6 +154,8 @@ public class APIManager {
 
                         //修改用户信息
                         if(account.getACL() == null) {
+                            account.setNickname(authData.getUserNickname());
+                            account.setPortrait(authData.getUserPortrait());
                             String objectId = account.getObjectId();
                             Account a = new Account();
                             a.setNickname(account.getNickname());
@@ -184,6 +183,7 @@ public class APIManager {
                                 }
                             });
                         }
+                        mUserManager.updateAccount(account);
                     }
                 })
                 .subscribeOn(Schedulers.io())

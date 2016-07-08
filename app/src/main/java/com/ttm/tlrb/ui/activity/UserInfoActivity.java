@@ -116,8 +116,6 @@ public class UserInfoActivity extends TitlebarActivity implements View.OnClickLi
             }
             @Override
             public void onNext(BmobObject bmobObject) {
-                Log.e("onNext","onNext");
-                Log.e("onNext","onNext"+APIManager.getInstance().getPictureUrl());
                 Account account = UserManager.getInstance().getAccount();
                 account.setPortrait(APIManager.getInstance().getPictureUrl());
                 UserManager.getInstance().updateAccount(account);
