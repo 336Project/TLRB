@@ -112,7 +112,7 @@ public class UserInfoActivity extends TitlebarActivity implements View.OnClickLi
                 mTextViewType.setText("来自新浪");
             }else if(type == 2){
                 mTextViewType.setText("来自微信");
-            }else if(type == 2){
+            }else if(type == 3){
                 mTextViewType.setText("来自QQ");
             }
         }

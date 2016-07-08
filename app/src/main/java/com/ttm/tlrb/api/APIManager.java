@@ -151,6 +151,7 @@ public class APIManager {
                         if(account.getACL() == null) {
                             account.setNickname(authData.getUserNickname());
                             account.setPortrait(authData.getUserPortrait());
+                            account.setType(type);
                             String objectId = account.getObjectId();
                             Account a = new Account();
                             a.setNickname(account.getNickname());

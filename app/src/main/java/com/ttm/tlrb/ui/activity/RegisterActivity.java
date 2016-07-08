@@ -68,6 +68,7 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
         Account account = new Account();
         account.setUsername(userName);
         account.setPassword(pwd);
+        account.setType(0);
         APIManager.getInstance().register(account, new Subscriber<Account>() {
 
             @Override
