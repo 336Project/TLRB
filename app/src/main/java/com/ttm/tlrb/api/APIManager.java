@@ -292,7 +292,7 @@ public class APIManager {
     public void addRedBomb(RedBomb redBomb, Subscriber<BmobObject> subscriber){
         redBomb.setACL(mUserManager.getUserACL());
         redBomb.setUserName(mUserManager.getAccount().getUsername());
-
+        redBomb.setDelete(false);
         RequestBody body = RequestBody.create(Constant.JSON,redBomb.toString());
         getAPIService().postRedBomb(body)
                 .subscribeOn(Schedulers.io())
@@ -327,10 +327,19 @@ public class APIManager {
      * @param objectId 要删除的红包数据的id
      */
     public void deleteRedBomb(String objectId, Subscriber<BmobObject> subscriber){
-        getAPIService().deleteRedBomb(objectId)
+        //软删除
+        RedBomb updateRedBomb=new RedBomb();
+        updateRedBomb.setDelete(true);
+        RequestBody body = RequestBody.create(Constant.JSON,updateRedBomb.toString());
+        getAPIService().putRedBomb(objectId,body)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(subscriber);
+        //硬删除
+        /*getAPIService().deleteRedBomb(objectId)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(subscriber);*/
     }
 
     /**
@@ -343,6 +352,7 @@ public class APIManager {
         //关联当前用户
         Map<String,Object> where = new HashMap<>();
         where.put("userName",mUserManager.getAccount().getUsername());
+        where.put("isDelete",false);
         if(type == 1 || type == 2) {
             where.put("type", type);
         }
@@ -367,7 +377,9 @@ public class APIManager {
      * 统计红包收入支出
      */
     public void countRedBombMoney(Subscriber<List<Map<String,String>>> subscriber){
-        getAPIService().countRedBombMoney("money","type")
+        Map<String,Object> where = new HashMap<>();
+        where.put("isDelete",false);
+        getAPIService().countRedBombMoney(GsonUtil.fromMap2Json(where),"money","type")
                 .map(new Func1<ResponseEn<Map<String,String>>, List<Map<String,String>>>() {
                     @Override
                     public List<Map<String, String>> call(ResponseEn<Map<String, String>> responseEn) {

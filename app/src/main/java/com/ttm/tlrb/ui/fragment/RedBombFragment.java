@@ -188,8 +188,9 @@ public class RedBombFragment extends Fragment implements SwipeRefreshLayout.OnRe
 
     //添加红包数据后，进行更新数据
     public void addNewInform(RedBomb redBomb){
+        mEmptyContainer.setType(EmptyEmbeddedContainer.EmptyStyle.EmptyStyle_NORMAL);
         mRedBombs.add(0,redBomb);
-        mAdapter.notifyDataSetChanged();
+        mAdapter.notifyDataSetChanged(BaseRecyclerAdapter.STATUS_NORMAL);
     }
 
     /*private BroadcastReceiver mReceiver=new BroadcastReceiver() {

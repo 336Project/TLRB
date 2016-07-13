@@ -80,7 +80,7 @@ public interface APIService {
     Observable<BmobObject> deleteRedBomb(@Path("objectId") String id);
     /**统计红包收入、支出*/
     @GET("1/classes/RedBomb")
-    Observable<ResponseEn<Map<String,String>>> countRedBombMoney(@Query("sum") String sumColumn,@Query("groupby") String groupByColumn);
+    Observable<ResponseEn<Map<String,String>>> countRedBombMoney(@Query("where") String where,@Query("sum") String sumColumn,@Query("groupby") String groupByColumn);
     /**获取组别*/
     @GET("1/classes/Category")
     Observable<ResponseEn<Category>> getCategory(@Query("where") String where,@Query("limit") int limit,@Query("order") String order);

@@ -27,7 +27,6 @@ import com.ttm.tlrb.api.APIManager;
 import com.ttm.tlrb.api.UserManager;
 import com.ttm.tlrb.ui.adapter.RedBombPagerAdapter;
 import com.ttm.tlrb.ui.application.Constant;
-import com.ttm.tlrb.ui.application.RBApplication;
 import com.ttm.tlrb.ui.entity.Account;
 import com.ttm.tlrb.ui.entity.BmobFile;
 import com.ttm.tlrb.ui.entity.RedBomb;
@@ -95,12 +94,6 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         mTextOut.setText("0");
 
         initTabLayout();
-        Account account = UserManager.getInstance().getAccount();
-        if (account != null) {
-            RBApplication.getInstance().setSession(account.getSessionToken());
-            refreshAccountInfo();
-            //mTextNickName.setText(account.getNickname());
-        }
         counter();
         checkUpdate();
 
@@ -118,7 +111,6 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
             }else {
                 mTextUserName.setText(account.getUsername());
             }
-            //mTextNickName.setText(account.getNickname());
         }
     }
 
@@ -160,7 +152,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 
                 @Override
                 public void onNext(List<Map<String, String>> maps) {
-                    if(maps != null && maps.size() == 2){
+                    if(maps != null && !maps.isEmpty()){
                         for (Map<String,String> map:maps){
                             String money = map.get("_sumMoney");
                             int type = Integer.valueOf(map.get("type"));
@@ -170,6 +162,9 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                                 mTextOut.setText(money);
                             }
                         }
+                    }else {
+                        mTextIn.setText("0");
+                        mTextOut.setText("0");
                     }
                 }
             };
@@ -350,6 +345,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
             if(mSpendingFragment!=null&&mSpendingFragment.isAdded()){
                 mSpendingFragment.onRefresh();
             }
+            counter();
         }
         if(resultCode==AddRedBombActivity.ADD_INFORM){
             RedBomb redBomb=(RedBomb) data.getSerializableExtra("redBomb");
@@ -366,6 +362,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                     mSpendingFragment.addNewInform(redBomb);
                 }
             }
+            counter();
         }
     }
 
