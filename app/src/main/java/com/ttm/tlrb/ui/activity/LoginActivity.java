@@ -11,6 +11,7 @@ import android.widget.EditText;
 
 import com.ttm.tlrb.R;
 import com.ttm.tlrb.api.APIManager;
+import com.ttm.tlrb.api.BaseSubscriber;
 import com.ttm.tlrb.api.e.HttpExceptionHandle;
 import com.ttm.tlrb.ui.application.Constant;
 import com.ttm.tlrb.ui.application.RBApplication;
@@ -117,6 +118,13 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
             ToastUtil.showToast(this,"密码不能为空");
             return;
         }
+//        APIManager.getInstance().login(userName,password,new BaseSubscriber<Account>(this){
+//
+//            @Override
+//            public void atNext(Account account) {
+//                loginSuccess();
+//            }
+//        });
         APIManager.getInstance().login(userName, password, new Subscriber<Account>() {
             @Override
             public void onStart() {
