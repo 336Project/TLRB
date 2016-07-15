@@ -1,10 +1,8 @@
 package com.ttm.tlrb.ui.activity;
 
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import com.ttm.tlrb.R;
 import com.ttm.tlrb.api.APIManager;
@@ -14,13 +12,10 @@ import com.ttm.tlrb.ui.entity.Account;
 import com.ttm.tlrb.ui.entity.BmobObject;
 import com.ttm.tlrb.utils.ToastUtil;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import retrofit2.adapter.rxjava.HttpException;
 import rx.Subscriber;
 
-public class UpdateNickNameActivity extends AppCompatActivity implements View.OnClickListener{
+public class UpdateNickNameActivity extends TitlebarActivity implements View.OnClickListener{
 
     private EditText mEditTextNick;
     private Account mAccount;
@@ -29,6 +24,7 @@ public class UpdateNickNameActivity extends AppCompatActivity implements View.On
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_update_nick_name);
+        setTitle("修改昵称");
         initView();
     }
 
@@ -41,7 +37,6 @@ public class UpdateNickNameActivity extends AppCompatActivity implements View.On
         mEditTextNick = (EditText) findViewById(R.id.editText_nick);
         findViewById(R.id.btn_confirm).setOnClickListener(this);
         mEditTextNick.setText(oldNickName);
-        findViewById(R.id.textView_back).setOnClickListener(this);
     }
     private void confirm(){
         String newNickName = mEditTextNick.getText().toString().trim();
@@ -53,7 +48,7 @@ public class UpdateNickNameActivity extends AppCompatActivity implements View.On
             ToastUtil.showToast(UpdateNickNameActivity.this,"用户名不能为空，请重新输入");
             return;
         }
-        Pattern p = Pattern.compile("[A-Za-z0-9_\\-\\u4e00-\\u9fa5]+");
+        /*Pattern p = Pattern.compile("[A-Za-z0-9_\\-\\u4e00-\\u9fa5]+");
         Matcher m = p.matcher(newNickName);
         if(!m.matches()){
             Toast.makeText(UpdateNickNameActivity.this,"昵称中有非法字符请重新输入", Toast.LENGTH_SHORT).show();
@@ -63,7 +58,7 @@ public class UpdateNickNameActivity extends AppCompatActivity implements View.On
         if(!(wordCount>=4&&wordCount<=16)){
             Toast.makeText(UpdateNickNameActivity.this,"昵称大小不符合请重新输入", Toast.LENGTH_SHORT).show();
             return;
-        }
+        }*/
         mAccount.setNickname(newNickName);
         Account newAccount = new Account();
         newAccount.setObjectId(mAccount.getObjectId());
@@ -71,10 +66,18 @@ public class UpdateNickNameActivity extends AppCompatActivity implements View.On
         if(mUpdateUserSubscriber == null || mUpdateUserSubscriber.isUnsubscribed()){
             mUpdateUserSubscriber = new Subscriber<BmobObject>() {
                 @Override
+                public void onStart() {
+                    super.onStart();
+                    showLoadingDialog();
+                }
+
+                @Override
                 public void onCompleted() {
+
                 }
                 @Override
                 public void onError(Throwable e) {
+                    hideLoadingDialog();
                     if(e instanceof HttpException){
                         HttpExceptionHandle handle = new HttpExceptionHandle((HttpException) e,UpdateNickNameActivity.this);
                         handle.handle();
@@ -82,9 +85,10 @@ public class UpdateNickNameActivity extends AppCompatActivity implements View.On
                 }
                 @Override
                 public void onNext(BmobObject bmobObject) {
+                    hideLoadingDialog();
                     UserManager.getInstance().updateAccount(mAccount);
-                    finish();
                     ToastUtil.showToast(UpdateNickNameActivity.this,"更新成功");
+                    finish();
                 }
             };
         }
@@ -99,9 +103,6 @@ public class UpdateNickNameActivity extends AppCompatActivity implements View.On
     @Override
     public void onClick(View v) {
         switch (v.getId()){
-            case R.id.textView_back:
-                finish();
-                break;
             case R.id.btn_confirm:
                 confirm();
                 break;

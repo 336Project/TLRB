@@ -24,19 +24,35 @@
 -optimizationpasses 5
 -dontusemixedcaseclassnames
 -dontskipnonpubliclibraryclasses
--keepattributes Signature
+#-verbose
+#-ignorewarnings
 -dontpreverify
+-keepattributes Signature
 -keepattributes Exceptions
+-keepattributes InnerClasses
+-keepattributes EnclosingMethod
+
 
 -keep public class * extends android.app.Activity
 -keep public class * extends android.app.Application
 -keep public class * extends android.app.Service
 -keep public class * extends android.content.BroadcastReceiver
+-keep public class * extends android.content.ContentProvider
+-keep public class * extends android.app.backup.BackupAgentHelper
+-keep public class * extends android.preference.Preference
+-keep public class com.android.vending.licensing.ILicensingService
+-keep public class * implements android.os.IInterface {*;}
+-keep public class * extends android.os.IInterface {*;}
 
 -dontwarn android.support.v4.**
+-dontwarn android.support.v7.**
 -keep class android.support.v4.** { *; }
+-keep class android.support.v7.** { *; }
+-keep class android.support.** { *; }
 -keep public class * extends android.support.v4.**
 -keep public class * extends android.app.Fragment
+-keep public class android.webkit.**{*;}
+
 
 -keep class * implements android.os.Parcelable {
 public static final android.os.Parcelable$Creator *;
@@ -51,6 +67,15 @@ public static final android.os.Parcelable$Creator *;
 	*;
 }
 
+-keep class com.ttm.tlrb.ui.entity.**{
+*;
+}
+
+-keep class com.ttm.tlrb.api.e.**{
+*;
+}
+
+-keep class com.andexert.library.**{*;}
 # fresco
 -keep,allowobfuscation @interface com.facebook.common.internal.DoNotStrip
 
@@ -64,22 +89,45 @@ public static final android.os.Parcelable$Creator *;
 -keepclassmembers class * {
     native <methods>;
 }
+-keepclasseswithmembernames class * {
+native <methods>;
+}
 
 -dontwarn okio.**
 -dontwarn javax.annotation.**
 
 # retrofit
+-keepclassmembers class okhttp3.**{
+ *;
+}
 -keep class okhttp3.** {
+ *;
+}
+-keepclassmembers class okio.**{
  *;
 }
 -keep class okio.** {
  *;
 }
 
+-keep class retrofit2.converter.gson.** {
+ *;
+}
+
+-dontwarn com.google.gson.**
+-keep class com.google.gson.** { *; }
+-keep public class * extends com.google.gson.**
+
 -dontwarn retrofit2.**
+-keepclassmembers class retrofit2.**{
+ *;
+}
 -keep class retrofit2.** { *; }
 
 -dontwarn rx.**
+-keepclassmembers class rx.**{
+ *;
+}
 -keep class rx.** {
  *;
 }
@@ -92,7 +140,21 @@ public static final android.os.Parcelable$Creator *;
 -keep public class com.ttm.tlrb.R$*{
 public static final int *;
 }
-
+-keep class com.umeng.**{
+*;
+}
+-dontwarn com.umeng.**
+-keep class com.tencent.stat.**{
+*;
+}
+-keep class com.tencent.**{
+*;
+}
+-dontwarn com.tencent.**
+-keep class com.sina.**{
+*;
+}
+-dontwarn com.sina.**
 -keepclassmembers enum * {
     public static **[] values();
     public static ** valueOf(java.lang.String);

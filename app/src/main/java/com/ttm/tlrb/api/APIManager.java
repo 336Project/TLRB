@@ -61,6 +61,7 @@ public class APIManager {
     private Retrofit retrofit;
     private APIService apiService;
     private UserManager mUserManager;
+
     private APIManager(){
         File cacheFile = new File(EnvironmentUtil.getCacheFile(), Constant.CACHE_HTTP);
         OkHttpClient.Builder builder = new OkHttpClient().newBuilder();
@@ -131,10 +132,7 @@ public class APIManager {
                     @Override
                     public void call(Account account) {
 
-                        account.setNickname(authData.getUserNickname());
-                        account.setPortrait(authData.getUserPortrait());
                         RBApplication.getInstance().setSession(account.getSessionToken());
-                        mUserManager.updateAccount(account);
                         //判断平台
                         AuthData.Platform platform = authData.getPlatform();
                         int type = 0;
@@ -151,6 +149,9 @@ public class APIManager {
 
                         //修改用户信息
                         if(account.getACL() == null) {
+                            account.setNickname(authData.getUserNickname());
+                            account.setPortrait(authData.getUserPortrait());
+                            account.setType(type);
                             String objectId = account.getObjectId();
                             Account a = new Account();
                             a.setNickname(account.getNickname());
@@ -178,6 +179,7 @@ public class APIManager {
                                 }
                             });
                         }
+                        mUserManager.updateAccount(account);
                     }
                 })
                 .subscribeOn(Schedulers.io())
@@ -290,7 +292,7 @@ public class APIManager {
     public void addRedBomb(RedBomb redBomb, Subscriber<BmobObject> subscriber){
         redBomb.setACL(mUserManager.getUserACL());
         redBomb.setUserName(mUserManager.getAccount().getUsername());
-
+        redBomb.setDelete(false);
         RequestBody body = RequestBody.create(Constant.JSON,redBomb.toString());
         getAPIService().postRedBomb(body)
                 .subscribeOn(Schedulers.io())
@@ -325,10 +327,19 @@ public class APIManager {
      * @param objectId 要删除的红包数据的id
      */
     public void deleteRedBomb(String objectId, Subscriber<BmobObject> subscriber){
-        getAPIService().deleteRedBomb(objectId)
+        //软删除
+        RedBomb updateRedBomb=new RedBomb();
+        updateRedBomb.setDelete(true);
+        RequestBody body = RequestBody.create(Constant.JSON,updateRedBomb.toString());
+        getAPIService().putRedBomb(objectId,body)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(subscriber);
+        //硬删除
+        /*getAPIService().deleteRedBomb(objectId)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(subscriber);*/
     }
 
     /**
@@ -341,6 +352,7 @@ public class APIManager {
         //关联当前用户
         Map<String,Object> where = new HashMap<>();
         where.put("userName",mUserManager.getAccount().getUsername());
+        where.put("isDelete",false);
         if(type == 1 || type == 2) {
             where.put("type", type);
         }
@@ -365,7 +377,9 @@ public class APIManager {
      * 统计红包收入支出
      */
     public void countRedBombMoney(Subscriber<List<Map<String,String>>> subscriber){
-        getAPIService().countRedBombMoney("money","type")
+        Map<String,Object> where = new HashMap<>();
+        where.put("isDelete",false);
+        getAPIService().countRedBombMoney(GsonUtil.fromMap2Json(where),"money","type")
                 .map(new Func1<ResponseEn<Map<String,String>>, List<Map<String,String>>>() {
                     @Override
                     public List<Map<String, String>> call(ResponseEn<Map<String, String>> responseEn) {
@@ -710,8 +724,7 @@ public class APIManager {
 
     /**
      * 批量添加红包数据
-     * @param redBombs 添加对象
-     * @param subscriber 回调监听
+//     * @param redBombs 添加对象
      *
      */
     /*@Deprecated
@@ -735,4 +748,56 @@ public class APIManager {
                 .subscribe(subscriber);
     }*/
 
+    public String getPictureUrl() {
+        return pictureUrl;
+    }
+
+    private String pictureUrl;
+    /**
+     * 更新头像
+     * @param accountId 用户id
+     * @param file 头像文件
+     * @param subscriber 回调
+     */
+    public void updatePicture(final String accountId,File file, Subscriber<BmobObject> subscriber){
+        if(file == null){
+            throw new NullPointerException("upload file not be null");
+        }
+        HLog.d("uploadFile","File is exist " + file.exists());
+        //获取文件类型
+        FileNameMap fileNameMap = URLConnection.getFileNameMap();
+        String contentType = fileNameMap.getContentTypeFor(file.getAbsolutePath());
+        HLog.d("uploadFile","ContentType = " + contentType);
+        MediaType mediaType = MediaType.parse(contentType);
+        //生成文件名称
+        String name = file.getName();
+        int index = name.lastIndexOf(".");
+        String suffix = name.substring(index);
+        String fileName = MD5.toMd5(name)+suffix;
+        //构造RequestBody并发起请求
+        RequestBody requestBody = RequestBody.create(mediaType,file);
+        getAPIService().postFileUpload(fileName,requestBody)
+                .map(new Func1<FileBodyEn, String>() {
+                    @Override
+                    public String call(FileBodyEn fileBodyEn) {
+                        HLog.d("uploadFile",fileBodyEn.toString());
+                        return fileBodyEn.getUrl();
+                    }
+                })
+                .flatMap(new Func1<String, Observable<BmobObject>>() {
+                    @Override
+                    public Observable<BmobObject> call(String url) {
+                        Account account = new Account();
+                        pictureUrl = url;
+                        account.setPortrait(url);
+                        String json = account.toString();
+                        HLog.d("UpdateUserJson",json);
+                        RequestBody body = RequestBody.create(Constant.JSON, json);
+                        return getAPIService().putUser(accountId, body);
+                    }
+                })
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(subscriber);
+    }
 }

@@ -2,6 +2,7 @@ package com.ttm.tlrb.view;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
+import android.support.design.widget.TextInputEditText;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.AttributeSet;
@@ -10,13 +11,12 @@ import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.CycleInterpolator;
 import android.view.animation.TranslateAnimation;
-import android.widget.EditText;
 
 /**
  * user:wtw
  * time: 2016/5/26 0026.
  */
-public class CleanableEditText extends EditText {
+public class CleanableEditText extends TextInputEditText {
     private Drawable mRightDrawable;
     private boolean isHasFocus;
 

@@ -34,7 +34,7 @@
     <dimen name="action_button_min_width">56dp</dimen>
     <dimen name="action_button_padding_horizontal">4dp</dimen>
 
-    <dimen name="actionBarSize">45dp</dimen>
+    <dimen name="actionBarSize">50dp</dimen>
 
     <dimen name="min_height">45dp</dimen>
     <dimen name="card_radius">5dp</dimen>

@@ -51,8 +51,10 @@ public class RedBombAdapter extends BaseRecyclerAdapter<RedBomb>{
         String money;
         if(type == 1){
             money = "+";
+            viewHolder.mTextViewMoney.setTextColor(viewHolder.mTextViewMoney.getContext().getResources().getColor(R.color.Green_600));
         }else {
             money = "-";
+            viewHolder.mTextViewMoney.setTextColor(viewHolder.mTextViewMoney.getContext().getResources().getColor(R.color.Red_A700));
         }
         money += redBomb.getMoney();
         viewHolder.mTextViewMoney.setText(money);

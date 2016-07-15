@@ -1,5 +1,7 @@
 package com.ttm.tlrb.ui.entity;
 
+import android.text.TextUtils;
+
 import com.google.gson.Gson;
 
 /**
@@ -15,7 +17,7 @@ public class RedBomb extends BmobObject {
     private String time;//时间
     private Integer target;//男女方（1男方、2女方、3共同）
     private Integer type;//类型（1收入、2支出）
-    private String categoryName = "默认";//组别名称（不设置，都为'默认'组别）
+    private String categoryName;//组别名称（不设置，都为'默认'组别）
     private Double money;//金额
     private String gift;//随礼
     private String remark;//备注
@@ -23,6 +25,15 @@ public class RedBomb extends BmobObject {
     private String city;//市
     private String district;//区
     private BmobGeoPoint location;//地理位置点
+    private Boolean isDelete;//是否被删除
+
+    public Boolean getDelete() {
+        return isDelete;
+    }
+
+    public void setDelete(Boolean delete) {
+        isDelete = delete;
+    }
 
     public String getCity() {
         return city;
@@ -97,6 +108,9 @@ public class RedBomb extends BmobObject {
     }
 
     public String getCategoryName() {
+        if(TextUtils.isEmpty(categoryName)){
+            return "默认";
+        }
         return categoryName;
     }
 

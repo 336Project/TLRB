@@ -1,5 +1,6 @@
 package com.ttm.tlrb.api;
 
+import com.ttm.tlrb.BuildConfig;
 import com.ttm.tlrb.ui.entity.Account;
 import com.ttm.tlrb.ui.entity.BaseEn;
 import com.ttm.tlrb.ui.entity.BmobObject;
@@ -29,7 +30,7 @@ import rx.Observable;
  */
 public interface APIService {
     String BASE_URL = "https://api.bmob.cn/";
-    String BASE_DOWNLOAD_FILE_URL = "http://bmob-cdn-2106.b0.upaiyun.com/";
+    String BASE_DOWNLOAD_FILE_URL = BuildConfig.BASE_DOWNLOAD_FILE_URL;
     //int BATCH_LIMIT_COUNT = 50;
     /**登录*/
     @GET("1/login")
@@ -79,7 +80,7 @@ public interface APIService {
     Observable<BmobObject> deleteRedBomb(@Path("objectId") String id);
     /**统计红包收入、支出*/
     @GET("1/classes/RedBomb")
-    Observable<ResponseEn<Map<String,String>>> countRedBombMoney(@Query("sum") String sumColumn,@Query("groupby") String groupByColumn);
+    Observable<ResponseEn<Map<String,String>>> countRedBombMoney(@Query("where") String where,@Query("sum") String sumColumn,@Query("groupby") String groupByColumn);
     /**获取组别*/
     @GET("1/classes/Category")
     Observable<ResponseEn<Category>> getCategory(@Query("where") String where,@Query("limit") int limit,@Query("order") String order);

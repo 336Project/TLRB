@@ -10,33 +10,6 @@
 
     <LinearLayout
         android:orientation="vertical"
-        android:layout_width="match_parent"
-        android:layout_height="45dp"
-        android:background="@color/white"
-        >
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:text="主页"
-            android:drawableLeft="@drawable/ic_back"
-            android:textSize="@dimen/font_20"
-            android:gravity="center_vertical"
-            android:textColor="@color/Black"
-            android:layout_gravity="center_vertical"
-            android:id="@+id/textView_back"
-            android:paddingRight="@dimen/font_16"
-            android:background="@drawable/userinfo_back"
-            />
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="0.5dp"
-            android:background="#DFDFDF"></View>
-    </LinearLayout>
-
-    <LinearLayout
-        android:orientation="vertical"
         android:layout_marginTop="15dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -78,7 +51,7 @@
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:background="#EFEFEF"
-            ></View>
+            />
 
         <LinearLayout
             android:orientation="horizontal"
@@ -108,10 +81,11 @@
                 />
         </LinearLayout>
         <View
+            android:id="@+id/line1"
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:background="#EFEFEF"
-            ></View>
+            />
         <LinearLayout
             android:orientation="horizontal"
             android:layout_width="match_parent"
@@ -121,7 +95,7 @@
 
             <TextView
                 android:layout_height="wrap_content"
-                android:text="修改账户密码"
+                android:text="修改密码"
                 style="@style/UserInfoTextViewTitle"
                 />
             <ImageView
@@ -134,17 +108,16 @@
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:background="#EFEFEF"
-            ></View>
+            />
         <LinearLayout
             android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/linearLayout_phone"
             >
 
             <TextView
                 android:layout_height="wrap_content"
-                android:text="已绑定手机号"
+                android:text="账号类型"
                 style="@style/UserInfoTextViewTitle"
                 />
 
@@ -152,13 +125,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 style="@style/UserInfoTextViewContent"
-                android:id="@+id/textView_phone"
+                android:id="@+id/textView_type"
                 />
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                style="@style/UserInfoImageView"
-                />
+
         </LinearLayout>
     </LinearLayout>
 

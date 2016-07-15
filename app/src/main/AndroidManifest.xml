@@ -15,9 +15,12 @@
     <!-- 保持CPU 运转，屏幕和键盘灯有可能是关闭的,用于文件上传和下载 -->
     <uses-permission android:name="android.permission.WAKE_LOCK"/>
 
+    <supports-screens android:smallScreens="true" android:largeScreens="true" android:xlargeScreens="true" android:normalScreens="true" android:anyDensity="true" />
+
     <application
         android:name=".ui.application.RBApplication"
         android:allowBackup="true"
+        android:fullBackupContent="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
@@ -31,11 +34,11 @@
         <meta-data
             android:name="com.amap.api.v2.apikey"
             android:value="2d71b810c4b24f3ff5ef7e6f02e272cf"/>
-
+        <meta-data android:name="BaiduMobAd_APP_ID" android:value="f2dda28a"/><!--f57536be-->
         <activity
             android:name=".ui.activity.MainActivity"
             android:label="@string/app_name"
-            android:theme="@style/AppTheme.NoActionBar">
+            >
         </activity>
         <activity
             android:name=".ui.activity.FeedBackActivity"
@@ -72,6 +75,10 @@
         <activity
             android:name=".ui.activity.UserInfoActivity"
             android:screenOrientation="portrait"/>
+        <activity android:name=".ui.activity.UpdateNickNameActivity" android:screenOrientation="portrait">
+        </activity>
+        <activity android:name=".ui.activity.UpdatePasswordActivity" android:screenOrientation="portrait">
+        </activity>
 
         <service android:name=".ui.service.DownloadService"/>
 
@@ -110,9 +117,9 @@
             android:windowSoftInputMode="adjustResize">
         </activity>
 
-        <service
+        <!--<service
             android:name="com.sina.weibo.sdk.net.DownloadService"
-            android:exported="false"/>
+            android:exported="false"/>-->
         <!-- 微信 -->
         <activity
             android:name=".wxapi.WXEntryActivity"
@@ -142,10 +149,6 @@
         <!-- 高德地图 -->
         <service android:name="com.amap.api.location.APSService"/>
 
-        <activity android:name=".ui.activity.UpdateNickNameActivity">
-        </activity>
-        <activity android:name=".ui.activity.UpdatePasswordActivity">
-        </activity>
     </application>
 
 </manifest>

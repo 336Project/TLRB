@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:fitsSystemWindows="true"
     android:theme="@style/AppTheme.AppBarOverlay"
     >
 
@@ -12,9 +13,8 @@
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        android:fitsSystemWindows="true"
-        android:clipToPadding="false"
         android:background="?attr/colorPrimary"
+        android:fitsSystemWindows="true"
         app:layout_scrollFlags="scroll|enterAlways"
         app:title="@string/app_name"
         app:navigationIcon="?attr/homeAsUpIndicator"

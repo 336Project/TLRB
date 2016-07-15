@@ -23,7 +23,7 @@
     <string name="sure">确定</string>
     <string name="add_type">添加组别</string>
     <string name="delete">删除</string>
-
+    <string name="modify">修改</string>
 
     <string name="action_all">全部</string>
     <string name="action_in">收入</string>
@@ -77,4 +77,5 @@
     <string name="cancel_auth">取消授权</string>
     <string name="auth_fail">授权失败</string>
     <string name="login_success">登录成功</string>
+    <string name="requesting">请求中…</string>
 </resources>
