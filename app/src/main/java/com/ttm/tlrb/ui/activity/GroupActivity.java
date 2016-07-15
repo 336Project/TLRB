@@ -8,6 +8,7 @@ import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.LinearLayout;
 
 import com.ttm.tlrb.R;
 import com.ttm.tlrb.api.APIManager;
@@ -22,6 +23,9 @@ import com.ttm.tlrb.view.EmptyEmbeddedContainer;
 import com.ttm.tlrb.view.MaterialDialog;
 import com.ttm.tlrb.view.TagGroup;
 import com.umeng.analytics.MobclickAgent;
+
+import net.youmi.android.banner.AdSize;
+import net.youmi.android.banner.AdView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -63,6 +67,15 @@ public class GroupActivity extends TitlebarActivity implements TagGroup.OnTagCha
             }
         });
         initData();
+        initAd();
+    }
+
+    private void initAd() {
+        AdView adView = new AdView(this, AdSize.FIT_SCREEN);
+        // 获取要嵌入广告条的布局
+        LinearLayout adLayout=(LinearLayout)findViewById(R.id.layout_ad);
+        // 将广告条加入到布局中
+        adLayout.addView(adView);
     }
 
     private Subscriber<List<Category>> mCategoryListSubscriber;

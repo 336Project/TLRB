@@ -14,6 +14,8 @@ import com.umeng.analytics.MobclickAgent;
 import com.umeng.socialize.Config;
 import com.umeng.socialize.PlatformConfig;
 
+import net.youmi.android.AdManager;
+
 
 /**
  * Created by Helen on 2016/4/28.
@@ -62,7 +64,7 @@ public class RBApplication extends Application{
         //QQ
         PlatformConfig.setQQZone("1105419691","0Ap15PWrubt2QEzu");
         //微信
-        //PlatformConfig.setWeixin("wxcdc197b98763f77c","d438ff02585a119e1870482b85dc8460");
+        PlatformConfig.setWeixin("wxcdc197b98763f77c","d438ff02585a119e1870482b85dc8460");
     }
 
     private void initUmeng() {
@@ -74,7 +76,7 @@ public class RBApplication extends Application{
     }
 
     private void initAD() {
-        //AdManager.getInstance(this).init("abef61a1925a5d96","95ce78a402f6cf12",true);
+        AdManager.getInstance(this).init("abef61a1925a5d96","95ce78a402f6cf12",false);
     }
 
     private void initPatchManager() {

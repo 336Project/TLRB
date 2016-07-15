@@ -58,9 +58,6 @@
 public static final android.os.Parcelable$Creator *;
 }
 
--keep class com.baidu.** {
- public protected *;
-}
 
 #不混淆 Entity
 -keepclassmembers class * extends com.ttm.tlrb.ui.entity.BaseEn{
@@ -159,3 +156,12 @@ public static final int *;
     public static **[] values();
     public static ** valueOf(java.lang.String);
 }
+
+#有米广告sdk
+-dontwarn net.youmi.android.**
+-keep class net.youmi.android.** {
+    *;
+}
+#-keep class com.baidu.** {
+# public protected *;
+#}
