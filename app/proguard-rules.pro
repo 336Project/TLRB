@@ -156,12 +156,3 @@ public static final int *;
     public static **[] values();
     public static ** valueOf(java.lang.String);
 }
-
-#有米广告sdk
--dontwarn net.youmi.android.**
--keep class net.youmi.android.** {
-    *;
-}
-#-keep class com.baidu.** {
-# public protected *;
-#}

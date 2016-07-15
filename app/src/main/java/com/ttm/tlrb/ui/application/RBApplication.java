@@ -10,11 +10,13 @@ import com.facebook.imagepipeline.core.ImagePipelineConfig;
 import com.ttm.tlrb.BuildConfig;
 import com.ttm.tlrb.api.UserManager;
 import com.ttm.tlrb.utils.EnvironmentUtil;
+import com.ttm.tlrb.utils.HLog;
 import com.umeng.analytics.MobclickAgent;
 import com.umeng.socialize.Config;
 import com.umeng.socialize.PlatformConfig;
 
-import net.youmi.android.AdManager;
+import th.ds.wa.AdManager;
+import th.ds.wa.OnSdkInitListener;
 
 
 /**
@@ -76,7 +78,17 @@ public class RBApplication extends Application{
     }
 
     private void initAD() {
-        AdManager.getInstance(this).init("abef61a1925a5d96","95ce78a402f6cf12",false);
+        AdManager.getInstance(this).init("abef61a1925a5d96", "95ce78a402f6cf12", BuildConfig.DEBUG, BuildConfig.DEBUG, new OnSdkInitListener() {
+            @Override
+            public void onSdkInitSuccess() {
+                HLog.d("YoumiSdk","onSdkInitSuccess");
+            }
+
+            @Override
+            public void onSdkInitFailed() {
+                HLog.d("YoumiSdk","onSdkInitFailed");
+            }
+        });
     }
 
     private void initPatchManager() {
