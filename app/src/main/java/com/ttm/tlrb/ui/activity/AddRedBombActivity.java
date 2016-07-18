@@ -1,9 +1,15 @@
 package com.ttm.tlrb.ui.activity;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.TextInputLayout;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -112,7 +118,7 @@ public class AddRedBombActivity extends TitlebarActivity implements View.OnClick
             }
         }else {
             //添加的时候才需要定位
-            initLocation();
+            requestPermission();
         }
         findAddType();
     }
@@ -397,6 +403,31 @@ public class AddRedBombActivity extends TitlebarActivity implements View.OnClick
         }
     }
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if(requestCode == REQ_LOC){
+            boolean isAllow = PackageManager.PERMISSION_GRANTED == grantResults[0];
+            if(isAllow){
+                initLocation();
+            }
+        }
+    }
+
+    private static final int REQ_LOC = 2001;//申请定位权限
+    private void requestPermission(){
+        if (Build.VERSION.SDK_INT < 23) {//如果系统版本低于23，直接跑应用的逻辑
+            initLocation();
+        }else {
+            //如果权限全部申请了，
+            boolean isAllow = PackageManager.PERMISSION_GRANTED == ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION);
+            if(isAllow){
+                initLocation();
+            }else {
+                ActivityCompat.requestPermissions(this,new String[]{Manifest.permission.ACCESS_FINE_LOCATION},REQ_LOC);
+            }
+        }
+    }
 
     private AMapLocationClient mLocationClient = null;
     private void initLocation(){
