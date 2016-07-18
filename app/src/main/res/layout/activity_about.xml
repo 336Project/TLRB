@@ -49,11 +49,6 @@
             android:text="@string/about_me"
             />-->
 
-        <com.andexert.library.RippleView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            style="@style/RippleViewStyle"
-            >
 
             <LinearLayout
                 android:id="@+id/layout_check_update"
@@ -88,16 +83,10 @@
                     android:visibility="gone"
                     />
             </LinearLayout>
-        </com.andexert.library.RippleView>
 
 
         <View style="@style/LineStyle"/>
 
-        <com.andexert.library.RippleView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            style="@style/RippleViewStyle"
-            >
 
             <LinearLayout
                 android:id="@+id/layout_share"
@@ -120,6 +109,5 @@
                     android:text="@string/share_soft"
                     />
             </LinearLayout>
-        </com.andexert.library.RippleView>
     </LinearLayout>
 </ScrollView>
