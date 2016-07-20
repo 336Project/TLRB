@@ -82,7 +82,7 @@
         <service android:name=".ui.service.DownloadService"/>
 
         <!-- 有米广告 -->
-        <activity
+        <!--<activity
             android:name="th.ds.wa.BV"
             android:configChanges="keyboard|keyboardHidden|orientation|screenSize"
             android:theme="@android:style/Theme.Light.NoTitleBar" >
@@ -97,15 +97,15 @@
                 <action android:name="android.intent.action.PACKAGE_ADDED" />
                 <data android:scheme="package" />
             </intent-filter>
-        </receiver>
+        </receiver>-->
 
 
         <!-- 百度广告 -->
-        <!--<meta-data	android:name="BaiduMobAd_APP_ID"	android:value="f57536be"/>
+        <meta-data	android:name="BaiduMobAd_APP_ID"	android:value="f57536be"/>
         <activity
             android:name="com.baidu.mobads.AppActivity"
             android:configChanges="keyboard|keyboardHidden|orientation"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar"/>-->
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"/>
         <!-- 新浪微博 -->
         <activity
             android:name="com.sina.weibo.sdk.component.WeiboSdkBrowser"

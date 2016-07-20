@@ -1,26 +1,26 @@
 package com.ttm.tlrb.ui.activity;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.RelativeLayout;
 
-import com.ttm.tlrb.BuildConfig;
+import com.baidu.mobads.AppActivity;
+import com.baidu.mobads.SplashAd;
+import com.baidu.mobads.SplashAdListener;
 import com.ttm.tlrb.R;
 import com.ttm.tlrb.ui.application.Constant;
 import com.ttm.tlrb.ui.application.RBApplication;
-import com.ttm.tlrb.utils.HLog;
-import com.ttm.tlrb.utils.SPUtil;
+import com.ttm.tlrb.utils.FileUtil;
 import com.umeng.analytics.MobclickAgent;
 
-import th.ds.wa.AdManager;
-import th.ds.wa.normal.spot.SplashView;
-import th.ds.wa.normal.spot.SpotDialogListener;
-import th.ds.wa.normal.spot.SpotManager;
-import th.ds.wa.onlineconfig.OnlineConfigCallBack;
+import java.io.File;
 
 /**
  * Created by Helen on 2016/6/17.
@@ -36,7 +36,7 @@ public class SplashActivity extends BaseActivity{
         //移除标题栏
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_splash);
-        boolean isAdOpen = SPUtil.getInstance().getBoolean("isAdOpen",false) || BuildConfig.DEBUG;
+        /*boolean isAdOpen = SPUtil.getInstance().getBoolean("isAdOpen",false) || BuildConfig.DEBUG;
         if(!isAdOpen) {
             AdManager.getInstance(RBApplication.getInstance()).asyncGetOnlineConfig("isOpen", new OnlineConfigCallBack() {
                 @Override
@@ -58,18 +58,14 @@ public class SplashActivity extends BaseActivity{
             });
         }else {
             showAd();
-        }
-        /*SpotManager.getInstance(RBApplication.getInstance()).loadSpotAds();
-        SpotManager.getInstance(RBApplication.getInstance()).setSpotOrientation(SpotManager.ORIENTATION_PORTRAIT);
-        SpotManager.getInstance(RBApplication.getInstance()).setAnimationType(SpotManager.ANIM_NONE);
-        SpotManager.getInstance(RBApplication.getInstance()).showSpotAds(this);*/
-        /*YouxiaoAd shuiguoAd = new YouxiaoAd(SplashActivity.this,adListener,"2483","3401");
-        adLayout.addView(shuiguoAd.getFullScreenAd());*/
+        }*/
         //清空百度广告缓存
-        /*FileUtil.deleteDir(new File(Environment.getExternalStorageDirectory(),"bddownload"));
+        FileUtil.deleteDir(new File(Environment.getExternalStorageDirectory(),"bddownload"));
         SharedPreferences sp = getSharedPreferences("__sdk_remote_dl_2", Context.MODE_PRIVATE);
         sp.edit().clear().apply();
         //设置广告
+        AppActivity.setActionBarColorTheme(AppActivity.ActionBarColorTheme.ACTION_BAR_BLUE_THEME);
+        RelativeLayout adLayout = (RelativeLayout) findViewById(R.id.layout_ad);
         new SplashAd(this, adLayout, new SplashAdListener() {
             @Override
             public void onAdPresent() {
@@ -90,10 +86,10 @@ public class SplashActivity extends BaseActivity{
             public void onAdClick() {
                 MobclickAgent.onEvent(SplashActivity.this, Constant.Event.EVENT_ID_SPLASH_AD_CLICK);
             }
-        },"2600711",true);*/
+        },"2600711",true);
     }
 
-    private void showAd(){
+    /*private void showAd(){
         RelativeLayout adLayout = (RelativeLayout) findViewById(R.id.layout_ad);
         SplashView splashView = SpotManager.getInstance(RBApplication.getInstance()).getSplashView(this);//new SplashView(this,null);
         if(splashView != null) {
@@ -134,35 +130,8 @@ public class SplashActivity extends BaseActivity{
         }else {
             jump();
         }
-    }
+    }*/
 
-    /**监听广告过程*//*
-    AdListener adListener=new AdListener(){
-        @Override
-        public void onFail(String msg) {
-            Log.d(TAG,"广告加载失败"+msg);
-        }
-
-        @Override
-        public void onExposure(String msg) {
-            Log.d(TAG,"广告曝光展示");
-        }
-
-        @Override
-        public void onClickAd(String msg) {
-            Log.d(TAG,"广告点击");
-
-        }
-
-        @Override
-        public void onBack(String msg) {
-        }
-
-        @Override
-        public void onAdReceive(String msg) {
-            Log.d(TAG,"广告加载成功");
-        }
-    };*/
 
     private void jump(){
         Intent intent;
@@ -177,7 +146,7 @@ public class SplashActivity extends BaseActivity{
 
     @Override
     protected void onDestroy() {
-        SpotManager.getInstance(RBApplication.getInstance()).onDestroy();
+        //SpotManager.getInstance(RBApplication.getInstance()).onDestroy();
         super.onDestroy();
     }
 }

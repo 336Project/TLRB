@@ -156,3 +156,7 @@ public static final int *;
     public static **[] values();
     public static ** valueOf(java.lang.String);
 }
+##百度广告
+-keep class com.baidu.**{
+    public protected *;
+}
