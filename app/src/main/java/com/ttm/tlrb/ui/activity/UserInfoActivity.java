@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -27,10 +28,15 @@ import rx.Subscriber;
 public class UserInfoActivity extends TitlebarActivity implements View.OnClickListener {
     private SimpleDraweeView mHeaderView;
     private TextView mTextViewNick;
-    private TextView mTextViewType;
+    private TextView mTextViewPhone;
+    private TextView mTextViewEmail;
+
     private ImageConfig mImageConfig;
     private final int REQUEST_NICK = 0x001;
-    private final int REQUEST_PASSWORD = 0x001;
+    private final int REQUEST_PHONE = 0x002;
+    private final int REQUEST_EMAIL = 0x003;
+    private final int REQUEST_PASSWORD = 0x004;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -87,18 +93,23 @@ public class UserInfoActivity extends TitlebarActivity implements View.OnClickLi
     private void initView() {
         findViewById(R.id.linearLayout_portrait).setOnClickListener(this);
         findViewById(R.id.linearLayout_nick).setOnClickListener(this);
+        findViewById(R.id.layout_phone).setOnClickListener(this);
+        findViewById(R.id.layout_email).setOnClickListener(this);
         View layoutPwd = findViewById(R.id.linearLayout_password);
         layoutPwd.setOnClickListener(this);
         layoutPwd.setVisibility(View.GONE);
         findViewById(R.id.line1).setVisibility(View.GONE);
         mHeaderView = (SimpleDraweeView) findViewById(R.id.iv_portrait);
         mTextViewNick = (TextView) findViewById(R.id.textView_nick);
-        mTextViewType = (TextView) findViewById(R.id.textView_type);
+        mTextViewPhone = (TextView) findViewById(R.id.tv_phone);
+        mTextViewEmail = (TextView) findViewById(R.id.tv_email);
+
+        TextView textViewType = (TextView) findViewById(R.id.textView_type);
         Account account = UserManager.getInstance().getAccount();
         if(account != null){
             mHeaderView.setImageURI(Uri.parse(account.getPortrait()));
             if(account.getNickname().equals("")){
-                mTextViewNick.setText("您还没有昵称，快去设置吧");
+                mTextViewNick.setText("您还没有昵称，快去设置吧~");
             }
             else{
                 mTextViewNick.setText(account.getNickname());
@@ -107,13 +118,21 @@ public class UserInfoActivity extends TitlebarActivity implements View.OnClickLi
             if(type == 0){
                 layoutPwd.setVisibility(View.VISIBLE);
                 findViewById(R.id.line1).setVisibility(View.VISIBLE);
-                mTextViewType.setText("来自注册");
+                textViewType.setText("来自注册");
             }else if(type == 1){
-                mTextViewType.setText("来自新浪");
+                textViewType.setText("来自新浪");
             }else if(type == 2){
-                mTextViewType.setText("来自微信");
+                textViewType.setText("来自微信");
             }else if(type == 3){
-                mTextViewType.setText("来自QQ");
+                textViewType.setText("来自QQ");
+            }
+            String phone = account.getMobilePhoneNumber();
+            if(!TextUtils.isEmpty(phone)){
+                mTextViewPhone.setText(phone);
+            }
+            String email = account.getEmail();
+            if(!TextUtils.isEmpty(email)){
+                mTextViewEmail.setText(email);
             }
         }
     }
@@ -148,17 +167,19 @@ public class UserInfoActivity extends TitlebarActivity implements View.OnClickLi
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode == this.REQUEST_NICK){
-            mTextViewNick.setText(UserManager.getInstance().getAccount().getNickname());
-        }
-        if (requestCode == ImageSelector.IMAGE_REQUEST_CODE && resultCode == RESULT_OK && data != null) {
-            // Get Image Path List
-            List<String> pathList = data.getStringArrayListExtra(ImageSelectorActivity.EXTRA_RESULT);
-            int i=0;
-            for (String path : pathList) {
-                if(i==0){
-                    inputPicture(path);
-                    i++;
+        if(resultCode == RESULT_OK) {
+            if (requestCode == this.REQUEST_NICK) {
+                mTextViewNick.setText(UserManager.getInstance().getAccount().getNickname());
+            } else if (requestCode == REQUEST_EMAIL) {
+                mTextViewEmail.setText(UserManager.getInstance().getAccount().getEmail());
+            } else if (requestCode == REQUEST_PHONE) {
+                mTextViewPhone.setText(UserManager.getInstance().getAccount().getMobilePhoneNumber());
+            } else if (requestCode == ImageSelector.IMAGE_REQUEST_CODE) {
+                if (data != null) {
+                    List<String> pathList = data.getStringArrayListExtra(ImageSelectorActivity.EXTRA_RESULT);
+                    if (pathList != null && !pathList.isEmpty()) {
+                        inputPicture(pathList.get(0));
+                    }
                 }
             }
         }
@@ -171,6 +192,14 @@ public class UserInfoActivity extends TitlebarActivity implements View.OnClickLi
             case R.id.linearLayout_nick:
                 intent.setClass(UserInfoActivity.this,UpdateNickNameActivity.class);
                 startActivityForResult(intent,this.REQUEST_NICK);
+                break;
+            case R.id.layout_phone:
+                intent.setClass(UserInfoActivity.this,UpdatePhoneActivity.class);
+                startActivityForResult(intent,this.REQUEST_PHONE);
+                break;
+            case R.id.layout_email:
+                intent.setClass(UserInfoActivity.this,UpdateEmailActivity.class);
+                startActivityForResult(intent,this.REQUEST_EMAIL);
                 break;
             case R.id.linearLayout_password:
                 intent.setClass(UserInfoActivity.this,UpdatePasswordActivity.class);

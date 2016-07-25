@@ -56,6 +56,18 @@ public class HttpExceptionHandle {
             case 210:
                 ToastUtil.showToast(mContext,"旧密码不正确");
                 break;
+            case 10010:
+                ToastUtil.showToast(mContext,"该手机号发送短信达到限制");
+                break;
+            case 10011:
+                ToastUtil.showToast(mContext,"该账户无可用的发送短信条数");
+                break;
+            case 10012:
+                ToastUtil.showToast(mContext,"身份信息必须审核通过才能使用该功能");
+                break;
+            case 10013:
+                ToastUtil.showToast(mContext,"非法短信内容");
+                break;
         }
     }
 

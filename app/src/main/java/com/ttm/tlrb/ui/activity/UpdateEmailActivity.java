@@ -15,7 +15,7 @@ import com.ttm.tlrb.utils.ToastUtil;
 import retrofit2.adapter.rxjava.HttpException;
 import rx.Subscriber;
 
-public class UpdateNickNameActivity extends TitlebarActivity implements View.OnClickListener{
+public class UpdateEmailActivity extends TitlebarActivity implements View.OnClickListener{
 
     private EditText mEditTextNick;
     private Account mAccount;
@@ -24,7 +24,7 @@ public class UpdateNickNameActivity extends TitlebarActivity implements View.OnC
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_update_nick_name);
-        setTitle("修改昵称");
+        setTitle("修改邮箱");
         initView();
     }
 
@@ -41,11 +41,11 @@ public class UpdateNickNameActivity extends TitlebarActivity implements View.OnC
     private void confirm(){
         String newNickName = mEditTextNick.getText().toString().trim();
         if(mAccount ==null){
-            ToastUtil.showToast(UpdateNickNameActivity.this,"登录异常，请重新登录");
+            ToastUtil.showToast(UpdateEmailActivity.this,"登录异常，请重新登录");
             return;
         }
         if(newNickName.equals("")){
-            ToastUtil.showToast(UpdateNickNameActivity.this,"用户名不能为空，请重新输入");
+            ToastUtil.showToast(UpdateEmailActivity.this,"用户名不能为空，请重新输入");
             return;
         }
         /*Pattern p = Pattern.compile("[A-Za-z0-9_\\-\\u4e00-\\u9fa5]+");
@@ -79,7 +79,7 @@ public class UpdateNickNameActivity extends TitlebarActivity implements View.OnC
                 public void onError(Throwable e) {
                     hideLoadingDialog();
                     if(e instanceof HttpException){
-                        HttpExceptionHandle handle = new HttpExceptionHandle((HttpException) e,UpdateNickNameActivity.this);
+                        HttpExceptionHandle handle = new HttpExceptionHandle((HttpException) e,UpdateEmailActivity.this);
                         handle.handle();
                     }
                 }
@@ -87,8 +87,7 @@ public class UpdateNickNameActivity extends TitlebarActivity implements View.OnC
                 public void onNext(BmobObject bmobObject) {
                     hideLoadingDialog();
                     UserManager.getInstance().updateAccount(mAccount);
-                    ToastUtil.showToast(UpdateNickNameActivity.this,"更新成功");
-                    setResult(RESULT_OK);
+                    ToastUtil.showToast(UpdateEmailActivity.this,"更新成功");
                     finish();
                 }
             };

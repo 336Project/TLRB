@@ -96,4 +96,8 @@ public interface APIService {
     /**删除分组*/
     @DELETE("1/classes/Category/{objectId}")
     Observable<BmobObject> deleteCategory(@Path("objectId") String id);
+    @POST("1/requestSmsCode")
+    Observable<BmobObject> getSmsCode(@Body RequestBody body);
+    @POST("1/verifySmsCode/{code}")
+    Observable<BmobObject> verifySmsCode(@Path("code") String code,@Body RequestBody body);
 }

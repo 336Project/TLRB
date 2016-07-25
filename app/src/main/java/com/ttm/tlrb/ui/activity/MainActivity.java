@@ -20,7 +20,6 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -152,7 +151,6 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     private void initTabLayout(){
         RedBombPagerAdapter pagerAdapter = new RedBombPagerAdapter(getSupportFragmentManager());
         mAllInformFragment=RedBombFragment.newInstance(0);
-        Log.e("","");
         mSpendingFragment=RedBombFragment.newInstance(2);
         mIncomeFragment=RedBombFragment.newInstance(1);
         pagerAdapter.addFragment(mAllInformFragment,getString(R.string.action_all));

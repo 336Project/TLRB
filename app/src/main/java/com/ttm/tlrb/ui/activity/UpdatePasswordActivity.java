@@ -92,6 +92,7 @@ public class UpdatePasswordActivity extends TitlebarActivity implements View.OnC
                 public void onNext(BmobObject bmobObject) {
                     hideLoadingDialog();
                     ToastUtil.showToast(UpdatePasswordActivity.this,"更新成功");
+                    setResult(RESULT_OK);
                     finish();
                 }
             };

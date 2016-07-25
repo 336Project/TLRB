@@ -800,4 +800,36 @@ public class APIManager {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(subscriber);
     }
+
+    /**
+     * 获取短信验证码
+     * @param phoneNum 手机号码
+     * @param subscriber 回调
+     */
+    public void getSmsCode(String phoneNum,Subscriber<BmobObject> subscriber){
+        Map<String,String> map = new HashMap<>();
+        map.put("mobilePhoneNumber",phoneNum);
+        map.put("template","手机验证码");
+        RequestBody body = RequestBody.create(Constant.JSON,GsonUtil.fromMap2Json(map));
+        getAPIService().getSmsCode(body)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(subscriber);
+    }
+
+    /**
+     * 验证短信验证码
+     * @param phoneNum 手机号码
+     * @param code 验证码
+     * @param subscriber 回调
+     */
+    public void verifySmsCode(String phoneNum,String code,Subscriber<BmobObject> subscriber){
+        Map<String,String> map = new HashMap<>();
+        map.put("mobilePhoneNumber",phoneNum);
+        RequestBody body = RequestBody.create(Constant.JSON,GsonUtil.fromMap2Json(map));
+        getAPIService().verifySmsCode(code,body)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(subscriber);
+    }
 }

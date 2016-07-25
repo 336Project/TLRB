@@ -76,6 +76,10 @@
             android:screenOrientation="portrait"/>
         <activity android:name=".ui.activity.UpdateNickNameActivity" android:screenOrientation="portrait">
         </activity>
+        <activity android:name=".ui.activity.UpdateEmailActivity" android:screenOrientation="portrait">
+        </activity>
+        <activity android:name=".ui.activity.UpdatePhoneActivity" android:screenOrientation="portrait">
+        </activity>
         <activity android:name=".ui.activity.UpdatePasswordActivity" android:screenOrientation="portrait">
         </activity>
 
