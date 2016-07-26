@@ -9,7 +9,7 @@ import android.widget.EditText;
 
 import com.ttm.tlrb.R;
 import com.ttm.tlrb.api.APIManager;
-import com.ttm.tlrb.api.e.HttpExceptionHandle;
+import com.ttm.tlrb.api.BaseSubscriber;
 import com.ttm.tlrb.ui.application.Constant;
 import com.ttm.tlrb.ui.entity.Account;
 import com.ttm.tlrb.utils.ToastUtil;
@@ -19,13 +19,13 @@ import com.umeng.analytics.MobclickAgent;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import retrofit2.adapter.rxjava.HttpException;
 import rx.Subscriber;
 
 public class RegisterActivity extends BaseActivity implements View.OnClickListener{
 
     private EditText mEditTextUsername;
     private  EditText mEditTextPassword;
+    private Subscriber<Account> mSubscriber;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -62,36 +62,21 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
             account.setUsername(userName);
             account.setPassword(pwd);
             account.setType(0);
-            APIManager.getInstance().register(account, new Subscriber<Account>() {
+            if(mSubscriber == null || mSubscriber.isUnsubscribed()){
+                mSubscriber = new BaseSubscriber<Account>(this) {
+                    @Override
+                    public void atNext(Account account) {
+                        ToastUtil.showToast(RegisterActivity.this, "注册成功");
+                        finish();
+                    }
 
-                @Override
-                public void onStart() {
-                    super.onStart();
-                    showLoadingDialog();
-                }
-
-                @Override
-                public void onCompleted() {
-                }
-
-                @Override
-                public void onError(Throwable e) {
-                    hideLoadingDialog();
-                    if (e instanceof HttpException) {
-                        HttpExceptionHandle handle = new HttpExceptionHandle((HttpException) e, RegisterActivity.this);
-                        handle.handle();
-                    } else {
+                    @Override
+                    public void atError(Throwable e) {
                         ToastUtil.showToast(RegisterActivity.this, "注册失败");
                     }
-                }
-
-                @Override
-                public void onNext(Account account) {
-                    hideLoadingDialog();
-                    ToastUtil.showToast(RegisterActivity.this, "注册成功");
-                    finish();
-                }
-            });
+                };
+            }
+            APIManager.getInstance().register(account, mSubscriber);
 
         }
     }
@@ -106,5 +91,13 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
                 finish();
                 break;
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        if(mSubscriber != null && !mSubscriber.isUnsubscribed()){
+            mSubscriber.unsubscribe();
+        }
+        super.onDestroy();
     }
 }

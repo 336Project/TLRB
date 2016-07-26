@@ -6,14 +6,13 @@ import android.widget.EditText;
 
 import com.ttm.tlrb.R;
 import com.ttm.tlrb.api.APIManager;
+import com.ttm.tlrb.api.BaseSubscriber;
 import com.ttm.tlrb.api.UserManager;
-import com.ttm.tlrb.api.e.HttpExceptionHandle;
 import com.ttm.tlrb.ui.entity.Account;
 import com.ttm.tlrb.ui.entity.BmobObject;
 import com.ttm.tlrb.utils.ToastUtil;
 import com.ttm.tlrb.utils.VerifyUtil;
 
-import retrofit2.adapter.rxjava.HttpException;
 import rx.Subscriber;
 
 public class UpdatePasswordActivity extends TitlebarActivity implements View.OnClickListener {
@@ -65,30 +64,9 @@ public class UpdatePasswordActivity extends TitlebarActivity implements View.OnC
         if(VerifyUtil.checkPassword(this,newPassword)) {
             Account mAccount = UserManager.getInstance().getAccount();
             if (mUpdatePasswordSubscriber == null || mUpdatePasswordSubscriber.isUnsubscribed()) {
-                mUpdatePasswordSubscriber = new Subscriber<BmobObject>() {
-
+                mUpdatePasswordSubscriber = new BaseSubscriber<BmobObject>(this) {
                     @Override
-                    public void onStart() {
-                        super.onStart();
-                        showLoadingDialog();
-                    }
-
-                    @Override
-                    public void onCompleted() {
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        hideLoadingDialog();
-                        if (e instanceof HttpException) {
-                            HttpExceptionHandle handle = new HttpExceptionHandle((HttpException) e, UpdatePasswordActivity.this);
-                            handle.handle();
-                        }
-                    }
-
-                    @Override
-                    public void onNext(BmobObject bmobObject) {
-                        hideLoadingDialog();
+                    public void atNext(BmobObject object) {
                         ToastUtil.showToast(UpdatePasswordActivity.this, "修改成功");
                         setResult(RESULT_OK);
                         finish();

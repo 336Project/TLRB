@@ -23,6 +23,7 @@ import com.amap.api.location.AMapLocationClientOption;
 import com.amap.api.location.AMapLocationListener;
 import com.ttm.tlrb.R;
 import com.ttm.tlrb.api.APIManager;
+import com.ttm.tlrb.api.BaseSubscriber;
 import com.ttm.tlrb.ui.application.Constant;
 import com.ttm.tlrb.ui.application.RBApplication;
 import com.ttm.tlrb.ui.entity.BmobGeoPoint;
@@ -124,125 +125,128 @@ public class AddRedBombActivity extends TitlebarActivity implements View.OnClick
     }
 
     //查询组别
+    private Subscriber<List<Category>> mSubscriberGetCategory;
     private void findAddType(){
-        APIManager.getInstance().getCategoryList(new Subscriber<List<Category>>() {
-            @Override
-            public void onCompleted() {
+        if(mSubscriberGetCategory == null || mSubscriberGetCategory.isUnsubscribed()){
+            mSubscriberGetCategory = new Subscriber<List<Category>>() {
+                @Override
+                public void onCompleted() {
 
-            }
-
-            @Override
-            public void onError(Throwable e) {
-//                ToastUtil.showToast(AddRedBombActivity.this,"获取组别失败");
-            }
-
-            @Override
-            public void onNext(List<Category> categories) {
-                int selection=0;
-                List<String> list = new ArrayList<String>();
-                for (int i=0;i<categories.size();i++){
-                    if(redBomb!=null&&redBomb.getCategoryName().equals(categories.get(i).getName())){
-                        type=categories.get(i).getName();
-                        selection=i;
-                    }else if(i==0){
-                        type=categories.get(0).getName();
-                    }
-                    list.add(categories.get(i).getName());
                 }
-                final ArrayAdapter<String> adapter = new ArrayAdapter<String>(AddRedBombActivity.this, android.R.layout.simple_spinner_item, list);
-                adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                mSpAddType.setAdapter(adapter);
-                mSpAddType.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                    @Override
-                    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                        type = adapter.getItem(position);
-                    }
 
-                    @Override
-                    public void onNothingSelected(AdapterView<?> parent) {
+                @Override
+                public void onError(Throwable e) {
+//                ToastUtil.showToast(AddRedBombActivity.this,"获取组别失败");
+                }
 
+                @Override
+                public void onNext(List<Category> categories) {
+                    int selection=0;
+                    List<String> list = new ArrayList<String>();
+                    for (int i=0;i<categories.size();i++){
+                        if(redBomb!=null&&redBomb.getCategoryName().equals(categories.get(i).getName())){
+                            type=categories.get(i).getName();
+                            selection=i;
+                        }else if(i==0){
+                            type=categories.get(0).getName();
+                        }
+                        list.add(categories.get(i).getName());
                     }
-                });
-                mSpAddType.setSelection(selection);
-            }
-        });
+                    final ArrayAdapter<String> adapter = new ArrayAdapter<String>(AddRedBombActivity.this, android.R.layout.simple_spinner_item, list);
+                    adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                    mSpAddType.setAdapter(adapter);
+                    mSpAddType.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                        @Override
+                        public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                            type = adapter.getItem(position);
+                        }
+
+                        @Override
+                        public void onNothingSelected(AdapterView<?> parent) {
+
+                        }
+                    });
+                    mSpAddType.setSelection(selection);
+                }
+            };
+        }
+        APIManager.getInstance().getCategoryList(mSubscriberGetCategory);
     }
 
     //保存数据
+    private Subscriber<BmobObject> mSubscriberSave;
     private void saveData(){
         if(checkInput(mInputRedBomb)==null){
             return;
         }
-        APIManager.getInstance().addRedBomb(mInputRedBomb, new Subscriber<BmobObject>() {
-            @Override
-            public void onCompleted() {
-                Intent intent=new Intent();
-                intent.putExtra("redBomb",mInputRedBomb);
-                setResult(ADD_INFORM,intent);
-                ToastUtil.showToast(AddRedBombActivity.this, "添加成功");
-                finish();
-            }
+        if(mSubscriberSave == null || mSubscriberSave.isUnsubscribed()){
+            mSubscriberSave = new BaseSubscriber<BmobObject>(this) {
+                @Override
+                public void atNext(BmobObject bmobObject) {
+                    mInputRedBomb.setObjectId(bmobObject.getObjectId());
+                    mInputRedBomb.setACL(bmobObject.getACL());
+                    mInputRedBomb.setCreatedAt(bmobObject.getCreatedAt());
+                    mInputRedBomb.setUpdatedAt(bmobObject.getUpdatedAt());
 
-            @Override
-            public void onError(Throwable e) {
-                ToastUtil.showToast(AddRedBombActivity.this, "保存数据失败，请重试");
-            }
+                    Intent intent=new Intent();
+                    intent.putExtra("redBomb",mInputRedBomb);
+                    setResult(ADD_INFORM,intent);
+                    ToastUtil.showToast(AddRedBombActivity.this, "添加成功");
+                    finish();
+                }
 
-            @Override
-            public void onNext(BmobObject bmobObject) {
-                mInputRedBomb.setObjectId(bmobObject.getObjectId());
-                mInputRedBomb.setACL(bmobObject.getACL());
-                mInputRedBomb.setCreatedAt(bmobObject.getCreatedAt());
-                mInputRedBomb.setUpdatedAt(bmobObject.getUpdatedAt());
-            }
-        });
+                @Override
+                public void atError(Throwable e) {
+                    ToastUtil.showToast(AddRedBombActivity.this, "保存数据失败，请重试");
+                }
+            };
+        }
+        APIManager.getInstance().addRedBomb(mInputRedBomb, mSubscriberSave);
     }
 
     //更新数据
+    private Subscriber<BmobObject> mSubscriberUpdate;
     private void updateData(){
         if(checkInput(redBomb)==null){
             return;
         }
-        APIManager.getInstance().updateRedBomb(redBomb, new Subscriber<BmobObject>() {
-            @Override
-            public void onCompleted() {
-                setResult(REFRESH_REDBOMBFRAGMENT);
-                ToastUtil.showToast(AddRedBombActivity.this, "修改数据成功");
-                finish();
-            }
+        if(mSubscriberUpdate == null || mSubscriberUpdate.isUnsubscribed()){
+            mSubscriberUpdate = new BaseSubscriber<BmobObject>(this) {
+                @Override
+                public void atNext(BmobObject bmobObject) {
+                    setResult(REFRESH_REDBOMBFRAGMENT);
+                    ToastUtil.showToast(AddRedBombActivity.this, "修改数据成功");
+                    finish();
+                }
 
-            @Override
-            public void onError(Throwable e) {
-                ToastUtil.showToast(AddRedBombActivity.this, "修改数据失败，请重试");
-            }
-
-            @Override
-            public void onNext(BmobObject bmobObject) {
-
-            }
-        });
+                @Override
+                public void atError(Throwable e) {
+                    ToastUtil.showToast(AddRedBombActivity.this, "修改数据失败，请重试");
+                }
+            };
+        }
+        APIManager.getInstance().updateRedBomb(redBomb, mSubscriberUpdate);
     }
 
     //删除数据
+    private Subscriber<BmobObject> mSubscriberDelete;
     private void deleteData(){
-        APIManager.getInstance().deleteRedBomb(redBomb.getObjectId(), new Subscriber<BmobObject>() {
-            @Override
-            public void onCompleted() {
-                setResult(REFRESH_REDBOMBFRAGMENT);
-                ToastUtil.showToast(AddRedBombActivity.this, "删除成功");
-                finish();
-            }
+        if(mSubscriberDelete == null || mSubscriberDelete.isUnsubscribed()){
+            mSubscriberDelete = new BaseSubscriber<BmobObject>(this) {
+                @Override
+                public void atNext(BmobObject bmobObject) {
+                    setResult(REFRESH_REDBOMBFRAGMENT);
+                    ToastUtil.showToast(AddRedBombActivity.this, "删除成功");
+                    finish();
+                }
 
-            @Override
-            public void onError(Throwable e) {
-                ToastUtil.showToast(AddRedBombActivity.this, "删除数据失败，请重试");
-            }
-
-            @Override
-            public void onNext(BmobObject bmobObject) {
-
-            }
-        });
+                @Override
+                public void atError(Throwable e) {
+                    ToastUtil.showToast(AddRedBombActivity.this, "删除数据失败，请重试");
+                }
+            };
+        }
+        APIManager.getInstance().deleteRedBomb(redBomb.getObjectId(), mSubscriberDelete);
     }
 
     //检查用户输入是否正确，并赋值redBomb
@@ -505,6 +509,18 @@ public class AddRedBombActivity extends TitlebarActivity implements View.OnClick
     protected void onDestroy() {
         if(mLocationClient != null){
             mLocationClient.onDestroy();//销毁定位客户端。
+        }
+        if(mSubscriberGetCategory != null && !mSubscriberGetCategory.isUnsubscribed()){
+            mSubscriberGetCategory.unsubscribe();
+        }
+        if(mSubscriberSave != null && !mSubscriberSave.isUnsubscribed()){
+            mSubscriberSave.unsubscribe();
+        }
+        if(mSubscriberUpdate != null && !mSubscriberUpdate.isUnsubscribed()){
+            mSubscriberUpdate.unsubscribe();
+        }
+        if(mSubscriberDelete != null && !mSubscriberDelete.isUnsubscribed()){
+            mSubscriberDelete.unsubscribe();
         }
         super.onDestroy();
     }

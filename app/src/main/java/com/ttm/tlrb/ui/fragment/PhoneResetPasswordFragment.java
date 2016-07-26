@@ -30,6 +30,8 @@ public class PhoneResetPasswordFragment extends BaseFragment implements View.OnC
     private EditText mEditTextPwd;
     private Button mButtonGetCode;
     private CountDownTimer mCountDownTimer;
+    private BaseSubscriber<BmobObject> mSubscriberGetCode;
+    private BaseSubscriber<BmobObject> mSubscriber;
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -68,18 +70,21 @@ public class PhoneResetPasswordFragment extends BaseFragment implements View.OnC
                 String phoneNum = mEditTextPhone.getText().toString().trim();
                 if(VerifyUtil.checkMobileNumber(phoneNum)){
                     mCountDownTimer.start();
-                    APIManager.getInstance().getSmsCode(phoneNum, new BaseSubscriber<BmobObject>(mContext) {
+                    if(mSubscriberGetCode == null || mSubscriberGetCode.isUnsubscribed()){
+                        mSubscriberGetCode = new BaseSubscriber<BmobObject>(mContext) {
 
-                        @Override
-                        public void atError(Throwable e) {
-                            ToastUtil.showToast(mContext,"获取验证码失败");
-                        }
+                            @Override
+                            public void atError(Throwable e) {
+                                ToastUtil.showToast(mContext,"获取验证码失败");
+                            }
 
-                        @Override
-                        public void atNext(BmobObject object) {
-                            ToastUtil.showToast(mContext,"验证码已发送，请注意查收");
-                        }
-                    });
+                            @Override
+                            public void atNext(BmobObject object) {
+                                ToastUtil.showToast(mContext,"验证码已发送，请注意查收");
+                            }
+                        };
+                    }
+                    APIManager.getInstance().getSmsCode(phoneNum, mSubscriberGetCode);
                 }else {
                     ToastUtil.showToast(mContext,"请输入正确的手机号码");
                 }
@@ -94,38 +99,47 @@ public class PhoneResetPasswordFragment extends BaseFragment implements View.OnC
                     ToastUtil.showToast(mContext,"请输入验证码");
                     return;
                 }
-                APIManager.getInstance().resetPasswordBySmsCode(newPwd, code, new BaseSubscriber<BmobObject>(mContext) {
+                if(mSubscriber == null || mSubscriber.isUnsubscribed()){
+                    mSubscriber = new BaseSubscriber<BmobObject>(mContext) {
 
-                    @Override
-                    public void atNext(BmobObject object) {
-                        ToastUtil.showToast(mContext,"修改成功");
-                        finish();
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        dismiss();
-                        if(e instanceof HttpException){
-                            HttpException httpException = (HttpException) e;
-                            int code = httpException.code();
-                            if(code == 500){
-                                ToastUtil.showToast(mContext,"该手机未绑定账号");
-                            }else {
-                                HttpExceptionHandle handle = new HttpExceptionHandle(httpException, mContext);
-                                handle.handle();
-                            }
-                        }else {
-                            ToastUtil.showToast(mContext,"该手机未绑定账号");
+                        @Override
+                        public void atNext(BmobObject object) {
+                            ToastUtil.showToast(mContext,"修改成功");
+                            finish();
                         }
-                    }
-                });
+
+                        @Override
+                        public void onError(Throwable e) {
+                            dismiss();
+                            if(e instanceof HttpException){
+                                HttpException httpException = (HttpException) e;
+                                int code = httpException.code();
+                                if(code == 500){
+                                    ToastUtil.showToast(mContext,"该手机未绑定账号");
+                                }else {
+                                    HttpExceptionHandle handle = new HttpExceptionHandle(httpException, mContext);
+                                    handle.handle();
+                                }
+                            }else {
+                                ToastUtil.showToast(mContext,"该手机未绑定账号");
+                            }
+                        }
+                    };
+                }
+                APIManager.getInstance().resetPasswordBySmsCode(newPwd, code,mSubscriber);
                 break;
         }
     }
 
     @Override
     public void onDestroy() {
-        super.onDestroy();
         mCountDownTimer.cancel();
+        if(mSubscriberGetCode != null && !mSubscriberGetCode.isUnsubscribed()){
+            mSubscriberGetCode.unsubscribe();
+        }
+        if(mSubscriber != null && !mSubscriber.isUnsubscribed()){
+            mSubscriber.unsubscribe();
+        }
+        super.onDestroy();
     }
 }

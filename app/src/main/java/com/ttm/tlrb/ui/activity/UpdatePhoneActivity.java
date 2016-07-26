@@ -9,8 +9,8 @@ import android.widget.EditText;
 
 import com.ttm.tlrb.R;
 import com.ttm.tlrb.api.APIManager;
+import com.ttm.tlrb.api.BaseSubscriber;
 import com.ttm.tlrb.api.UserManager;
-import com.ttm.tlrb.api.e.HttpExceptionHandle;
 import com.ttm.tlrb.ui.application.Constant;
 import com.ttm.tlrb.ui.entity.Account;
 import com.ttm.tlrb.ui.entity.BmobObject;
@@ -22,7 +22,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import okhttp3.RequestBody;
-import retrofit2.adapter.rxjava.HttpException;
 import rx.Observable;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
@@ -36,6 +35,8 @@ public class UpdatePhoneActivity extends TitlebarActivity implements View.OnClic
     private Button mButtonGetCode;
     private CountDownTimer mCountDownTimer;
     private Account mAccount;
+    private Subscriber<BmobObject> mSubscriberGetCode;
+    private Subscriber<BmobObject> mSubscriberVerify;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -86,6 +87,26 @@ public class UpdatePhoneActivity extends TitlebarActivity implements View.OnClic
                     ToastUtil.showToast(UpdatePhoneActivity.this,"请输入验证码");
                     return;
                 }
+
+                if(mSubscriberVerify == null || mSubscriberVerify.isUnsubscribed()){
+                    mSubscriberVerify = new BaseSubscriber<BmobObject>(this) {
+                        @Override
+                        public void atNext(BmobObject object) {
+                            Account account = UserManager.getInstance().getAccount();
+                            account.setMobilePhoneNumberVerified(true);
+                            account.setMobilePhoneNumber(phone);
+                            UserManager.getInstance().updateAccount(account);
+                            ToastUtil.showToast(UpdatePhoneActivity.this,"绑定成功");
+                            setResult(RESULT_OK);
+                            finish();
+                        }
+
+                        @Override
+                        public void atError(Throwable e) {
+                            ToastUtil.showToast(UpdatePhoneActivity.this,"验证失败");
+                        }
+                    };
+                }
                 Map<String,String> map = new HashMap<>();
                 map.put("mobilePhoneNumber",phone);
                 RequestBody body = RequestBody.create(Constant.JSON, GsonUtil.fromMap2Json(map));
@@ -102,59 +123,26 @@ public class UpdatePhoneActivity extends TitlebarActivity implements View.OnClic
                         })
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(new Subscriber<BmobObject>() {
-                            @Override
-                            public void onCompleted() {
-
-                            }
-
-                            @Override
-                            public void onError(Throwable e) {
-                                if(e instanceof HttpException){
-                                    HttpExceptionHandle handle = new HttpExceptionHandle((HttpException) e,UpdatePhoneActivity.this);
-                                    handle.handle();
-                                }else {
-                                    ToastUtil.showToast(UpdatePhoneActivity.this,"验证失败");
-                                }
-                            }
-
-                            @Override
-                            public void onNext(BmobObject object) {
-                                Account account = UserManager.getInstance().getAccount();
-                                account.setMobilePhoneNumberVerified(true);
-                                account.setMobilePhoneNumber(phone);
-                                UserManager.getInstance().updateAccount(account);
-                                ToastUtil.showToast(UpdatePhoneActivity.this,"绑定成功");
-                                setResult(RESULT_OK);
-                                finish();
-                            }
-                        });
+                        .subscribe(mSubscriberVerify);
                 break;
             case R.id.btn_get_code://获取验证码
                 String phoneNum = mEditTextPhone.getText().toString().trim();
                 if(VerifyUtil.checkMobileNumber(phoneNum)){
                     mCountDownTimer.start();
-                    APIManager.getInstance().getSmsCode(phoneNum, new Subscriber<BmobObject>() {
-                        @Override
-                        public void onCompleted() {
+                    if(mSubscriberGetCode == null || mSubscriberGetCode.isUnsubscribed()){
+                        mSubscriberGetCode = new BaseSubscriber<BmobObject>(this) {
+                            @Override
+                            public void atNext(BmobObject object) {
+                                ToastUtil.showToast(UpdatePhoneActivity.this,"验证码已发送，请注意查收");
+                            }
 
-                        }
-
-                        @Override
-                        public void onError(Throwable e) {
-                            if(e instanceof HttpException){
-                                HttpExceptionHandle handle = new HttpExceptionHandle((HttpException) e,UpdatePhoneActivity.this);
-                                handle.handle();
-                            }else {
+                            @Override
+                            public void atError(Throwable e) {
                                 ToastUtil.showToast(UpdatePhoneActivity.this,"获取验证码失败");
                             }
-                        }
-
-                        @Override
-                        public void onNext(BmobObject object) {
-                            ToastUtil.showToast(UpdatePhoneActivity.this,"验证码已发送，请注意查收");
-                        }
-                    });
+                        };
+                    }
+                    APIManager.getInstance().getSmsCode(phoneNum, mSubscriberGetCode);
                 }else {
                     ToastUtil.showToast(UpdatePhoneActivity.this,"请输入正确的手机号码");
                 }
@@ -167,6 +155,12 @@ public class UpdatePhoneActivity extends TitlebarActivity implements View.OnClic
     @Override
     protected void onDestroy() {
         mCountDownTimer.cancel();
+        if(mSubscriberGetCode != null && !mSubscriberGetCode.isUnsubscribed()){
+            mSubscriberGetCode.unsubscribe();
+        }
+        if(mSubscriberVerify != null && !mSubscriberVerify.isUnsubscribed()){
+            mSubscriberVerify.unsubscribe();
+        }
         super.onDestroy();
     }
 }

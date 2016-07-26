@@ -16,6 +16,7 @@ import com.bumptech.glide.Glide;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.ttm.tlrb.R;
 import com.ttm.tlrb.api.APIManager;
+import com.ttm.tlrb.api.BaseSubscriber;
 import com.ttm.tlrb.api.UserManager;
 import com.ttm.tlrb.ui.entity.Account;
 import com.ttm.tlrb.ui.entity.BmobObject;
@@ -195,32 +196,20 @@ public class UserInfoActivity extends TitlebarActivity implements View.OnClickLi
         }
     }
 
-
+    private Subscriber<BmobObject> mUpdatePictureSubscriber;
     private void inputPicture(String filePath){
         File file = new File(filePath);
-        Subscriber<BmobObject> mUpdatePictureSubscriber = new Subscriber<BmobObject>() {
-            @Override
-            public void onStart() {
-                super.onStart();
-                showLoadingDialog();
-            }
-
-            @Override
-            public void onCompleted() {
-                hideLoadingDialog();
-            }
-            @Override
-            public void onError(Throwable e) {
-                hideLoadingDialog();
-            }
-            @Override
-            public void onNext(BmobObject bmobObject) {
-                Account account = UserManager.getInstance().getAccount();
-                account.setPortrait(APIManager.getInstance().getPictureUrl());
-                UserManager.getInstance().updateAccount(account);
-                mHeaderView.setImageURI(Uri.parse(APIManager.getInstance().getPictureUrl()));
-            }
-        };
+        if(mUpdatePictureSubscriber == null || mUpdatePictureSubscriber.isUnsubscribed()){
+            mUpdatePictureSubscriber = new BaseSubscriber<BmobObject>(this) {
+                @Override
+                public void atNext(BmobObject object) {
+                    Account account = UserManager.getInstance().getAccount();
+                    account.setPortrait(APIManager.getInstance().getPictureUrl());
+                    UserManager.getInstance().updateAccount(account);
+                    mHeaderView.setImageURI(Uri.parse(APIManager.getInstance().getPictureUrl()));
+                }
+            };
+        }
         Account account = UserManager.getInstance().getAccount();
         APIManager.getInstance().updatePicture(account.getObjectId(),file,mUpdatePictureSubscriber);
     }
@@ -271,5 +260,13 @@ public class UserInfoActivity extends TitlebarActivity implements View.OnClickLi
                 ImageSelector.open(UserInfoActivity.this, mImageConfig);   // 开启图片选择器
                 break;
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        if(mUpdatePictureSubscriber != null && !mUpdatePictureSubscriber.isUnsubscribed()){
+            mUpdatePictureSubscriber.unsubscribe();
+        }
+        super.onDestroy();
     }
 }

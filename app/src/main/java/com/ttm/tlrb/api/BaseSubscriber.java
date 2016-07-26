@@ -54,7 +54,9 @@ public abstract class BaseSubscriber<T> extends Subscriber<T> {
     }
 
     public void dismiss(){
-        mMaterialDialog.dismiss();
+        if(mMaterialDialog != null && mMaterialDialog.isShow()) {
+            mMaterialDialog.dismiss();
+        }
     }
 
     public void atCompleted(){}
