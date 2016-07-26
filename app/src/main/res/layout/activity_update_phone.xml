@@ -30,6 +30,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:hint="请输入验证码"
+            android:inputType="number"
             style="@style/TitleStyle"
             />
         <Button
