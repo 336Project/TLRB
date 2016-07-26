@@ -3,7 +3,6 @@ package com.ttm.tlrb.ui.fragment;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,19 +12,19 @@ import android.widget.EditText;
 
 import com.ttm.tlrb.R;
 import com.ttm.tlrb.api.APIManager;
+import com.ttm.tlrb.api.BaseSubscriber;
 import com.ttm.tlrb.api.e.HttpExceptionHandle;
 import com.ttm.tlrb.ui.entity.BmobObject;
 import com.ttm.tlrb.utils.ToastUtil;
 import com.ttm.tlrb.utils.VerifyUtil;
 
 import retrofit2.adapter.rxjava.HttpException;
-import rx.Subscriber;
 
 /**
  * Created by Helen on 2016/7/26.
  * 短信重置
  */
-public class PhoneResetPasswordFragment extends Fragment implements View.OnClickListener{
+public class PhoneResetPasswordFragment extends BaseFragment implements View.OnClickListener{
     private EditText mEditTextPhone;
     private EditText mEditTextCode;
     private EditText mEditTextPwd;
@@ -69,67 +68,55 @@ public class PhoneResetPasswordFragment extends Fragment implements View.OnClick
                 String phoneNum = mEditTextPhone.getText().toString().trim();
                 if(VerifyUtil.checkMobileNumber(phoneNum)){
                     mCountDownTimer.start();
-                    APIManager.getInstance().getSmsCode(phoneNum, new Subscriber<BmobObject>() {
-                        @Override
-                        public void onCompleted() {
+                    APIManager.getInstance().getSmsCode(phoneNum, new BaseSubscriber<BmobObject>(mContext) {
 
+                        @Override
+                        public void atError(Throwable e) {
+                            ToastUtil.showToast(mContext,"获取验证码失败");
                         }
 
                         @Override
-                        public void onError(Throwable e) {
-                            if(e instanceof HttpException){
-                                HttpExceptionHandle handle = new HttpExceptionHandle((HttpException) e,getActivity());
-                                handle.handle();
-                            }else {
-                                ToastUtil.showToast(getActivity(),"获取验证码失败");
-                            }
-                        }
-
-                        @Override
-                        public void onNext(BmobObject object) {
-                            ToastUtil.showToast(getActivity(),"验证码已发送，请注意查收");
+                        public void atNext(BmobObject object) {
+                            ToastUtil.showToast(mContext,"验证码已发送，请注意查收");
                         }
                     });
                 }else {
-                    ToastUtil.showToast(getActivity(),"请输入正确的手机号码");
+                    ToastUtil.showToast(mContext,"请输入正确的手机号码");
                 }
                 break;
             case R.id.btn_confirm://确定重置
                 String newPwd = mEditTextPwd.getText().toString();
                 String code = mEditTextCode.getText().toString();
-                if(!VerifyUtil.checkPassword(getActivity(),newPwd)){
+                if(!VerifyUtil.checkPassword(mContext,newPwd)){
                     return;
                 }
                 if(TextUtils.isEmpty(code)){
-                    ToastUtil.showToast(getActivity(),"请输入验证码");
+                    ToastUtil.showToast(mContext,"请输入验证码");
                     return;
                 }
-                APIManager.getInstance().resetPasswordBySmsCode(newPwd, code, new Subscriber<BmobObject>() {
-                    @Override
-                    public void onCompleted() {
+                APIManager.getInstance().resetPasswordBySmsCode(newPwd, code, new BaseSubscriber<BmobObject>(mContext) {
 
+                    @Override
+                    public void atNext(BmobObject object) {
+                        ToastUtil.showToast(mContext,"修改成功");
+                        finish();
                     }
 
                     @Override
                     public void onError(Throwable e) {
+                        dismiss();
                         if(e instanceof HttpException){
                             HttpException httpException = (HttpException) e;
                             int code = httpException.code();
                             if(code == 500){
-                                ToastUtil.showToast(getActivity(),"该手机未绑定账号");
+                                ToastUtil.showToast(mContext,"该手机未绑定账号");
                             }else {
-                                HttpExceptionHandle handle = new HttpExceptionHandle(httpException, getActivity());
+                                HttpExceptionHandle handle = new HttpExceptionHandle(httpException, mContext);
                                 handle.handle();
                             }
                         }else {
-                            ToastUtil.showToast(getActivity(),"该手机未绑定账号");
+                            ToastUtil.showToast(mContext,"该手机未绑定账号");
                         }
-                    }
-
-                    @Override
-                    public void onNext(BmobObject object) {
-                        ToastUtil.showToast(getActivity(),"修改成功");
-                        getActivity().finish();
                     }
                 });
                 break;

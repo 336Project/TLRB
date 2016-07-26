@@ -875,4 +875,18 @@ public class APIManager {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(subscriber);
     }
+    /**
+     * 短信重置密码
+     * @param email 邮箱
+     * @param subscriber 回调
+     */
+    public void resetPasswordByEmail(String email,Subscriber<BmobObject> subscriber){
+        Map<String,String> map = new HashMap<>();
+        map.put("email",email);
+        RequestBody body = RequestBody.create(Constant.JSON,GsonUtil.fromMap2Json(map));
+        getAPIService().resetPasswordByEmail(body)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(subscriber);
+    }
 }

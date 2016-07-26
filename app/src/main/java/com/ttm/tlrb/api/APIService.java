@@ -108,4 +108,7 @@ public interface APIService {
     /**短信密码重置*/
     @PUT("/1/resetPasswordBySmsCode/{code}")
     Observable<BmobObject> resetPasswordBySmsCode(@Path("code") String code,@Body RequestBody body);
+    /**邮箱密码重置*/
+    @POST("/1/requestPasswordReset")
+    Observable<BmobObject> resetPasswordByEmail(@Body RequestBody body);
 }
