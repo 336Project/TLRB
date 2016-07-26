@@ -38,18 +38,25 @@ public abstract class BaseSubscriber<T> extends Subscriber<T> {
 
     @Override
     public void onError(Throwable e) {
+        dismiss();
         if(e instanceof HttpException){
             HttpExceptionHandle handle = new HttpExceptionHandle((HttpException) e,context);
             handle.handle();
+        }else {
+            atError(e);
         }
-        mMaterialDialog.dismiss();
-        atError(e);
     }
 
     @Override
     public void onNext(T t) {
-        mMaterialDialog.dismiss();
+        dismiss();
         atNext(t);
+    }
+
+    public void dismiss(){
+        if(mMaterialDialog != null && mMaterialDialog.isShow()) {
+            mMaterialDialog.dismiss();
+        }
     }
 
     public void atCompleted(){}

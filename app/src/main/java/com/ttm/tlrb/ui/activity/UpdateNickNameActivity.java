@@ -6,20 +6,17 @@ import android.widget.EditText;
 
 import com.ttm.tlrb.R;
 import com.ttm.tlrb.api.APIManager;
+import com.ttm.tlrb.api.BaseSubscriber;
 import com.ttm.tlrb.api.UserManager;
-import com.ttm.tlrb.api.e.HttpExceptionHandle;
 import com.ttm.tlrb.ui.entity.Account;
 import com.ttm.tlrb.ui.entity.BmobObject;
 import com.ttm.tlrb.utils.ToastUtil;
-
-import retrofit2.adapter.rxjava.HttpException;
-import rx.Subscriber;
 
 public class UpdateNickNameActivity extends TitlebarActivity implements View.OnClickListener{
 
     private EditText mEditTextNick;
     private Account mAccount;
-    private Subscriber<BmobObject> mUpdateUserSubscriber;
+    private BaseSubscriber<BmobObject> mUpdateUserSubscriber;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,57 +45,23 @@ public class UpdateNickNameActivity extends TitlebarActivity implements View.OnC
             ToastUtil.showToast(UpdateNickNameActivity.this,"用户名不能为空，请重新输入");
             return;
         }
-        /*Pattern p = Pattern.compile("[A-Za-z0-9_\\-\\u4e00-\\u9fa5]+");
-        Matcher m = p.matcher(newNickName);
-        if(!m.matches()){
-            Toast.makeText(UpdateNickNameActivity.this,"昵称中有非法字符请重新输入", Toast.LENGTH_SHORT).show();
-            return;
-        }
-        int wordCount = getWordCount(newNickName);
-        if(!(wordCount>=4&&wordCount<=16)){
-            Toast.makeText(UpdateNickNameActivity.this,"昵称大小不符合请重新输入", Toast.LENGTH_SHORT).show();
-            return;
-        }*/
         mAccount.setNickname(newNickName);
         Account newAccount = new Account();
         newAccount.setObjectId(mAccount.getObjectId());
         newAccount.setNickname(newNickName);
         if(mUpdateUserSubscriber == null || mUpdateUserSubscriber.isUnsubscribed()){
-            mUpdateUserSubscriber = new Subscriber<BmobObject>() {
+            mUpdateUserSubscriber = new BaseSubscriber<BmobObject>(this) {
                 @Override
-                public void onStart() {
-                    super.onStart();
-                    showLoadingDialog();
-                }
-
-                @Override
-                public void onCompleted() {
-
-                }
-                @Override
-                public void onError(Throwable e) {
-                    hideLoadingDialog();
-                    if(e instanceof HttpException){
-                        HttpExceptionHandle handle = new HttpExceptionHandle((HttpException) e,UpdateNickNameActivity.this);
-                        handle.handle();
-                    }
-                }
-                @Override
-                public void onNext(BmobObject bmobObject) {
-                    hideLoadingDialog();
+                public void atNext(BmobObject object) {
                     UserManager.getInstance().updateAccount(mAccount);
-                    ToastUtil.showToast(UpdateNickNameActivity.this,"更新成功");
+                    ToastUtil.showToast(UpdateNickNameActivity.this,"修改成功");
+                    setResult(RESULT_OK);
                     finish();
                 }
+
             };
         }
         APIManager.getInstance().updateUser(newAccount,mUpdateUserSubscriber);
-    }
-    public  int getWordCount(String s)
-    {
-        s = s.replaceAll("[^\\x00-\\xff]", "**");
-        int length = s.length();
-        return length;
     }
     @Override
     public void onClick(View v) {

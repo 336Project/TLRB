@@ -3,7 +3,6 @@ package com.ttm.tlrb.ui.fragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -30,7 +29,7 @@ import rx.Subscriber;
  * Created by Helen on 2016/4/29.
  *
  */
-public class RedBombFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener,EmptyEmbeddedContainer.EmptyInterface,RedBombAdapter.onItemClickListener {
+public class RedBombFragment extends BaseFragment implements SwipeRefreshLayout.OnRefreshListener,EmptyEmbeddedContainer.EmptyInterface,RedBombAdapter.onItemClickListener {
     public static final int GO_ADD_RED_BOMB=1001;//去添加红包界面
     private List<RedBomb> mRedBombs = new ArrayList<>();
     private RedBombAdapter mAdapter;

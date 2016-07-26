@@ -63,7 +63,6 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Nick Name"
                 android:id="@+id/textView_nick"
                 style="@style/UserInfoTextViewTitle"
                 />
@@ -73,6 +72,66 @@
                 android:layout_height="wrap_content"
                 android:text="修改"
                 style="@style/UserInfoTextViewContent"
+                />
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                style="@style/UserInfoImageView"
+                />
+        </LinearLayout>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#EFEFEF"
+            />
+        <LinearLayout
+            android:id="@+id/layout_phone"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:layout_height="wrap_content"
+                android:text="手机号"
+                style="@style/UserInfoTextViewTitle"
+                />
+
+            <TextView
+                android:id="@+id/tv_phone"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                style="@style/UserInfoTextViewContent"
+                android:text="未绑定"
+                />
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                style="@style/UserInfoImageView"
+                />
+        </LinearLayout>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#EFEFEF"
+            />
+        <LinearLayout
+            android:id="@+id/layout_email"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:layout_height="wrap_content"
+                android:text="邮箱"
+                style="@style/UserInfoTextViewTitle"
+                />
+
+            <TextView
+                android:id="@+id/tv_email"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                style="@style/UserInfoTextViewContent"
+                android:text="未绑定"
                 />
             <ImageView
                 android:layout_width="wrap_content"
@@ -129,6 +188,7 @@
                 />
 
         </LinearLayout>
+
     </LinearLayout>
 
 </LinearLayout>

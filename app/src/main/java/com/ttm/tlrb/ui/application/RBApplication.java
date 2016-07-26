@@ -14,6 +14,8 @@ import com.umeng.analytics.MobclickAgent;
 import com.umeng.socialize.Config;
 import com.umeng.socialize.PlatformConfig;
 
+import retrofit2.http.HEAD;
+
 
 /**
  * Created by Helen on 2016/4/28.
