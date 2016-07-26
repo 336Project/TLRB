@@ -4,7 +4,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.SpannableString;
+import android.text.Spanned;
 import android.text.TextUtils;
+import android.text.style.ForegroundColorSpan;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -30,12 +33,15 @@ public class UserInfoActivity extends TitlebarActivity implements View.OnClickLi
     private TextView mTextViewNick;
     private TextView mTextViewPhone;
     private TextView mTextViewEmail;
+    private View layoutPwd;
+    private TextView textViewType;
 
     private ImageConfig mImageConfig;
     private final int REQUEST_NICK = 0x001;
     private final int REQUEST_PHONE = 0x002;
     private final int REQUEST_EMAIL = 0x003;
     private final int REQUEST_PASSWORD = 0x004;
+    private Account mAccount;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -95,7 +101,7 @@ public class UserInfoActivity extends TitlebarActivity implements View.OnClickLi
         findViewById(R.id.linearLayout_nick).setOnClickListener(this);
         findViewById(R.id.layout_phone).setOnClickListener(this);
         findViewById(R.id.layout_email).setOnClickListener(this);
-        View layoutPwd = findViewById(R.id.linearLayout_password);
+        layoutPwd = findViewById(R.id.linearLayout_password);
         layoutPwd.setOnClickListener(this);
         layoutPwd.setVisibility(View.GONE);
         findViewById(R.id.line1).setVisibility(View.GONE);
@@ -104,17 +110,45 @@ public class UserInfoActivity extends TitlebarActivity implements View.OnClickLi
         mTextViewPhone = (TextView) findViewById(R.id.tv_phone);
         mTextViewEmail = (TextView) findViewById(R.id.tv_email);
 
-        TextView textViewType = (TextView) findViewById(R.id.textView_type);
-        Account account = UserManager.getInstance().getAccount();
-        if(account != null){
-            mHeaderView.setImageURI(Uri.parse(account.getPortrait()));
-            if(account.getNickname().equals("")){
+        textViewType = (TextView) findViewById(R.id.textView_type);
+        mAccount = UserManager.getInstance().getAccount();
+        setAccountInfo();
+        refreshAccount();
+    }
+
+    private void refreshAccount() {
+        if(mAccount == null ) return;
+
+        APIManager.getInstance().getUser(mAccount.getObjectId(), new Subscriber<Account>() {
+            @Override
+            public void onCompleted() {
+
+            }
+
+            @Override
+            public void onError(Throwable e) {
+
+            }
+
+            @Override
+            public void onNext(Account account) {
+                mAccount = account;
+                UserManager.getInstance().updateAccount(mAccount);
+                setAccountInfo();
+            }
+        });
+    }
+
+    private void setAccountInfo(){
+        if(mAccount != null){
+            mHeaderView.setImageURI(Uri.parse(mAccount.getPortrait()));
+            if(mAccount.getNickname().equals("")){
                 mTextViewNick.setText("您还没有昵称，快去设置吧~");
             }
             else{
-                mTextViewNick.setText(account.getNickname());
+                mTextViewNick.setText(mAccount.getNickname());
             }
-            int type = account.getType();
+            int type = mAccount.getType();
             if(type == 0){
                 layoutPwd.setVisibility(View.VISIBLE);
                 findViewById(R.id.line1).setVisibility(View.VISIBLE);
@@ -126,16 +160,42 @@ public class UserInfoActivity extends TitlebarActivity implements View.OnClickLi
             }else if(type == 3){
                 textViewType.setText("来自QQ");
             }
-            String phone = account.getMobilePhoneNumber();
-            if(!TextUtils.isEmpty(phone)){
+            setPhone();
+            setEmail();
+        }
+    }
+
+    private void setPhone(){
+        String phone = mAccount.getMobilePhoneNumber();
+        boolean isVerify = mAccount.isMobilePhoneNumberVerified();
+        if(!TextUtils.isEmpty(phone)){
+            if(isVerify) {
                 mTextViewPhone.setText(phone);
-            }
-            String email = account.getEmail();
-            if(!TextUtils.isEmpty(email)){
-                mTextViewEmail.setText(email);
+            }else {
+                String phoneStr = phone+"(未验证)";
+                SpannableString span = new SpannableString(phoneStr);
+                span.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.Red_400)),phone.length(),phoneStr.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                mTextViewPhone.setText(span);
             }
         }
     }
+
+    private void setEmail(){
+        String email = mAccount.getEmail();
+        boolean isVerify = mAccount.isEmailVerified();
+        if(!TextUtils.isEmpty(email)){
+            if(isVerify) {
+                mTextViewEmail.setText(email);
+            }else {
+                String emailStr = email+"(未验证)";
+                SpannableString span = new SpannableString(emailStr);
+                span.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.Red_400)),email.length(),emailStr.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                mTextViewEmail.setText(span);
+            }
+        }
+    }
+
+
     private void inputPicture(String filePath){
         File file = new File(filePath);
         Subscriber<BmobObject> mUpdatePictureSubscriber = new Subscriber<BmobObject>() {
@@ -171,9 +231,11 @@ public class UserInfoActivity extends TitlebarActivity implements View.OnClickLi
             if (requestCode == this.REQUEST_NICK) {
                 mTextViewNick.setText(UserManager.getInstance().getAccount().getNickname());
             } else if (requestCode == REQUEST_EMAIL) {
-                mTextViewEmail.setText(UserManager.getInstance().getAccount().getEmail());
+                mAccount = UserManager.getInstance().getAccount();
+                setEmail();
             } else if (requestCode == REQUEST_PHONE) {
-                mTextViewPhone.setText(UserManager.getInstance().getAccount().getMobilePhoneNumber());
+                mAccount = UserManager.getInstance().getAccount();
+                setPhone();
             } else if (requestCode == ImageSelector.IMAGE_REQUEST_CODE) {
                 if (data != null) {
                     List<String> pathList = data.getStringArrayListExtra(ImageSelectorActivity.EXTRA_RESULT);

@@ -47,6 +47,9 @@ public class HttpExceptionHandle {
             case 203:
                 ToastUtil.showToast(mContext,"邮箱已存在");
                 break;
+            case 205:
+                ToastUtil.showToast(mContext,"没有找到此邮件的用户");
+                break;
             case 207:
                 ToastUtil.showToast(mContext,"验证码错误");
                 break;
@@ -67,6 +70,9 @@ public class HttpExceptionHandle {
                 break;
             case 10013:
                 ToastUtil.showToast(mContext,"非法短信内容");
+                break;
+            default:
+                ToastUtil.showToast(mContext,"请求发生异常");
                 break;
         }
     }

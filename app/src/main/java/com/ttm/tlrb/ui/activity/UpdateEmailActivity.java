@@ -8,98 +8,99 @@ import com.ttm.tlrb.R;
 import com.ttm.tlrb.api.APIManager;
 import com.ttm.tlrb.api.UserManager;
 import com.ttm.tlrb.api.e.HttpExceptionHandle;
+import com.ttm.tlrb.ui.application.Constant;
 import com.ttm.tlrb.ui.entity.Account;
 import com.ttm.tlrb.ui.entity.BmobObject;
+import com.ttm.tlrb.utils.GsonUtil;
 import com.ttm.tlrb.utils.ToastUtil;
+import com.ttm.tlrb.utils.VerifyUtil;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import okhttp3.RequestBody;
 import retrofit2.adapter.rxjava.HttpException;
+import rx.Observable;
 import rx.Subscriber;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Func1;
+import rx.schedulers.Schedulers;
 
 public class UpdateEmailActivity extends TitlebarActivity implements View.OnClickListener{
 
-    private EditText mEditTextNick;
+    private EditText mEditTextEmail;
     private Account mAccount;
-    private Subscriber<BmobObject> mUpdateUserSubscriber;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_update_nick_name);
+        setContentView(R.layout.activity_update_email);
         setTitle("修改邮箱");
         initView();
     }
 
     private void initView() {
         mAccount = UserManager.getInstance().getAccount();
-        String oldNickName = "";
+        String oldEmail = "";
         if(mAccount!=null){
-            oldNickName = mAccount.getNickname();
+            oldEmail = mAccount.getEmail();
         }
-        mEditTextNick = (EditText) findViewById(R.id.editText_nick);
+        mEditTextEmail = (EditText) findViewById(R.id.editText_email);
         findViewById(R.id.btn_confirm).setOnClickListener(this);
-        mEditTextNick.setText(oldNickName);
+        mEditTextEmail.setText(oldEmail);
     }
     private void confirm(){
-        String newNickName = mEditTextNick.getText().toString().trim();
+        final String newEmail = mEditTextEmail.getText().toString().trim();
         if(mAccount ==null){
             ToastUtil.showToast(UpdateEmailActivity.this,"登录异常，请重新登录");
             return;
         }
-        if(newNickName.equals("")){
-            ToastUtil.showToast(UpdateEmailActivity.this,"用户名不能为空，请重新输入");
+        if(!VerifyUtil.checkEmail(newEmail)){
+            ToastUtil.showToast(UpdateEmailActivity.this,"请输入正确的邮箱地址");
             return;
         }
-        /*Pattern p = Pattern.compile("[A-Za-z0-9_\\-\\u4e00-\\u9fa5]+");
-        Matcher m = p.matcher(newNickName);
-        if(!m.matches()){
-            Toast.makeText(UpdateNickNameActivity.this,"昵称中有非法字符请重新输入", Toast.LENGTH_SHORT).show();
-            return;
-        }
-        int wordCount = getWordCount(newNickName);
-        if(!(wordCount>=4&&wordCount<=16)){
-            Toast.makeText(UpdateNickNameActivity.this,"昵称大小不符合请重新输入", Toast.LENGTH_SHORT).show();
-            return;
-        }*/
-        mAccount.setNickname(newNickName);
         Account newAccount = new Account();
-        newAccount.setObjectId(mAccount.getObjectId());
-        newAccount.setNickname(newNickName);
-        if(mUpdateUserSubscriber == null || mUpdateUserSubscriber.isUnsubscribed()){
-            mUpdateUserSubscriber = new Subscriber<BmobObject>() {
-                @Override
-                public void onStart() {
-                    super.onStart();
-                    showLoadingDialog();
-                }
-
-                @Override
-                public void onCompleted() {
-
-                }
-                @Override
-                public void onError(Throwable e) {
-                    hideLoadingDialog();
-                    if(e instanceof HttpException){
-                        HttpExceptionHandle handle = new HttpExceptionHandle((HttpException) e,UpdateEmailActivity.this);
-                        handle.handle();
+        newAccount.setEmail(newEmail);
+        RequestBody body = RequestBody.create(Constant.JSON, newAccount.toString());
+        APIManager.getInstance().getAPIService().putUser(mAccount.getObjectId(),body)
+                .flatMap(new Func1<BmobObject, Observable<BmobObject>>() {
+                    @Override
+                    public Observable<BmobObject> call(BmobObject object) {
+                        Map<String,String> map = new HashMap<>();
+                        map.put("email",newEmail);
+                        RequestBody body = RequestBody.create(Constant.JSON, GsonUtil.fromMap2Json(map));
+                        return APIManager.getInstance().getAPIService().verifyEmail(body);
                     }
-                }
-                @Override
-                public void onNext(BmobObject bmobObject) {
-                    hideLoadingDialog();
-                    UserManager.getInstance().updateAccount(mAccount);
-                    ToastUtil.showToast(UpdateEmailActivity.this,"更新成功");
-                    finish();
-                }
-            };
-        }
-        APIManager.getInstance().updateUser(newAccount,mUpdateUserSubscriber);
+                })
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Subscriber<BmobObject>() {
+                    @Override
+                    public void onCompleted() {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        if(e instanceof HttpException){
+                            HttpExceptionHandle handle = new HttpExceptionHandle((HttpException) e,UpdateEmailActivity.this);
+                            handle.handle();
+                        }else {
+                            ToastUtil.showToast(UpdateEmailActivity.this,"绑定失败");
+                        }
+                    }
+
+                    @Override
+                    public void onNext(BmobObject object) {
+                        mAccount.setEmail(newEmail);
+                        mAccount.setEmailVerified(false);
+                        UserManager.getInstance().updateAccount(mAccount);
+                        ToastUtil.showToast(UpdateEmailActivity.this,"验证邮件已发送到邮箱，请尽快进行验证");
+                        setResult(RESULT_OK);
+                        finish();
+                    }
+                });
     }
-    public  int getWordCount(String s)
-    {
-        s = s.replaceAll("[^\\x00-\\xff]", "**");
-        int length = s.length();
-        return length;
-    }
+
     @Override
     public void onClick(View v) {
         switch (v.getId()){
@@ -112,8 +113,5 @@ public class UpdateEmailActivity extends TitlebarActivity implements View.OnClic
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if(mUpdateUserSubscriber!=null&& !mUpdateUserSubscriber.isUnsubscribed()){
-            mUpdateUserSubscriber.unsubscribe();
-        }
     }
 }

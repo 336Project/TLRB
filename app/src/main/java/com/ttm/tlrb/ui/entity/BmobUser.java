@@ -21,7 +21,10 @@ public class BmobUser extends BmobObject{
         this.mobilePhoneNumber = mobilePhoneNumber;
     }
 
-    public boolean isMobilePhoneNumberVerified() {
+    public Boolean isMobilePhoneNumberVerified() {
+        if(mobilePhoneNumberVerified == null){
+            return Boolean.FALSE;
+        }
         return mobilePhoneNumberVerified;
     }
 
@@ -37,7 +40,10 @@ public class BmobUser extends BmobObject{
         this.email = email;
     }
 
-    public boolean isEmailVerified() {
+    public Boolean isEmailVerified() {
+        if(emailVerified == null){
+            return Boolean.FALSE;
+        }
         return emailVerified;
     }
 

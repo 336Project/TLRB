@@ -268,6 +268,18 @@ public class APIManager {
     }
 
     /**
+     * 获取用户信息
+     * @param userId 用户id
+     * @param subscriber 回调
+     */
+    public void getUser(String userId,Subscriber<Account> subscriber){
+        getAPIService().getUser(userId)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(subscriber);
+    }
+
+    /**
      * 修改密码
      * @param userObjectId 用户ID
      * @param oldPassword 旧密码
@@ -828,6 +840,21 @@ public class APIManager {
         map.put("mobilePhoneNumber",phoneNum);
         RequestBody body = RequestBody.create(Constant.JSON,GsonUtil.fromMap2Json(map));
         getAPIService().verifySmsCode(code,body)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(subscriber);
+    }
+
+    /**
+     * 验证邮箱
+     * @param email 邮箱地址
+     * @param subscriber 回调
+     */
+    public void verifyEmail(String email,Subscriber<BmobObject> subscriber){
+        Map<String,String> map = new HashMap<>();
+        map.put("email",email);
+        RequestBody body = RequestBody.create(Constant.JSON,GsonUtil.fromMap2Json(map));
+        getAPIService().verifyEmail(body)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(subscriber);
