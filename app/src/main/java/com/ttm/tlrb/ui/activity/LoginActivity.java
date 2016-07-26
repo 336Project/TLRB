@@ -12,7 +12,6 @@ import android.widget.EditText;
 
 import com.ttm.tlrb.R;
 import com.ttm.tlrb.api.APIManager;
-import com.ttm.tlrb.api.BaseSubscriber;
 import com.ttm.tlrb.api.e.HttpExceptionHandle;
 import com.ttm.tlrb.ui.application.Constant;
 import com.ttm.tlrb.ui.application.RBApplication;
@@ -59,6 +58,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
         findViewById(R.id.iv_sina).setOnClickListener(this);
         findViewById(R.id.iv_qq).setOnClickListener(this);
         findViewById(R.id.iv_weixin).setOnClickListener(this);
+        findViewById(R.id.tv_retrieve_password).setOnClickListener(this);
         mEditTextUserName = (EditText) findViewById(R.id.editText_username);
         mEditTextPassword = (EditText) findViewById(R.id.editText_password);
     }
@@ -89,6 +89,9 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
                 MobclickAgent.onEvent(LoginActivity.this, Constant.Event.EVENT_ID_LOGIN_WX);
                 umShareAPI = UMShareAPI.get(RBApplication.getInstance());
                 umShareAPI.doOauthVerify(this, SHARE_MEDIA.WEIXIN, this);
+                break;
+            case R.id.tv_retrieve_password:
+                ResetPasswordActivity.launcher(LoginActivity.this);
                 break;
         }
     }

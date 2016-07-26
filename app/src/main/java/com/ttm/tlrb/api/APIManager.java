@@ -859,4 +859,20 @@ public class APIManager {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(subscriber);
     }
+
+    /**
+     * 短信重置密码
+     * @param newPwd 新密码
+     * @param code 验证码
+     * @param subscriber 回调
+     */
+    public void resetPasswordBySmsCode(String newPwd,String code,Subscriber<BmobObject> subscriber){
+        Map<String,String> map = new HashMap<>();
+        map.put("password",newPwd);
+        RequestBody body = RequestBody.create(Constant.JSON,GsonUtil.fromMap2Json(map));
+        getAPIService().resetPasswordBySmsCode(code,body)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(subscriber);
+    }
 }

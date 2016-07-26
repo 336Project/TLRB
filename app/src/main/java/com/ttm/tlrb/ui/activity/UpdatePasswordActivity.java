@@ -11,6 +11,7 @@ import com.ttm.tlrb.api.e.HttpExceptionHandle;
 import com.ttm.tlrb.ui.entity.Account;
 import com.ttm.tlrb.ui.entity.BmobObject;
 import com.ttm.tlrb.utils.ToastUtil;
+import com.ttm.tlrb.utils.VerifyUtil;
 
 import retrofit2.adapter.rxjava.HttpException;
 import rx.Subscriber;
@@ -61,44 +62,42 @@ public class UpdatePasswordActivity extends TitlebarActivity implements View.OnC
             ToastUtil.showToast(UpdatePasswordActivity.this,"新密码含有特殊字符，建议使用数字，字母，下划线组成密码");
             return;
         }*/
-        int wordCount = newPassword.length();
-        if(!(wordCount>=6&&wordCount<=32)){
-            ToastUtil.showToast(UpdatePasswordActivity.this,"密码长度至少6个字符，最多32个字符");
-            return;
-        }
+        if(VerifyUtil.checkPassword(this,newPassword)) {
+            Account mAccount = UserManager.getInstance().getAccount();
+            if (mUpdatePasswordSubscriber == null || mUpdatePasswordSubscriber.isUnsubscribed()) {
+                mUpdatePasswordSubscriber = new Subscriber<BmobObject>() {
 
-        Account mAccount = UserManager.getInstance().getAccount();
-        if(mUpdatePasswordSubscriber == null || mUpdatePasswordSubscriber.isUnsubscribed()){
-            mUpdatePasswordSubscriber = new Subscriber<BmobObject>() {
-
-                @Override
-                public void onStart() {
-                    super.onStart();
-                    showLoadingDialog();
-                }
-
-                @Override
-                public void onCompleted() {
-                }
-                @Override
-                public void onError(Throwable e) {
-                    hideLoadingDialog();
-                    if(e instanceof HttpException){
-                        HttpExceptionHandle handle = new HttpExceptionHandle((HttpException) e,UpdatePasswordActivity.this);
-                        handle.handle();
+                    @Override
+                    public void onStart() {
+                        super.onStart();
+                        showLoadingDialog();
                     }
-                }
-                @Override
-                public void onNext(BmobObject bmobObject) {
-                    hideLoadingDialog();
-                    ToastUtil.showToast(UpdatePasswordActivity.this,"更新成功");
-                    setResult(RESULT_OK);
-                    finish();
-                }
-            };
-        }
 
-        APIManager.getInstance().updateUserPassword(mAccount.getObjectId(),oldPassword,newPassword,mUpdatePasswordSubscriber);
+                    @Override
+                    public void onCompleted() {
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        hideLoadingDialog();
+                        if (e instanceof HttpException) {
+                            HttpExceptionHandle handle = new HttpExceptionHandle((HttpException) e, UpdatePasswordActivity.this);
+                            handle.handle();
+                        }
+                    }
+
+                    @Override
+                    public void onNext(BmobObject bmobObject) {
+                        hideLoadingDialog();
+                        ToastUtil.showToast(UpdatePasswordActivity.this, "修改成功");
+                        setResult(RESULT_OK);
+                        finish();
+                    }
+                };
+            }
+
+            APIManager.getInstance().updateUserPassword(mAccount.getObjectId(), oldPassword, newPassword, mUpdatePasswordSubscriber);
+        }
 
     }
     @Override

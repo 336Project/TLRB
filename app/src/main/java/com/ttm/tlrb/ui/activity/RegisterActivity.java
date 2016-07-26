@@ -13,6 +13,7 @@ import com.ttm.tlrb.api.e.HttpExceptionHandle;
 import com.ttm.tlrb.ui.application.Constant;
 import com.ttm.tlrb.ui.entity.Account;
 import com.ttm.tlrb.utils.ToastUtil;
+import com.ttm.tlrb.utils.VerifyUtil;
 import com.umeng.analytics.MobclickAgent;
 
 import java.util.regex.Matcher;
@@ -56,48 +57,43 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
             return;
         }
 
-        if(TextUtils.isEmpty(pwd)){
-            ToastUtil.showToast(RegisterActivity.this,"密码不能为空");
-            return;
-        }
-        if(pwd.length() < 6 && pwd.length() > 32){
-            ToastUtil.showToast(RegisterActivity.this,"密码长度至少6个字符，最多32个字符");
-            return;
-        }
+        if(VerifyUtil.checkPassword(this,pwd)) {
+            Account account = new Account();
+            account.setUsername(userName);
+            account.setPassword(pwd);
+            account.setType(0);
+            APIManager.getInstance().register(account, new Subscriber<Account>() {
 
-        Account account = new Account();
-        account.setUsername(userName);
-        account.setPassword(pwd);
-        account.setType(0);
-        APIManager.getInstance().register(account, new Subscriber<Account>() {
-
-            @Override
-            public void onStart() {
-                super.onStart();
-                showLoadingDialog();
-            }
-
-            @Override
-            public void onCompleted() {
-            }
-            @Override
-            public void onError(Throwable e) {
-                hideLoadingDialog();
-                if(e instanceof HttpException){
-                    HttpExceptionHandle handle = new HttpExceptionHandle((HttpException) e,RegisterActivity.this);
-                    handle.handle();
-                }else{
-                    ToastUtil.showToast(RegisterActivity.this,"注册失败");
+                @Override
+                public void onStart() {
+                    super.onStart();
+                    showLoadingDialog();
                 }
-            }
-            @Override
-            public void onNext(Account account) {
-                hideLoadingDialog();
-                ToastUtil.showToast(RegisterActivity.this,"注册成功");
-                finish();
-            }
-        });
 
+                @Override
+                public void onCompleted() {
+                }
+
+                @Override
+                public void onError(Throwable e) {
+                    hideLoadingDialog();
+                    if (e instanceof HttpException) {
+                        HttpExceptionHandle handle = new HttpExceptionHandle((HttpException) e, RegisterActivity.this);
+                        handle.handle();
+                    } else {
+                        ToastUtil.showToast(RegisterActivity.this, "注册失败");
+                    }
+                }
+
+                @Override
+                public void onNext(Account account) {
+                    hideLoadingDialog();
+                    ToastUtil.showToast(RegisterActivity.this, "注册成功");
+                    finish();
+                }
+            });
+
+        }
     }
     @Override
     public void onClick(View v) {
