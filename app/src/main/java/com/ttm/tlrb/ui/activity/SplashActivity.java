@@ -8,19 +8,10 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.RelativeLayout;
 
-import com.ttm.tlrb.BuildConfig;
+import com.qhad.ads.sdk.adcore.Qhad;
+import com.qhad.ads.sdk.interfaces.IQhAdEventListener;
 import com.ttm.tlrb.R;
-import com.ttm.tlrb.ui.application.Constant;
 import com.ttm.tlrb.ui.application.RBApplication;
-import com.ttm.tlrb.utils.HLog;
-import com.ttm.tlrb.utils.SPUtil;
-import com.umeng.analytics.MobclickAgent;
-
-import th.ds.wa.AdManager;
-import th.ds.wa.normal.spot.SplashView;
-import th.ds.wa.normal.spot.SpotDialogListener;
-import th.ds.wa.normal.spot.SpotManager;
-import th.ds.wa.onlineconfig.OnlineConfigCallBack;
 
 /**
  * Created by Helen on 2016/6/17.
@@ -36,7 +27,7 @@ public class SplashActivity extends BaseActivity{
         //移除标题栏
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_splash);
-        boolean isAdOpen = SPUtil.getInstance().getBoolean("isAdOpen",false) || BuildConfig.DEBUG;
+        /*boolean isAdOpen = SPUtil.getInstance().getBoolean("isAdOpen",false) || BuildConfig.DEBUG;
         if(!isAdOpen) {
             AdManager.getInstance(RBApplication.getInstance()).asyncGetOnlineConfig("isOpen", new OnlineConfigCallBack() {
                 @Override
@@ -58,7 +49,8 @@ public class SplashActivity extends BaseActivity{
             });
         }else {
             showAd();
-        }
+        }*/
+        showAd();
         /*SpotManager.getInstance(RBApplication.getInstance()).loadSpotAds();
         SpotManager.getInstance(RBApplication.getInstance()).setSpotOrientation(SpotManager.ORIENTATION_PORTRAIT);
         SpotManager.getInstance(RBApplication.getInstance()).setAnimationType(SpotManager.ANIM_NONE);
@@ -95,7 +87,48 @@ public class SplashActivity extends BaseActivity{
 
     private void showAd(){
         RelativeLayout adLayout = (RelativeLayout) findViewById(R.id.layout_ad);
-        SplashView splashView = SpotManager.getInstance(RBApplication.getInstance()).getSplashView(this);//new SplashView(this,null);
+        Qhad.showSplashAd(adLayout, this, "PPablfr656", new IQhAdEventListener() {
+            @Override
+            public void onAdviewGotAdSucceed() {
+
+            }
+
+            @Override
+            public void onAdviewGotAdFail() {
+                jump();
+            }
+
+            @Override
+            public void onAdviewRendered() {
+
+            }
+
+            @Override
+            public void onAdviewIntoLandpage() {
+
+            }
+
+            @Override
+            public void onAdviewDismissedLandpage() {
+
+            }
+
+            @Override
+            public void onAdviewClicked() {
+
+            }
+
+            @Override
+            public void onAdviewClosed() {
+                jump();
+            }
+
+            @Override
+            public void onAdviewDestroyed() {
+
+            }
+        },true,false);
+        /*SplashView splashView = SpotManager.getInstance(RBApplication.getInstance()).getSplashView(this);//new SplashView(this,null);
         if(splashView != null) {
             Intent intent;
             if(TextUtils.isEmpty(RBApplication.getInstance().getSession())){
@@ -133,7 +166,7 @@ public class SplashActivity extends BaseActivity{
             });
         }else {
             jump();
-        }
+        }*/
     }
 
     /**监听广告过程*//*
@@ -177,7 +210,8 @@ public class SplashActivity extends BaseActivity{
 
     @Override
     protected void onDestroy() {
-        SpotManager.getInstance(RBApplication.getInstance()).onDestroy();
+        //SpotManager.getInstance(RBApplication.getInstance()).onDestroy();
+        Qhad.activityDestroy(this);
         super.onDestroy();
     }
 }

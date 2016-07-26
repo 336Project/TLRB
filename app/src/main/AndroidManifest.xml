@@ -12,6 +12,7 @@
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE"/>
     <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.GET_TASKS"/>
     <!-- 保持CPU 运转，屏幕和键盘灯有可能是关闭的,用于文件上传和下载 -->
     <uses-permission android:name="android.permission.WAKE_LOCK"/>
 
@@ -89,7 +90,7 @@
         <service android:name=".ui.service.DownloadService"/>
 
         <!-- 有米广告 -->
-        <activity
+        <!--<activity
             android:name="th.ds.wa.BV"
             android:configChanges="keyboard|keyboardHidden|orientation|screenSize"
             android:theme="@android:style/Theme.Light.NoTitleBar" >
@@ -104,7 +105,7 @@
                 <action android:name="android.intent.action.PACKAGE_ADDED" />
                 <data android:scheme="package" />
             </intent-filter>
-        </receiver>
+        </receiver>-->
 
 
         <!-- 百度广告 -->
@@ -113,6 +114,12 @@
             android:name="com.baidu.mobads.AppActivity"
             android:configChanges="keyboard|keyboardHidden|orientation"
             android:theme="@android:style/Theme.Translucent.NoTitleBar"/>-->
+        <!--360广告-->
+        <service android:name="com.qhad.ads.sdk.service.QhAdService"
+                 android:enabled="true"
+                 android:exported="false"/>
+        <activity android:name="com.qhad.ads.sdk.adcore.QhAdActivity" android:configChanges="orientation|screenSize|keyboardHidden" >
+        </activity>
         <!-- 新浪微博 -->
         <activity
             android:name="com.sina.weibo.sdk.component.WeiboSdkBrowser"

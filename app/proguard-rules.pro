@@ -156,3 +156,5 @@ public static final int *;
     public static **[] values();
     public static ** valueOf(java.lang.String);
 }
+#360
+-keep class com.qhad.** {*;}
