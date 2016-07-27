@@ -10,12 +10,14 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
 
+import com.qq.e.ads.banner.ADSize;
+import com.qq.e.ads.banner.AbstractBannerADListener;
+import com.qq.e.ads.banner.BannerView;
 import com.ttm.tlrb.R;
 import com.ttm.tlrb.api.APIManager;
 import com.ttm.tlrb.api.e.CategoryExistException;
 import com.ttm.tlrb.api.e.CategoryOverCountException;
 import com.ttm.tlrb.ui.application.Constant;
-import com.ttm.tlrb.ui.application.RBApplication;
 import com.ttm.tlrb.ui.entity.BmobObject;
 import com.ttm.tlrb.ui.entity.Category;
 import com.ttm.tlrb.utils.HLog;
@@ -29,7 +31,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import rx.Subscriber;
-import th.ds.wa.normal.banner.BannerManager;
 
 /**
  * Created by 李晓伟 on 2016/6/20.
@@ -68,14 +69,27 @@ public class GroupActivity extends TitlebarActivity implements TagGroup.OnTagCha
         initData();
         initAd();
     }
-
+    private BannerView adView;
     private void initAd() {
-        View adView = BannerManager.getInstance(RBApplication.getInstance()).getBanner(this);
+        adView = new BannerView(this, ADSize.BANNER, "1105419691", "6040413346244812");
         if(adView != null) {
+            adView.setRefresh(10);
+            adView.setADListener(new AbstractBannerADListener() {
+                @Override
+                public void onNoAD(int i) {
+                    HLog.d("GroupActivity","onNoAD----"+i);
+                }
+
+                @Override
+                public void onADReceiv() {
+                    HLog.d("GroupActivity","onADReceive");
+                }
+            });
             // 获取要嵌入广告条的布局
             LinearLayout adLayout = (LinearLayout) findViewById(R.id.layout_ad);
             // 将广告条加入到布局中
             adLayout.addView(adView);
+            adView.loadAD();
         }
     }
 
@@ -128,6 +142,9 @@ public class GroupActivity extends TitlebarActivity implements TagGroup.OnTagCha
         }
         if(mCategoryDeleteSubscriber != null && !mCategoryDeleteSubscriber.isUnsubscribed()){
             mCategoryDeleteSubscriber.unsubscribe();
+        }
+        if(adView != null){
+            adView.destroy();
         }
         super.onDestroy();
     }

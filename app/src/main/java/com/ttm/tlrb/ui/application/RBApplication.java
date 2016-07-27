@@ -14,8 +14,6 @@ import com.umeng.analytics.MobclickAgent;
 import com.umeng.socialize.Config;
 import com.umeng.socialize.PlatformConfig;
 
-import th.ds.wa.AdManager;
-
 
 /**
  * Created by Helen on 2016/4/28.
@@ -76,7 +74,7 @@ public class RBApplication extends Application{
     }
 
     private void initAD() {
-        AdManager.getInstance(this).init("abef61a1925a5d96", "95ce78a402f6cf12", false, BuildConfig.DEBUG);
+        //AdManager.getInstance(this).init("abef61a1925a5d96", "95ce78a402f6cf12", false, BuildConfig.DEBUG);
     }
 
     private void initPatchManager() {

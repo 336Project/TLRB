@@ -156,3 +156,10 @@ public static final int *;
     public static **[] values();
     public static ** valueOf(java.lang.String);
 }
+#腾讯广告
+-keep class com.qq.e.** {
+    public protected *;
+}
+-keep class android.support.v4.app.NotificationCompat**{
+    public *;
+}

@@ -4,23 +4,16 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
+import android.view.KeyEvent;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.RelativeLayout;
 
-import com.ttm.tlrb.BuildConfig;
+import com.qq.e.ads.splash.SplashAD;
+import com.qq.e.ads.splash.SplashADListener;
 import com.ttm.tlrb.R;
-import com.ttm.tlrb.ui.application.Constant;
 import com.ttm.tlrb.ui.application.RBApplication;
 import com.ttm.tlrb.utils.HLog;
-import com.ttm.tlrb.utils.SPUtil;
-import com.umeng.analytics.MobclickAgent;
-
-import th.ds.wa.AdManager;
-import th.ds.wa.normal.spot.SplashView;
-import th.ds.wa.normal.spot.SpotDialogListener;
-import th.ds.wa.normal.spot.SpotManager;
-import th.ds.wa.onlineconfig.OnlineConfigCallBack;
 
 /**
  * Created by Helen on 2016/6/17.
@@ -28,6 +21,7 @@ import th.ds.wa.onlineconfig.OnlineConfigCallBack;
  */
 public class SplashActivity extends BaseActivity{
     private static String TAG = "SplashActivity";
+    public boolean canJump = false;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -36,7 +30,7 @@ public class SplashActivity extends BaseActivity{
         //移除标题栏
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_splash);
-        boolean isAdOpen = SPUtil.getInstance().getBoolean("isAdOpen",false) || BuildConfig.DEBUG;
+        /*boolean isAdOpen = SPUtil.getInstance().getBoolean("isAdOpen",false) || BuildConfig.DEBUG;
         if(!isAdOpen) {
             AdManager.getInstance(RBApplication.getInstance()).asyncGetOnlineConfig("isOpen", new OnlineConfigCallBack() {
                 @Override
@@ -56,9 +50,9 @@ public class SplashActivity extends BaseActivity{
                     jump();
                 }
             });
-        }else {
+        }else {*/
             showAd();
-        }
+        //}
         /*SpotManager.getInstance(RBApplication.getInstance()).loadSpotAds();
         SpotManager.getInstance(RBApplication.getInstance()).setSpotOrientation(SpotManager.ORIENTATION_PORTRAIT);
         SpotManager.getInstance(RBApplication.getInstance()).setAnimationType(SpotManager.ANIM_NONE);
@@ -95,7 +89,29 @@ public class SplashActivity extends BaseActivity{
 
     private void showAd(){
         RelativeLayout adLayout = (RelativeLayout) findViewById(R.id.layout_ad);
-        SplashView splashView = SpotManager.getInstance(RBApplication.getInstance()).getSplashView(this);//new SplashView(this,null);
+        SplashAD splashAD = new SplashAD(this, adLayout, "1105419691", "1090617356347870", new SplashADListener() {
+            @Override
+            public void onADDismissed() {
+                jump();
+            }
+
+            @Override
+            public void onNoAD(int i) {
+                HLog.d(TAG, "onNoAD----" + i);
+                jump();
+            }
+
+            @Override
+            public void onADPresent() {
+
+            }
+
+            @Override
+            public void onADClicked() {
+
+            }
+        },3000);
+        /*SplashView splashView = SpotManager.getInstance(RBApplication.getInstance()).getSplashView(this);//new SplashView(this,null);
         if(splashView != null) {
             Intent intent;
             if(TextUtils.isEmpty(RBApplication.getInstance().getSession())){
@@ -133,7 +149,7 @@ public class SplashActivity extends BaseActivity{
             });
         }else {
             jump();
-        }
+        }*/
     }
 
     /**监听广告过程*//*
@@ -165,19 +181,46 @@ public class SplashActivity extends BaseActivity{
     };*/
 
     private void jump(){
-        Intent intent;
-        if(TextUtils.isEmpty(RBApplication.getInstance().getSession())){
-            intent = new Intent(this,LoginActivity.class);
+        if(canJump) {
+            Intent intent;
+            if (TextUtils.isEmpty(RBApplication.getInstance().getSession())) {
+                intent = new Intent(this, LoginActivity.class);
+            } else {
+                intent = new Intent(this, MainActivity.class);
+            }
+            startActivity(intent);
+            finish();
         }else {
-            intent = new Intent(this,MainActivity.class);
+            canJump = true;
         }
-        startActivity(intent);
-        finish();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        canJump = false;
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (canJump) {
+            jump();
+        }
+        canJump = true;
     }
 
     @Override
     protected void onDestroy() {
-        SpotManager.getInstance(RBApplication.getInstance()).onDestroy();
+        //SpotManager.getInstance(RBApplication.getInstance()).onDestroy();
         super.onDestroy();
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK || keyCode == KeyEvent.KEYCODE_HOME) {
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
     }
 }
