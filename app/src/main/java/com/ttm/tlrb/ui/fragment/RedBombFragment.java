@@ -1,6 +1,5 @@
 package com.ttm.tlrb.ui.fragment;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -12,7 +11,7 @@ import android.view.ViewGroup;
 
 import com.ttm.tlrb.R;
 import com.ttm.tlrb.api.APIManager;
-import com.ttm.tlrb.ui.activity.AddRedBombActivity;
+import com.ttm.tlrb.ui.activity.UpdateRedBombActivity;
 import com.ttm.tlrb.ui.adapter.BaseRecyclerAdapter;
 import com.ttm.tlrb.ui.adapter.RedBombAdapter;
 import com.ttm.tlrb.ui.application.Constant;
@@ -180,9 +179,7 @@ public class RedBombFragment extends BaseFragment implements SwipeRefreshLayout.
     @Override
     public void onItemClick(View view, int position) {
         MobclickAgent.onEvent(getActivity(), Constant.Event.EVENT_ID_BOMB_LOOK);
-        Intent intent=new Intent(getActivity(), AddRedBombActivity.class);
-        intent.putExtra("redBomb", mRedBombs.get(position));
-        getActivity().startActivityForResult(intent, GO_ADD_RED_BOMB);
+        UpdateRedBombActivity.launcher(getActivity(),mRedBombs.get(position),GO_ADD_RED_BOMB);
     }
 
     //添加红包数据后，进行更新数据
