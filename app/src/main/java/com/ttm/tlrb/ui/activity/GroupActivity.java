@@ -73,7 +73,7 @@ public class GroupActivity extends TitlebarActivity implements TagGroup.OnTagCha
     private void initAd() {
         adView = new BannerView(this, ADSize.BANNER, "1105419691", "6040413346244812");
         if(adView != null) {
-            adView.setRefresh(10);
+            adView.setRefresh(5);
             adView.setADListener(new AbstractBannerADListener() {
                 @Override
                 public void onNoAD(int i) {
@@ -85,11 +85,11 @@ public class GroupActivity extends TitlebarActivity implements TagGroup.OnTagCha
                     HLog.d("GroupActivity","onADReceive");
                 }
             });
+            adView.loadAD();
             // 获取要嵌入广告条的布局
             LinearLayout adLayout = (LinearLayout) findViewById(R.id.layout_ad);
             // 将广告条加入到布局中
             adLayout.addView(adView);
-            adView.loadAD();
         }
     }
 
