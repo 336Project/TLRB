@@ -1,0 +1,359 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/add_redbomb_radiobutton_padding"
+        android:background="@drawable/ic_other_bg"
+        android:orientation="horizontal">
+
+        <TextView
+            style="@style/add_red_bomb_text"
+            android:text="@string/name"/>
+
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/layout_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <com.ttm.tlrb.view.CleanableEditText
+                style="@style/add_red_bomb_edittext"
+                android:hint="@string/name"/>
+        </android.support.design.widget.TextInputLayout>
+
+        <!--<android.support.design.widget.TextInputEditText
+            android:id="@+id/et_name"
+            style="@style/add_red_bomb_edittext"/>-->
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        android:background="@drawable/shape_rectangular_red_radius"
+        android:orientation="horizontal"
+        android:padding="2dp">
+
+        <TextView
+            android:id="@+id/tv_men"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_weight="1"
+            android:background="@drawable/shape_rectangular_red_radiusleft"
+            android:clickable="true"
+            android:gravity="center"
+            android:text="@string/men"
+            android:textColor="@color/white"/>
+
+        <TextView
+            android:layout_width="2dp"
+            android:layout_height="match_parent"
+            android:background="@color/Red_400"/>
+
+        <TextView
+            android:id="@+id/tv_women"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_weight="1"
+            android:clickable="true"
+            android:gravity="center"
+            android:text="@string/women"
+            android:textColor="@color/black_de"/>
+
+        <TextView
+            android:layout_width="2dp"
+            android:layout_height="match_parent"
+            android:background="@color/Red_400"/>
+
+        <TextView
+            android:id="@+id/tv_all"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_weight="1"
+            android:clickable="true"
+            android:gravity="center"
+            android:text="@string/all"
+            android:textColor="@color/black_de"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/ic_other_bg"
+        android:orientation="horizontal">
+
+        <TextView
+            style="@style/add_red_bomb_text"
+            android:text="@string/money"/>
+
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/layout_money"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <com.ttm.tlrb.view.CleanableEditText
+                style="@style/add_red_bomb_edittext"
+                android:hint="@string/money"
+                android:inputType="numberDecimal"/>
+        </android.support.design.widget.TextInputLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        android:background="@drawable/shape_rectangular_red_radius"
+        android:orientation="horizontal"
+        android:padding="2dp">
+
+        <TextView
+            android:id="@+id/tv_income"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_weight="1"
+            android:background="@drawable/shape_rectangular_red_radiusleft"
+            android:clickable="true"
+            android:gravity="center"
+            android:text="@string/income"
+            android:textColor="@color/white"/>
+
+        <TextView
+            android:layout_width="2dp"
+            android:layout_height="match_parent"
+            android:background="@color/Red_400"/>
+
+        <TextView
+            android:id="@+id/tv_spending"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_weight="1"
+            android:clickable="true"
+            android:gravity="center"
+            android:text="@string/spending"
+            android:textColor="@color/black_de"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/ic_other_bg"
+        android:orientation="horizontal">
+
+        <TextView
+            style="@style/add_red_bomb_text"
+            android:text="@string/gift"/>
+
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/layout_gift"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <com.ttm.tlrb.view.CleanableEditText
+                style="@style/add_red_bomb_edittext"
+                android:hint="@string/gift"/>
+        </android.support.design.widget.TextInputLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/ic_other_bg"
+        android:orientation="horizontal">
+
+        <TextView
+            style="@style/add_red_bomb_text"
+            android:text="@string/categoryName"
+            android:textSize="@dimen/add_redbomb_title_text"
+            android:visibility="visible"/>
+
+        <Spinner
+            android:id="@+id/sp_addType"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1">
+
+        </Spinner>
+
+        <TextView
+            android:id="@+id/tv_addType"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="5dp"
+            android:layout_marginTop="5dp"
+            android:background="@drawable/shape_rectangular_blue_radius"
+            android:clickable="true"
+            android:gravity="center"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"
+            android:text="@string/add_type"
+            android:textColor="@color/white"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/ic_other_bg"
+        android:orientation="horizontal">
+
+        <TextView
+            style="@style/add_red_bomb_text"
+            android:text="@string/time"/>
+
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/layout_time"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1">
+
+            <com.ttm.tlrb.view.CleanableEditText
+                style="@style/add_red_bomb_edittext"
+                android:focusable="false"
+                android:hint="@string/time"/>
+        </android.support.design.widget.TextInputLayout>
+
+        <ImageView
+            android:id="@+id/iv_time"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_gravity="center"
+            android:layout_marginRight="@dimen/add_redbomb_radiobutton_padding"
+            android:src="@drawable/ic_date"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/ic_other_bg"
+        android:orientation="horizontal">
+
+        <TextView
+            style="@style/add_red_bomb_text"
+            android:text="@string/remark"/>
+
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/layout_remark"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <com.ttm.tlrb.view.CleanableEditText
+                style="@style/add_red_bomb_edittext"
+                android:hint="@string/remark"/>
+        </android.support.design.widget.TextInputLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="20dp"
+        android:minHeight="50dp"
+        android:orientation="horizontal"
+        android:visibility="gone">
+
+        <TextView
+            style="@style/add_red_bomb_text"
+            android:text="@string/sex"
+            android:visibility="visible"/>
+
+        <RadioGroup
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="horizontal">
+
+            <RadioButton
+                android:id="@+id/rb_boy"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:layout_weight="1"
+                android:checked="true"
+                android:gravity="center_vertical|left"
+                android:text="@string/men"
+                android:textSize="@dimen/add_redbomb_textsize"/>
+
+            <RadioButton
+                android:id="@+id/rb_gril"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:layout_marginLeft="@dimen/add_redbomb_radiobutton_padding"
+                android:layout_weight="1"
+                android:gravity="center_vertical|left"
+                android:text="@string/women"
+                android:textSize="@dimen/add_redbomb_textsize"/>
+
+            <RadioButton
+                android:id="@+id/rb_all"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:layout_marginLeft="@dimen/add_redbomb_radiobutton_padding"
+                android:layout_weight="1"
+                android:gravity="center_vertical|left"
+                android:text="@string/all"
+                android:textSize="@dimen/add_redbomb_textsize"/>
+
+        </RadioGroup>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="20dp"
+        android:minHeight="50dp"
+        android:orientation="horizontal"
+        android:visibility="gone">
+
+        <TextView
+            style="@style/add_red_bomb_text"
+            android:text="@string/type"
+            android:visibility="visible"/>
+
+        <RadioGroup
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="horizontal">
+
+            <RadioButton
+                android:id="@+id/rb_spending"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:layout_weight="1"
+                android:checked="true"
+                android:gravity="center_vertical|left"
+                android:text="@string/spending"
+                android:textSize="@dimen/add_redbomb_textsize"/>
+
+            <RadioButton
+                android:id="@+id/rb_income"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:layout_marginLeft="@dimen/add_redbomb_radiobutton_padding"
+                android:layout_weight="1"
+                android:gravity="center_vertical|left"
+                android:text="@string/income"
+                android:textSize="@dimen/add_redbomb_textsize"/>
+
+        </RadioGroup>
+
+    </LinearLayout>
+</LinearLayout>
