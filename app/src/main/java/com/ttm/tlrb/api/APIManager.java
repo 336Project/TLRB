@@ -268,6 +268,18 @@ public class APIManager {
     }
 
     /**
+     * 获取用户信息
+     * @param userId 用户id
+     * @param subscriber 回调
+     */
+    public void getUser(String userId,Subscriber<Account> subscriber){
+        getAPIService().getUser(userId)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(subscriber);
+    }
+
+    /**
      * 修改密码
      * @param userObjectId 用户ID
      * @param oldPassword 旧密码
@@ -796,6 +808,83 @@ public class APIManager {
                         return getAPIService().putUser(accountId, body);
                     }
                 })
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(subscriber);
+    }
+
+    /**
+     * 获取短信验证码
+     * @param phoneNum 手机号码
+     * @param subscriber 回调
+     */
+    public void getSmsCode(String phoneNum,Subscriber<BmobObject> subscriber){
+        Map<String,String> map = new HashMap<>();
+        map.put("mobilePhoneNumber",phoneNum);
+        map.put("template","手机验证码");
+        RequestBody body = RequestBody.create(Constant.JSON,GsonUtil.fromMap2Json(map));
+        getAPIService().getSmsCode(body)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(subscriber);
+    }
+
+    /**
+     * 验证短信验证码
+     * @param phoneNum 手机号码
+     * @param code 验证码
+     * @param subscriber 回调
+     */
+    public void verifySmsCode(String phoneNum,String code,Subscriber<BmobObject> subscriber){
+        Map<String,String> map = new HashMap<>();
+        map.put("mobilePhoneNumber",phoneNum);
+        RequestBody body = RequestBody.create(Constant.JSON,GsonUtil.fromMap2Json(map));
+        getAPIService().verifySmsCode(code,body)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(subscriber);
+    }
+
+    /**
+     * 验证邮箱
+     * @param email 邮箱地址
+     * @param subscriber 回调
+     */
+    public void verifyEmail(String email,Subscriber<BmobObject> subscriber){
+        Map<String,String> map = new HashMap<>();
+        map.put("email",email);
+        RequestBody body = RequestBody.create(Constant.JSON,GsonUtil.fromMap2Json(map));
+        getAPIService().verifyEmail(body)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(subscriber);
+    }
+
+    /**
+     * 短信重置密码
+     * @param newPwd 新密码
+     * @param code 验证码
+     * @param subscriber 回调
+     */
+    public void resetPasswordBySmsCode(String newPwd,String code,Subscriber<BmobObject> subscriber){
+        Map<String,String> map = new HashMap<>();
+        map.put("password",newPwd);
+        RequestBody body = RequestBody.create(Constant.JSON,GsonUtil.fromMap2Json(map));
+        getAPIService().resetPasswordBySmsCode(code,body)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(subscriber);
+    }
+    /**
+     * 短信重置密码
+     * @param email 邮箱
+     * @param subscriber 回调
+     */
+    public void resetPasswordByEmail(String email,Subscriber<BmobObject> subscriber){
+        Map<String,String> map = new HashMap<>();
+        map.put("email",email);
+        RequestBody body = RequestBody.create(Constant.JSON,GsonUtil.fromMap2Json(map));
+        getAPIService().resetPasswordByEmail(body)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(subscriber);

@@ -1,5 +1,7 @@
 package com.ttm.tlrb.api;
 
+import android.text.TextUtils;
+
 import com.ttm.tlrb.ui.entity.Account;
 import com.ttm.tlrb.ui.entity.BmobACL;
 import com.ttm.tlrb.utils.GsonUtil;
@@ -30,8 +32,11 @@ public class UserManager {
         if(account == null){
             return;
         }
+        if(TextUtils.isEmpty(account.getSessionToken())){
+            account.setSessionToken(mAccount.getSessionToken());
+        }
         mAccount = account;
-        SPUtil.getInstance().putString(KEY_SP_USER,account.toString()).commit();
+        SPUtil.getInstance().putString(KEY_SP_USER,mAccount.toString()).commit();
         updateSessionToken(mAccount.getSessionToken());
     }
 

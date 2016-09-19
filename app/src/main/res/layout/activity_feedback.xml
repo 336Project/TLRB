@@ -36,11 +36,6 @@
         android:text="@string/hint_upload_log"
         style="@style/SubheadStyle"
         />
-    <com.andexert.library.RippleView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        style="@style/RippleViewStyle"
-        >
     <Button
         android:id="@+id/btn_send"
         android:layout_width="match_parent"
@@ -49,5 +44,4 @@
         style="@style/TitleStyle.Light"
         android:background="@drawable/bg_btn"
         android:text="@string/send"/>
-    </com.andexert.library.RippleView>
 </LinearLayout>

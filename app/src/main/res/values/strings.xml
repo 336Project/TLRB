@@ -78,4 +78,5 @@
     <string name="auth_fail">授权失败</string>
     <string name="login_success">登录成功</string>
     <string name="requesting">请求中…</string>
+    <string name="get_code">获取验证码</string>
 </resources>

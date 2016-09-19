@@ -4,8 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.util.Log;
-import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.EditText;
@@ -13,7 +11,6 @@ import android.widget.EditText;
 import com.ttm.tlrb.R;
 import com.ttm.tlrb.api.APIManager;
 import com.ttm.tlrb.api.BaseSubscriber;
-import com.ttm.tlrb.api.e.HttpExceptionHandle;
 import com.ttm.tlrb.ui.application.Constant;
 import com.ttm.tlrb.ui.application.RBApplication;
 import com.ttm.tlrb.ui.entity.Account;
@@ -30,13 +27,13 @@ import org.json.JSONObject;
 
 import java.util.Map;
 
-import retrofit2.adapter.rxjava.HttpException;
 import rx.Subscriber;
 
 public class LoginActivity extends BaseActivity implements View.OnClickListener,UMAuthListener{
 
     private EditText mEditTextUserName;
     private EditText mEditTextPassword;
+    private Subscriber<Account> mSubscriberLogin;
 
 
     public static void launcher(Context context){
@@ -59,6 +56,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
         findViewById(R.id.iv_sina).setOnClickListener(this);
         findViewById(R.id.iv_qq).setOnClickListener(this);
         findViewById(R.id.iv_weixin).setOnClickListener(this);
+        findViewById(R.id.tv_retrieve_password).setOnClickListener(this);
         mEditTextUserName = (EditText) findViewById(R.id.editText_username);
         mEditTextPassword = (EditText) findViewById(R.id.editText_password);
     }
@@ -90,6 +88,9 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
                 umShareAPI = UMShareAPI.get(RBApplication.getInstance());
                 umShareAPI.doOauthVerify(this, SHARE_MEDIA.WEIXIN, this);
                 break;
+            case R.id.tv_retrieve_password:
+                ResetPasswordActivity.launcher(LoginActivity.this);
+                break;
         }
     }
 
@@ -115,38 +116,15 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
             ToastUtil.showToast(this,"密码不能为空");
             return;
         }
-//        APIManager.getInstance().login(userName,password,new BaseSubscriber<Account>(this){
-//
-//            @Override
-//            public void atNext(Account account) {
-//                loginSuccess();
-//            }
-//        });
-        APIManager.getInstance().login(userName, password, new Subscriber<Account>() {
-            @Override
-            public void onStart() {
-                super.onStart();
-                showLoadingDialog();
-            }
-
-            @Override
-            public void onCompleted() {
-            }
-            @Override
-            public void onError(Throwable e) {
-                System.out.println(Log.getStackTraceString(e));
-                if(e instanceof HttpException){
-                    HttpExceptionHandle handle = new HttpExceptionHandle((HttpException) e,LoginActivity.this);
-                    handle.handle();
+        if(mSubscriberLogin == null || mSubscriberLogin.isUnsubscribed()){
+            mSubscriberLogin = new BaseSubscriber<Account>(this) {
+                @Override
+                public void atNext(Account account) {
+                    loginSuccess();
                 }
-                hideLoadingDialog();
-            }
-            @Override
-            public void onNext(Account account) {
-                hideLoadingDialog();
-                loginSuccess();
-            }
-        });
+            };
+        }
+        APIManager.getInstance().login(userName, password, mSubscriberLogin);
     }
 
     private void loginSuccess(){
@@ -239,28 +217,15 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
             return;
         }
         if(mAuthLoginSubscriber == null || mAuthLoginSubscriber.isUnsubscribed()){
-            mAuthLoginSubscriber = new Subscriber<Account>() {
+            mAuthLoginSubscriber = new BaseSubscriber<Account>(this) {
 
                 @Override
-                public void onStart() {
-                    super.onStart();
-                    showLoadingDialog();
-                }
-
-                @Override
-                public void onCompleted() {
-
-                }
-
-                @Override
-                public void onError(Throwable e) {
-                    hideLoadingDialog();
+                public void atError(Throwable e) {
                     ToastUtil.showToast(LoginActivity.this, getString(R.string.auth_fail));
                 }
 
                 @Override
-                public void onNext(Account account) {
-                    hideLoadingDialog();
+                public void atNext(Account account) {
                     loginSuccess();
                 }
             };
@@ -285,14 +250,9 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
         if(mAuthLoginSubscriber != null && !mAuthLoginSubscriber.isUnsubscribed()){
             mAuthLoginSubscriber.unsubscribe();
         }
-        super.onDestroy();
-    }
-
-    @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if(keyCode ==KeyEvent.KEYCODE_BACK){
-            hideLoadingDialog();
+        if(mSubscriberLogin != null && !mSubscriberLogin.isUnsubscribed()){
+            mSubscriberLogin.unsubscribe();
         }
-        return super.onKeyDown(keyCode, event);
+        super.onDestroy();
     }
 }

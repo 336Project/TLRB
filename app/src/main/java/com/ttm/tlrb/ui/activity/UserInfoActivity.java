@@ -4,6 +4,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.TextUtils;
+import android.text.style.ForegroundColorSpan;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -12,6 +16,7 @@ import com.bumptech.glide.Glide;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.ttm.tlrb.R;
 import com.ttm.tlrb.api.APIManager;
+import com.ttm.tlrb.api.BaseSubscriber;
 import com.ttm.tlrb.api.UserManager;
 import com.ttm.tlrb.ui.entity.Account;
 import com.ttm.tlrb.ui.entity.BmobObject;
@@ -27,10 +32,18 @@ import rx.Subscriber;
 public class UserInfoActivity extends TitlebarActivity implements View.OnClickListener {
     private SimpleDraweeView mHeaderView;
     private TextView mTextViewNick;
-    private TextView mTextViewType;
+    private TextView mTextViewPhone;
+    private TextView mTextViewEmail;
+    private View layoutPwd;
+    private TextView textViewType;
+
     private ImageConfig mImageConfig;
     private final int REQUEST_NICK = 0x001;
-    private final int REQUEST_PASSWORD = 0x001;
+    private final int REQUEST_PHONE = 0x002;
+    private final int REQUEST_EMAIL = 0x003;
+    private final int REQUEST_PASSWORD = 0x004;
+    private Account mAccount;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -87,78 +100,137 @@ public class UserInfoActivity extends TitlebarActivity implements View.OnClickLi
     private void initView() {
         findViewById(R.id.linearLayout_portrait).setOnClickListener(this);
         findViewById(R.id.linearLayout_nick).setOnClickListener(this);
-        View layoutPwd = findViewById(R.id.linearLayout_password);
+        findViewById(R.id.layout_phone).setOnClickListener(this);
+        findViewById(R.id.layout_email).setOnClickListener(this);
+        layoutPwd = findViewById(R.id.linearLayout_password);
         layoutPwd.setOnClickListener(this);
         layoutPwd.setVisibility(View.GONE);
         findViewById(R.id.line1).setVisibility(View.GONE);
         mHeaderView = (SimpleDraweeView) findViewById(R.id.iv_portrait);
         mTextViewNick = (TextView) findViewById(R.id.textView_nick);
-        mTextViewType = (TextView) findViewById(R.id.textView_type);
-        Account account = UserManager.getInstance().getAccount();
-        if(account != null){
-            mHeaderView.setImageURI(Uri.parse(account.getPortrait()));
-            if(account.getNickname().equals("")){
-                mTextViewNick.setText("您还没有昵称，快去设置吧");
-            }
-            else{
-                mTextViewNick.setText(account.getNickname());
-            }
-            int type = account.getType();
-            if(type == 0){
-                layoutPwd.setVisibility(View.VISIBLE);
-                findViewById(R.id.line1).setVisibility(View.VISIBLE);
-                mTextViewType.setText("来自注册");
-            }else if(type == 1){
-                mTextViewType.setText("来自新浪");
-            }else if(type == 2){
-                mTextViewType.setText("来自微信");
-            }else if(type == 3){
-                mTextViewType.setText("来自QQ");
-            }
-        }
+        mTextViewPhone = (TextView) findViewById(R.id.tv_phone);
+        mTextViewEmail = (TextView) findViewById(R.id.tv_email);
+
+        textViewType = (TextView) findViewById(R.id.textView_type);
+        mAccount = UserManager.getInstance().getAccount();
+        setAccountInfo();
+        refreshAccount();
     }
-    private void inputPicture(String filePath){
-        File file = new File(filePath);
-        Subscriber<BmobObject> mUpdatePictureSubscriber = new Subscriber<BmobObject>() {
+
+    private void refreshAccount() {
+        if(mAccount == null ) return;
+
+        APIManager.getInstance().getUser(mAccount.getObjectId(), new Subscriber<Account>() {
             @Override
-            public void onStart() {
-                super.onStart();
-                showLoadingDialog();
+            public void onCompleted() {
+
             }
 
             @Override
-            public void onCompleted() {
-                hideLoadingDialog();
-            }
-            @Override
             public void onError(Throwable e) {
-                hideLoadingDialog();
+
             }
+
             @Override
-            public void onNext(BmobObject bmobObject) {
-                Account account = UserManager.getInstance().getAccount();
-                account.setPortrait(APIManager.getInstance().getPictureUrl());
-                UserManager.getInstance().updateAccount(account);
-                mHeaderView.setImageURI(Uri.parse(APIManager.getInstance().getPictureUrl()));
+            public void onNext(Account account) {
+                mAccount = account;
+                UserManager.getInstance().updateAccount(mAccount);
+                setAccountInfo();
             }
-        };
+        });
+    }
+
+    private void setAccountInfo(){
+        if(mAccount != null){
+            mHeaderView.setImageURI(Uri.parse(mAccount.getPortrait()));
+            if(mAccount.getNickname().equals("")){
+                mTextViewNick.setText("您还没有昵称，快去设置吧~");
+            }
+            else{
+                mTextViewNick.setText(mAccount.getNickname());
+            }
+            int type = mAccount.getType();
+            if(type == 0){
+                layoutPwd.setVisibility(View.VISIBLE);
+                findViewById(R.id.line1).setVisibility(View.VISIBLE);
+                textViewType.setText("来自注册");
+            }else if(type == 1){
+                textViewType.setText("来自新浪");
+            }else if(type == 2){
+                textViewType.setText("来自微信");
+            }else if(type == 3){
+                textViewType.setText("来自QQ");
+            }
+            setPhone();
+            setEmail();
+        }
+    }
+
+    private void setPhone(){
+        String phone = mAccount.getMobilePhoneNumber();
+        boolean isVerify = mAccount.isMobilePhoneNumberVerified();
+        if(!TextUtils.isEmpty(phone)){
+            if(isVerify) {
+                mTextViewPhone.setText(phone);
+            }else {
+                String phoneStr = phone+"(未验证)";
+                SpannableString span = new SpannableString(phoneStr);
+                span.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.Red_400)),phone.length(),phoneStr.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                mTextViewPhone.setText(span);
+            }
+        }
+    }
+
+    private void setEmail(){
+        String email = mAccount.getEmail();
+        boolean isVerify = mAccount.isEmailVerified();
+        if(!TextUtils.isEmpty(email)){
+            if(isVerify) {
+                mTextViewEmail.setText(email);
+            }else {
+                String emailStr = email+"(未验证)";
+                SpannableString span = new SpannableString(emailStr);
+                span.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.Red_400)),email.length(),emailStr.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                mTextViewEmail.setText(span);
+            }
+        }
+    }
+
+    private Subscriber<BmobObject> mUpdatePictureSubscriber;
+    private void inputPicture(String filePath){
+        File file = new File(filePath);
+        if(mUpdatePictureSubscriber == null || mUpdatePictureSubscriber.isUnsubscribed()){
+            mUpdatePictureSubscriber = new BaseSubscriber<BmobObject>(this) {
+                @Override
+                public void atNext(BmobObject object) {
+                    Account account = UserManager.getInstance().getAccount();
+                    account.setPortrait(APIManager.getInstance().getPictureUrl());
+                    UserManager.getInstance().updateAccount(account);
+                    mHeaderView.setImageURI(Uri.parse(APIManager.getInstance().getPictureUrl()));
+                }
+            };
+        }
         Account account = UserManager.getInstance().getAccount();
         APIManager.getInstance().updatePicture(account.getObjectId(),file,mUpdatePictureSubscriber);
     }
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode == this.REQUEST_NICK){
-            mTextViewNick.setText(UserManager.getInstance().getAccount().getNickname());
-        }
-        if (requestCode == ImageSelector.IMAGE_REQUEST_CODE && resultCode == RESULT_OK && data != null) {
-            // Get Image Path List
-            List<String> pathList = data.getStringArrayListExtra(ImageSelectorActivity.EXTRA_RESULT);
-            int i=0;
-            for (String path : pathList) {
-                if(i==0){
-                    inputPicture(path);
-                    i++;
+        if(resultCode == RESULT_OK) {
+            if (requestCode == this.REQUEST_NICK) {
+                mTextViewNick.setText(UserManager.getInstance().getAccount().getNickname());
+            } else if (requestCode == REQUEST_EMAIL) {
+                mAccount = UserManager.getInstance().getAccount();
+                setEmail();
+            } else if (requestCode == REQUEST_PHONE) {
+                mAccount = UserManager.getInstance().getAccount();
+                setPhone();
+            } else if (requestCode == ImageSelector.IMAGE_REQUEST_CODE) {
+                if (data != null) {
+                    List<String> pathList = data.getStringArrayListExtra(ImageSelectorActivity.EXTRA_RESULT);
+                    if (pathList != null && !pathList.isEmpty()) {
+                        inputPicture(pathList.get(0));
+                    }
                 }
             }
         }
@@ -172,6 +244,14 @@ public class UserInfoActivity extends TitlebarActivity implements View.OnClickLi
                 intent.setClass(UserInfoActivity.this,UpdateNickNameActivity.class);
                 startActivityForResult(intent,this.REQUEST_NICK);
                 break;
+            case R.id.layout_phone:
+                intent.setClass(UserInfoActivity.this,UpdatePhoneActivity.class);
+                startActivityForResult(intent,this.REQUEST_PHONE);
+                break;
+            case R.id.layout_email:
+                intent.setClass(UserInfoActivity.this,UpdateEmailActivity.class);
+                startActivityForResult(intent,this.REQUEST_EMAIL);
+                break;
             case R.id.linearLayout_password:
                 intent.setClass(UserInfoActivity.this,UpdatePasswordActivity.class);
                 startActivityForResult(intent,this.REQUEST_PASSWORD);
@@ -180,5 +260,13 @@ public class UserInfoActivity extends TitlebarActivity implements View.OnClickLi
                 ImageSelector.open(UserInfoActivity.this, mImageConfig);   // 开启图片选择器
                 break;
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        if(mUpdatePictureSubscriber != null && !mUpdatePictureSubscriber.isUnsubscribed()){
+            mUpdatePictureSubscriber.unsubscribe();
+        }
+        super.onDestroy();
     }
 }

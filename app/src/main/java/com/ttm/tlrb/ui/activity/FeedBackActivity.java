@@ -13,6 +13,7 @@ import android.widget.EditText;
 import com.ttm.tlrb.R;
 import com.ttm.tlrb.api.APIManager;
 import com.ttm.tlrb.api.APIService;
+import com.ttm.tlrb.api.BaseSubscriber;
 import com.ttm.tlrb.ui.application.Constant;
 import com.ttm.tlrb.ui.entity.BaseEn;
 import com.ttm.tlrb.ui.entity.BmobFile;
@@ -104,18 +105,10 @@ public class FeedBackActivity extends TitlebarActivity implements View.OnClickLi
      */
     private void upload(final Feedback feedBack , final File logFile){
         if(mSubscriber == null || mSubscriber.isUnsubscribed()){
-            mSubscriber = new Subscriber<BaseEn>() {
-                @Override
-                public void onCompleted() {
-
-                }
+            mSubscriber = new BaseSubscriber<BaseEn>(this) {
 
                 @Override
-                public void onError(Throwable e) {
-                }
-
-                @Override
-                public void onNext(BaseEn o) {
+                public void atNext(BaseEn baseEn) {
                     ToastUtil.showToast(FeedBackActivity.this,getString(R.string.thanks_to_feedback));
                     if(logFile != null && logFile.exists()) {
                         FileUtil.deleteFile(logFile);

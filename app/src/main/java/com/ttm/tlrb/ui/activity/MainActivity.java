@@ -1,12 +1,18 @@
 package com.ttm.tlrb.ui.activity;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
@@ -14,7 +20,6 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -34,6 +39,7 @@ import com.ttm.tlrb.ui.entity.VersionInfo;
 import com.ttm.tlrb.ui.fragment.RedBombFragment;
 import com.ttm.tlrb.ui.service.DownloadService;
 import com.ttm.tlrb.utils.HLog;
+import com.ttm.tlrb.utils.ToastUtil;
 import com.ttm.tlrb.view.MaterialDialog;
 import com.umeng.analytics.MobclickAgent;
 
@@ -98,7 +104,29 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         checkUpdate();
 
         //location
+        requestPermission();
+    }
 
+    private static final int REQ_WRITE = 2002;
+
+    private void requestPermission() {
+        if (Build.VERSION.SDK_INT >= 23) {
+            boolean isAllow = PackageManager.PERMISSION_GRANTED == ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+            if (!isAllow) {
+                ActivityCompat.requestPermissions(this,new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},REQ_WRITE);
+            }
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if(requestCode == REQ_WRITE){
+            boolean isAllow = PackageManager.PERMISSION_GRANTED == grantResults[0];
+            if(!isAllow){
+                ToastUtil.showToast(this,"权限获取失败，部分功能将不能正常使用！");
+            }
+        }
     }
 
     private void refreshAccountInfo(){
@@ -123,7 +151,6 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     private void initTabLayout(){
         RedBombPagerAdapter pagerAdapter = new RedBombPagerAdapter(getSupportFragmentManager());
         mAllInformFragment=RedBombFragment.newInstance(0);
-        Log.e("","");
         mSpendingFragment=RedBombFragment.newInstance(2);
         mIncomeFragment=RedBombFragment.newInstance(1);
         pagerAdapter.addFragment(mAllInformFragment,getString(R.string.action_all));

@@ -42,8 +42,8 @@ public interface APIService {
     @POST("1/users")
     Observable<Account> register(@Body RequestBody body);
     /**查询用户*/
-    /*@GET("1/users")
-    Observable<ResponseEn<Account>> getUser(@Query("where") String where);*/
+    @GET("1/users/{objectId}")
+    Observable<Account> getUser(@Path("objectId") String id);
     /**更新用户*/
     @PUT("1/users/{objectId}")
     Observable<BmobObject> putUser(@Path("objectId") String id,@Body RequestBody body);
@@ -96,4 +96,19 @@ public interface APIService {
     /**删除分组*/
     @DELETE("1/classes/Category/{objectId}")
     Observable<BmobObject> deleteCategory(@Path("objectId") String id);
+    /**获取验证码*/
+    @POST("1/requestSmsCode")
+    Observable<BmobObject> getSmsCode(@Body RequestBody body);
+    /**验证手机验证码*/
+    @POST("1/verifySmsCode/{code}")
+    Observable<BmobObject> verifySmsCode(@Path("code") String code,@Body RequestBody body);
+    /**验证邮箱*/
+    @POST("1/requestEmailVerify")
+    Observable<BmobObject> verifyEmail(@Body RequestBody body);
+    /**短信密码重置*/
+    @PUT("/1/resetPasswordBySmsCode/{code}")
+    Observable<BmobObject> resetPasswordBySmsCode(@Path("code") String code,@Body RequestBody body);
+    /**邮箱密码重置*/
+    @POST("/1/requestPasswordReset")
+    Observable<BmobObject> resetPasswordByEmail(@Body RequestBody body);
 }

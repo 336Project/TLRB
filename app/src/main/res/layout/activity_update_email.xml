@@ -9,23 +9,15 @@
     android:paddingRight="15dp"
     android:paddingLeft="15dp"
     android:paddingTop="20dp"
-    tools:context="com.ttm.tlrb.ui.activity.UserInfoActivity">
-
+    tools:context="com.ttm.tlrb.ui.activity.UpdateEmailActivity">
 
         <EditText
-            android:id="@+id/editText_nick"
+            android:id="@+id/editText_email"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="请输入新的用户名"
+            android:inputType="textEmailAddress"
+            android:hint="请输入邮箱"
             style="@style/TitleStyle"
-            />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="限4-16个字符，一个汉字为两个字符"
-            android:layout_marginTop="15dp"
-            style="@style/SubheadStyle"
             />
 
         <Button

@@ -76,7 +76,7 @@ public class RBApplication extends Application{
     }
 
     private void initAD() {
-        AdManager.getInstance(this).init("abef61a1925a5d96", "95ce78a402f6cf12", BuildConfig.DEBUG, BuildConfig.DEBUG);
+        AdManager.getInstance(this).init("abef61a1925a5d96", "95ce78a402f6cf12", false, BuildConfig.DEBUG);
     }
 
     private void initPatchManager() {
