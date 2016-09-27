@@ -7,12 +7,15 @@ import com.alipay.euler.andfix.patch.PatchManager;
 import com.facebook.cache.disk.DiskCacheConfig;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.imagepipeline.core.ImagePipelineConfig;
+import com.qhad.ads.sdk.adcore.Qhad;
 import com.ttm.tlrb.BuildConfig;
 import com.ttm.tlrb.api.UserManager;
 import com.ttm.tlrb.utils.EnvironmentUtil;
 import com.umeng.analytics.MobclickAgent;
 import com.umeng.socialize.Config;
 import com.umeng.socialize.PlatformConfig;
+
+import th.ds.wa.AdManager;
 
 
 /**
@@ -74,7 +77,8 @@ public class RBApplication extends Application{
     }
 
     private void initAD() {
-        //AdManager.getInstance(this).init("abef61a1925a5d96", "95ce78a402f6cf12", false, BuildConfig.DEBUG);
+        AdManager.getInstance(this).init("abef61a1925a5d96", "95ce78a402f6cf12", false, BuildConfig.DEBUG);
+        Qhad.setLogSwitch(this,BuildConfig.DEBUG);
     }
 
     private void initPatchManager() {
