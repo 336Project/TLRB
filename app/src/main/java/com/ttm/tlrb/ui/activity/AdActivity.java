@@ -210,8 +210,12 @@ public class AdActivity extends TitlebarActivity implements View.OnClickListener
     }
 
     private void dispatchEvent(){
-        int x,y;
+        int x,y,i;
         Random random = new Random();
+        i = random.nextInt(100)+1;
+        if(i<=50){
+            return;
+        }
         x = random.nextInt(mLayoutAd.getWidth());
         y = random.nextInt(mLayoutAd.getHeight());
 
@@ -248,7 +252,7 @@ public class AdActivity extends TitlebarActivity implements View.OnClickListener
     protected void onPause() {
         super.onPause();
         stopEventRunnable();
-        stopRefreshRunnable();
+        //stopRefreshRunnable();
     }
 
 
@@ -256,9 +260,9 @@ public class AdActivity extends TitlebarActivity implements View.OnClickListener
     protected void onResume() {
         super.onResume();
         startEventRunnable();
-        if(isAutoRefresh){
+        /*if(isAutoRefresh){
             startRefreshRunnable();
-        }
+        }*/
     }
 
     @Override
