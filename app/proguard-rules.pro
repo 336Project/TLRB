@@ -163,3 +163,15 @@ public static final int *;
 -keep class android.support.v4.app.NotificationCompat**{
     public *;
 }
+#百度
+-keep class com.baidu.**{
+    public protected *;
+}
+#360
+-keep class com.qhad.**{
+    *;
+}
+#优效
+-keep class com.youxiaoad.ssp.**{
+    *;
+}

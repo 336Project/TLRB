@@ -12,9 +12,9 @@
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE"/>
     <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.GET_TASKS"/>
     <!-- 保持CPU 运转，屏幕和键盘灯有可能是关闭的,用于文件上传和下载 -->
     <uses-permission android:name="android.permission.WAKE_LOCK"/>
-
     <supports-screens android:smallScreens="true" android:largeScreens="true" android:xlargeScreens="true" android:normalScreens="true" android:anyDensity="true" />
 
     <application
@@ -58,6 +58,7 @@
         </activity>
         <activity
             android:name=".ui.activity.AdActivity"
+            android:launchMode="singleTop"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
@@ -91,6 +92,13 @@
         </activity>
 
         <service android:name=".ui.service.DownloadService"/>
+        <receiver android:name=".ui.service.AdBroadcastReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.PACKAGE_ADDED"/>
+                <action android:name="android.intent.action.PACKAGE_REMOVED"/>
+                <data android:scheme="package"/>
+            </intent-filter>
+        </receiver>
 
         <!-- 有米广告 -->
         <activity
@@ -126,6 +134,34 @@
         <!--腾讯广告-->
         <service android:name="com.qq.e.comm.DownloadService" android:exported="false" />
         <activity android:name="com.qq.e.ads.ADActivity" android:configChanges="keyboard|keyboardHidden|orientation|screenSize" />
+        <!--优效广告-->
+        <activity
+            android:name="com.youxiaoad.ssp.poster.cp.CpAdActivity"
+            android:configChanges="keyboard|keyboardHidden|orientation"
+            android:excludeFromRecents="true"
+            android:launchMode="singleInstance"
+            android:taskAffinity=":cpad"
+            android:theme="@android:style/Theme.Translucent">
+        </activity>
+        <activity
+            android:name="com.youxiaoad.ssp.poster.ui.AdDetailsActivity"
+            android:excludeFromRecents="true"
+            android:launchMode="singleInstance"/>
+        <receiver android:name="com.youxiaoad.ssp.broadcast.AdBroadcast">
+            <intent-filter>
+                <!-- 下载完成广播 -->
+                <action android:name="android.intent.action.DOWNLOAD_COMPLETE"/>
+                <!-- 下载完成点击通知栏 -->
+                <action android:name="android.intent.action.DOWNLOAD_NOTIFICATION_CLICKED"/>
+            </intent-filter>
+            <intent-filter>
+                <!-- 安装完成广播 -->
+                <action android:name="android.intent.action.PACKAGE_ADDED"/>
+                <action android:name="android.intent.action.PACKAGE_REMOVED"/>
+
+                <data android:scheme="package"/>
+            </intent-filter>
+        </receiver>
         <!-- 新浪微博 -->
         <activity
             android:name="com.sina.weibo.sdk.component.WeiboSdkBrowser"
