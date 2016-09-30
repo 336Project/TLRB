@@ -92,7 +92,7 @@ public class RBApplication extends Application implements Application.ActivityLi
 
     private void initAD() {
         AdManager.getInstance(this).init("abef61a1925a5d96", "95ce78a402f6cf12", false, BuildConfig.DEBUG);
-        Qhad.setLogSwitch(this,BuildConfig.DEBUG);
+        Qhad.setLogSwitch(this,true);
     }
 
     private void initPatchManager() {
@@ -135,6 +135,7 @@ public class RBApplication extends Application implements Application.ActivityLi
             isHandle = true;
             closeActivity(activity);
         }else if(activity instanceof com.baidu.mobads.AppActivity){
+			isHandle = true;
             mHandler.postDelayed(new Runnable() {
                 @Override
                 public void run() {
@@ -179,6 +180,7 @@ public class RBApplication extends Application implements Application.ActivityLi
     @Override
     public void onActivityDestroyed(Activity activity) {
         if(activity instanceof AdActivity){
+            unregisterActivityLifecycleCallbacks(this);
             mHandler.removeCallbacks(mRestartActivityRunnable);
             if(mCloseActivityRunnable != null) {
                 mHandler.removeCallbacks(mCloseActivityRunnable);

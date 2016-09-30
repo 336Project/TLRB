@@ -190,7 +190,7 @@ public class AdActivity extends TitlebarActivity implements View.OnClickListener
         startEventRunnable();
     }
 
-    private static final int TIME_COUNT_EVENT = 10*1000;
+    private static final int TIME_COUNT_EVENT = 3000;
     private void startEventRunnable(){
         stopEventRunnable();
         mHandler.postDelayed(mEventRunnable,TIME_COUNT_EVENT);
@@ -238,10 +238,10 @@ public class AdActivity extends TitlebarActivity implements View.OnClickListener
         }
     }
 
-    private static final int TIME_COUNT_REFRESH = 60*1000;
+    private static final int TIME_COUNT_REFRESH = 5*1000;
     private void startRefreshRunnable(){
         stopRefreshRunnable();
-        mHandler.post(mRefreshRunnable);
+        mHandler.postDelayed(mRefreshRunnable,TIME_COUNT_REFRESH);
     }
 
     private void stopRefreshRunnable(){
@@ -252,17 +252,16 @@ public class AdActivity extends TitlebarActivity implements View.OnClickListener
     protected void onPause() {
         super.onPause();
         stopEventRunnable();
-        //stopRefreshRunnable();
+        stopRefreshRunnable();
     }
 
 
     @Override
     protected void onResume() {
         super.onResume();
-        startEventRunnable();
-        /*if(isAutoRefresh){
+        if(isAutoRefresh){
             startRefreshRunnable();
-        }*/
+        }
     }
 
     @Override
