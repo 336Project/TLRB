@@ -2,11 +2,12 @@ package com.ttm.tlrb.ui.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.RelativeLayout;
+
+import androidx.annotation.Nullable;
 
 import com.ttm.tlrb.BuildConfig;
 import com.ttm.tlrb.R;

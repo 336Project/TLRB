@@ -2,13 +2,14 @@ package com.ttm.tlrb.ui.fragment;
 
 import android.os.Bundle;
 import android.os.CountDownTimer;
-import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+
+import androidx.annotation.Nullable;
 
 import com.ttm.tlrb.R;
 import com.ttm.tlrb.api.APIManager;

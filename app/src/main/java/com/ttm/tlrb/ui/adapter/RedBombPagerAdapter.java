@@ -1,8 +1,9 @@
 package com.ttm.tlrb.ui.adapter;
 
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
+
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentPagerAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,7 +12,7 @@ import java.util.List;
  * Created by Helen on 2016/4/29.
  *
  */
-public class RedBombPagerAdapter extends FragmentPagerAdapter{
+public class RedBombPagerAdapter extends FragmentPagerAdapter {
     private final List<Fragment> mFragments = new ArrayList<>();//添加的Fragment的集合
     private final List<String> mFragmentsTitles = new ArrayList<>();//每个Fragment对应的title的集合
 

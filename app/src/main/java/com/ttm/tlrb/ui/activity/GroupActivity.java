@@ -3,12 +3,13 @@ package com.ttm.tlrb.ui.activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
+
+import androidx.annotation.Nullable;
 
 import com.ttm.tlrb.R;
 import com.ttm.tlrb.api.APIManager;

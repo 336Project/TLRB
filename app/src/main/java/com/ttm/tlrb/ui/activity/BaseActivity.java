@@ -1,8 +1,9 @@
 package com.ttm.tlrb.ui.activity;
 
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
+
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.facebook.common.logging.FLog;
 import com.ttm.tlrb.R;
@@ -19,7 +20,7 @@ import java.util.Map;
  */
 public class BaseActivity extends AppCompatActivity {
 
-    private static Map<String,WeakReference<BaseActivity>> activitiesMap = new HashMap<>();
+    private static final Map<String,WeakReference<BaseActivity>> activitiesMap = new HashMap<>();
     private MaterialDialog mMaterialDialog;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {

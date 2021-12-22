@@ -3,7 +3,6 @@ package com.ttm.tlrb.ui.activity;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.TextInputLayout;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -11,6 +10,7 @@ import android.widget.DatePicker;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.google.android.material.textfield.TextInputLayout;
 import com.ttm.tlrb.R;
 import com.ttm.tlrb.api.APIManager;
 import com.ttm.tlrb.api.BaseSubscriber;
