@@ -22,7 +22,7 @@ import java.util.regex.Pattern;
 
 import rx.Subscriber;
 
-public class RegisterActivity extends BaseActivity implements View.OnClickListener{
+public class RegisterActivity extends StatusBarActivity implements View.OnClickListener{
 
     private EditText mEditTextUsername;
     private  EditText mEditTextPassword;
@@ -31,7 +31,6 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_register);
         initView();
     }

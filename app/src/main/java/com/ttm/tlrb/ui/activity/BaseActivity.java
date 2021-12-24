@@ -1,6 +1,8 @@
 package com.ttm.tlrb.ui.activity;
 
+import android.os.Build;
 import android.os.Bundle;
+import android.view.View;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -27,29 +29,19 @@ public class BaseActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         activitiesMap.put(BaseActivity.this.toString(), new WeakReference<BaseActivity>(this));
         initDialog();
-        /*Window window = getWindow();
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            // Translucent status bar
-            window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-        }
-        int color = getResources().getColor(R.color.colorAccent);
-        if(Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP){
-            window.setStatusBarColor(color);
-        }
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT && Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP){
-            ViewGroup contentView = (ViewGroup) findViewById(android.R.id.content);
-            View statusBarView = new View(this);
-            ViewGroup.LayoutParams lp = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-                    getStatusBarHeight(this));
-            statusBarView.setBackgroundColor(color);
-            contentView.addView(statusBarView, lp);
-        }*/
-
     }
 
-    /*public static int getStatusBarHeight(Context context){
-        return context.getResources().getDimensionPixelSize(R.dimen.actionBarSize);
-    }*/
+    protected void setStatusBarTextMode(boolean isLightMode){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            int vis = getWindow().getDecorView().getSystemUiVisibility();
+            if (!isLightMode) {
+                vis |= View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR;
+            } else {
+                vis &= ~View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR;
+            }
+            getWindow().getDecorView().setSystemUiVisibility(vis);
+        }
+    }
 
     private void initDialog() {
         mMaterialDialog = new MaterialDialog(this).setContentView(R.layout.material_dialog_login);

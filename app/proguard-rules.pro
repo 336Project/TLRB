@@ -130,15 +130,19 @@ native <methods>;
 }
 
 #友盟统计
+-keep class com.umeng.** {*;}
+
 -keepclassmembers class * {
    public <init> (org.json.JSONObject);
 }
 
+-keepclassmembers enum * {
+    public static **[] values();
+    public static ** valueOf(java.lang.String);
+}
+
 -keep public class com.ttm.tlrb.R$*{
 public static final int *;
-}
--keep class com.umeng.**{
-*;
 }
 -dontwarn com.umeng.**
 -keep class com.tencent.stat.**{

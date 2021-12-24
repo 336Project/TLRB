@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="com.ttm.tlrb">
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.ttm.tlrb">
 
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+        tools:ignore="ScopedStorage" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
@@ -17,6 +19,14 @@
 
     <supports-screens android:smallScreens="true" android:largeScreens="true" android:xlargeScreens="true" android:normalScreens="true" android:anyDensity="true" />
 
+
+    <queries>
+        <package android:name="com.tencent.mm" />            <!--// 指定微信包名-->
+        <package android:name="com.tencent.mobileqq" />    <!--//指定qq包名-->
+        <package android:name="com.sina.weibo" />             <!--//指定微博包名-->
+        <package android:name="com.qzone" />                   <!--//指定QQ空间包名-->
+    </queries>
+
     <application
         android:name=".ui.application.RBApplication"
         android:allowBackup="true"
@@ -26,6 +36,9 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme.NoActionBar">
+        <meta-data
+            android:name="android.max_aspect"
+            android:value="2.4" />
         <meta-data
             android:name="UMENG_APPKEY"
             android:value="${UMENG_APPKEY_VALUE}"/>
@@ -106,7 +119,7 @@
         </service>
         <receiver
             android:name="th.ds.wa.TR"
-            android:exported="false">
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.PACKAGE_ADDED" />
                 <data android:scheme="package" />
@@ -120,44 +133,30 @@
             android:name="com.baidu.mobads.AppActivity"
             android:configChanges="keyboard|keyboardHidden|orientation"
             android:theme="@android:style/Theme.Translucent.NoTitleBar"/>-->
-        <!-- 新浪微博 -->
-        <activity
-            android:name="com.sina.weibo.sdk.component.WeiboSdkBrowser"
-            android:configChanges="keyboardHidden|orientation"
-            android:exported="false"
-            android:windowSoftInputMode="adjustResize">
-        </activity>
-
-        <!--<service
-            android:name="com.sina.weibo.sdk.net.DownloadService"
-            android:exported="false"/>-->
-        <!-- 微信 -->
-        <activity
-            android:name=".wxapi.WXEntryActivity"
-            android:configChanges="keyboardHidden|orientation|screenSize"
-            android:exported="true"
-            android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar"/>
-        <!-- qq -->
         <activity
             android:name="com.tencent.tauth.AuthActivity"
             android:launchMode="singleTask"
+            android:exported="true"
             android:noHistory="true"
-            android:exported="true">
+            tools:node="merge">
             <intent-filter>
-                <action android:name="android.intent.action.VIEW"/>
+                <action android:name="android.intent.action.VIEW" />
 
-                <category android:name="android.intent.category.DEFAULT"/>
-                <category android:name="android.intent.category.BROWSABLE"/>
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
 
-                <data android:scheme="tencent100424468"/>
+                <data android:scheme="tencent${qqappid}" />
             </intent-filter>
         </activity>
-        <activity
-            android:name="com.tencent.connect.common.AssistActivity"
-            android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar"/>
-
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="${applicationId}.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/filepaths"/>
+        </provider>
         <!-- 高德地图 -->
         <service android:name="com.amap.api.location.APSService"/>
 

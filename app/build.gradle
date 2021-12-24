@@ -6,7 +6,7 @@ android {
     buildToolsVersion "30.0.3"
 
 
-    /*Properties properties = new Properties()
+    Properties properties = new Properties()
     properties.load(project.rootProject.file('local.properties').newDataInputStream())
     def keyAliasStr = properties.getProperty("keyAlias","")
     def keyPasswordStr = properties.getProperty("keyPassword","")
@@ -19,7 +19,7 @@ android {
             storeFile file(fileUrl)
             storePassword keyPasswordStr
         }
-    }*/
+    }
 
     defaultConfig {
         applicationId "com.ttm.tlrb"
@@ -32,14 +32,6 @@ android {
         ndk {
             abiFilters 'armeabi-v7a','arm64-v8a'
         }
-
-        /*splits {
-            abi {
-                enable true
-                reset()
-                include 'armeabi-v7a'
-            }
-        }*/
     }
     buildTypes {
 
@@ -47,7 +39,7 @@ android {
             minifyEnabled true
             shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-            //signingConfig signingConfigs.myConfig
+            signingConfig signingConfigs.myConfig
         }
     }
 
@@ -58,7 +50,11 @@ android {
             buildConfigField "String","X_Bmob_Application_Id","\"c1aa552ec6d7639a92f11a362ff22b34\""
             buildConfigField "String","X_Bmob_REST_API_Key","\"a93c8e5501c9f2ed942ae1cff46ccd77\""
             buildConfigField "String","BASE_DOWNLOAD_FILE_URL","\"http://bmob-cdn-2106.b0.upaiyun.com/\""
-            manifestPlaceholders = [UMENG_CHANNEL_VALUE: "dev",UMENG_APPKEY_VALUE: "573ecc24e0f55aec6b000976"]
+            manifestPlaceholders = [
+                    UMENG_CHANNEL_VALUE: "dev",
+                    UMENG_APPKEY_VALUE: "573ecc24e0f55aec6b000976",
+                    qqappid:"100424468"
+            ]
         }
         /**正式环境*/
         pro{
@@ -66,7 +62,11 @@ android {
             buildConfigField "String","X_Bmob_Application_Id","\"7886715d834d24b15f1b0947d51b0c6e\""
             buildConfigField "String","X_Bmob_REST_API_Key","\"1487aca64c5144719d49ed9408bc6fa8\""
             buildConfigField "String","BASE_DOWNLOAD_FILE_URL","\"http://bmob-cdn-3839.b0.upaiyun.com/\""
-            manifestPlaceholders = [UMENG_CHANNEL_VALUE: "product",UMENG_APPKEY_VALUE: "576b3c8c67e58eaff4001e99"]
+            manifestPlaceholders = [
+                    UMENG_CHANNEL_VALUE: "product",
+                    UMENG_APPKEY_VALUE: "576b3c8c67e58eaff4001e99",
+                    qqappid:"100424468"
+            ]
         }
 
         /*baidu {
@@ -96,7 +96,19 @@ dependencies {
     implementation 'androidx.cardview:cardview:1.0.0'
     implementation 'com.alipay.euler:andfix:0.4.0@aar'
     //友盟统计
-    implementation 'com.umeng.analytics:analytics:latest.integration'
+    implementation  'com.umeng.umsdk:common:9.4.4'// 必选
+    implementation  'com.umeng.umsdk:asms:1.4.1'// 必选
+    implementation 'com.umeng.umsdk:apm:1.5.2' // 错误分析升级为独立SDK，看crash数据请一定集成，可选
+    //友盟第三方登录
+    implementation  'com.umeng.umsdk:share-core:7.1.7'//分享核心库，必选
+    implementation  'com.umeng.umsdk:share-wx:7.1.7'//微信完整版
+    implementation 'com.tencent.mm.opensdk:wechat-sdk-android-without-mta:6.8.0'//微信官方依赖库，必选
+    implementation  'com.umeng.umsdk:share-qq:7.1.7'//QQ完整版
+    //implementation files('libs/open_sdk_3.5.7.4_r1bc9afe_lite.jar') //QQ官方依赖库，必选
+    implementation 'com.squareup.okhttp3:okhttp:3.14.9'//QQ官方sdk 3.53及之后版本需要集成okhttp3.x，必选
+    implementation  'com.umeng.umsdk:share-sina:7.1.7'//新浪微博完整版
+    implementation 'io.github.sinaweibosdk:core:11.11.1@aar'//新浪微博官方SDK依赖库，必选
+
     //Bmob
     //implementation 'cn.bmob.android:bmob-sdk:3.4.7-aar'
     //控件

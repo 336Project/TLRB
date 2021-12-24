@@ -32,10 +32,6 @@ public class SplashActivity extends BaseActivity{
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //设置全屏
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        //移除标题栏
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_splash);
         boolean isAdOpen = SPUtil.getInstance().getBoolean("isAdOpen",false) || BuildConfig.DEBUG;
         if(!isAdOpen) {
