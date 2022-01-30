@@ -10,6 +10,6 @@
     
     <!-- 填充 -->
     <solid
-        android:color="@color/Blue_500"/><!-- 填充的颜色 -->
+        android:color="@color/colorPrimary"/><!-- 填充的颜色 -->
 
 </shape>

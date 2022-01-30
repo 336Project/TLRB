@@ -186,7 +186,7 @@ public class AddRedBombActivity extends TitlebarActivity implements View.OnClick
         if(mLayoutMoney.getEditText().getText().toString().equals("")){
             ToastUtil.showToast(AddRedBombActivity.this,"金额不能为空");
             return null;
-        }else if(Double.valueOf(mLayoutMoney.getEditText().getText().toString())<=0){
+        }else if(Double.parseDouble(mLayoutMoney.getEditText().getText().toString())<=0){
             ToastUtil.showToast(AddRedBombActivity.this,"金额要大于0元");
             return null;
         }
@@ -255,31 +255,31 @@ public class AddRedBombActivity extends TitlebarActivity implements View.OnClick
             case R.id.tv_men:
                 textSet(1);
                 mTvMen.setTextColor(getResources().getColor(R.color.white));
-                mTvMen.setBackgroundDrawable(getResources().getDrawable(R.drawable.shape_rectangular_red_radiusleft));
+                mTvMen.setBackgroundDrawable(getResources().getDrawable(R.drawable.shape_rectangular_radiusleft));
                 target=1;
                 break;
             case R.id.tv_women:
                 textSet(2);
                 mTvWomen.setTextColor(getResources().getColor(R.color.white));
-                mTvWomen.setBackgroundColor(getResources().getColor(R.color.Red_400));
+                mTvWomen.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
                 target=2;
                 break;
             case R.id.tv_all:
                 textSet(3);
                 mTvAll.setTextColor(getResources().getColor(R.color.white));
-                mTvAll.setBackgroundDrawable(getResources().getDrawable(R.drawable.shape_rectangular_red_radiusright));
+                mTvAll.setBackgroundDrawable(getResources().getDrawable(R.drawable.shape_rectangular_radiusright));
                 target=3;
                 break;
             case R.id.tv_income:
                 IntOutType=1;
-                mTvIncome.setBackgroundDrawable(getResources().getDrawable(R.drawable.shape_rectangular_red_radiusleft));
+                mTvIncome.setBackgroundDrawable(getResources().getDrawable(R.drawable.shape_rectangular_radiusleft));
                 mTvIncome.setTextColor(getResources().getColor(R.color.white));
                 mTvSpending.setBackgroundDrawable(getResources().getDrawable(R.drawable.shape_rectangular_white_radiusright));
                 mTvSpending.setTextColor(getResources().getColor(R.color.black_de));
                 break;
             case R.id.tv_spending:
                 IntOutType=2;
-                mTvSpending.setBackgroundDrawable(getResources().getDrawable(R.drawable.shape_rectangular_red_radiusright));
+                mTvSpending.setBackgroundDrawable(getResources().getDrawable(R.drawable.shape_rectangular_radiusright));
                 mTvSpending.setTextColor(getResources().getColor(R.color.white));
                 mTvIncome.setBackgroundDrawable(getResources().getDrawable(R.drawable.shape_rectangular_white_radiusleft));
                 mTvIncome.setTextColor(getResources().getColor(R.color.black_de));

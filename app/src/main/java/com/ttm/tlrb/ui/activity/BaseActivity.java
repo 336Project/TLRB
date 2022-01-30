@@ -28,7 +28,6 @@ public class BaseActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         activitiesMap.put(BaseActivity.this.toString(), new WeakReference<BaseActivity>(this));
-        initDialog();
     }
 
     protected void setStatusBarTextMode(boolean isLightMode){
@@ -44,11 +43,14 @@ public class BaseActivity extends AppCompatActivity {
     }
 
     private void initDialog() {
-        mMaterialDialog = new MaterialDialog(this).setContentView(R.layout.material_dialog_login);
-        mMaterialDialog.setCanceledOnTouchOutside(true);
+        if (mMaterialDialog == null) {
+            mMaterialDialog = new MaterialDialog(this).setContentView(R.layout.material_dialog_login);
+            mMaterialDialog.setCanceledOnTouchOutside(true);
+        }
     }
 
     protected void showLoadingDialog(){
+        initDialog();
         if(mMaterialDialog != null && !mMaterialDialog.isShow()) {
             mMaterialDialog.show();
         }
@@ -63,6 +65,7 @@ public class BaseActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         activitiesMap.remove(BaseActivity.this.toString());
+        hideLoadingDialog();
         super.onDestroy();
     }
 
@@ -71,7 +74,7 @@ public class BaseActivity extends AppCompatActivity {
      */
     public static void finishAll(){
         try {
-            if(activitiesMap != null){
+            if(!activitiesMap.isEmpty()){
                 for (Map.Entry<String,WeakReference<BaseActivity>> entry:activitiesMap.entrySet()){
                     WeakReference<BaseActivity> weakReferenceAct = entry.getValue();
                     if(weakReferenceAct!=null && weakReferenceAct.get()!=null){

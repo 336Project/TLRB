@@ -6,6 +6,7 @@ import com.ttm.tlrb.utils.HLog;
 import java.io.EOFException;
 import java.io.IOException;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.Locale;
 
 import okhttp3.Interceptor;
@@ -38,7 +39,7 @@ public class LogInterceptor implements Interceptor{
             StringBuilder sb = new StringBuilder("Request Body [");
             okio.Buffer buffer = new okio.Buffer();
             requestBody.writeTo(buffer);
-            Charset charset = Charset.forName("UTF-8");
+            Charset charset = StandardCharsets.UTF_8;
             MediaType contentType = requestBody.contentType();
             if (contentType != null) {
                 charset = contentType.charset(charset);
