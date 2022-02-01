@@ -2,7 +2,6 @@ package com.ttm.tlrb.view;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
-import android.support.design.widget.TextInputEditText;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.AttributeSet;
@@ -11,6 +10,8 @@ import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.CycleInterpolator;
 import android.view.animation.TranslateAnimation;
+
+import com.google.android.material.textfield.TextInputEditText;
 
 /**
  * user:wtw

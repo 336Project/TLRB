@@ -12,15 +12,15 @@
         <menu>
             <item
                 android:id="@+id/nav_feedback"
-                android:icon="@drawable/icon_feedback"
+                android:icon="@drawable/ic_feedback"
                 android:title="@string/title_feedback"/>
             <item
                 android:id="@+id/nav_about"
-                android:icon="@drawable/icon_about"
+                android:icon="@drawable/ic_about"
                 android:title="@string/title_about"/>
             <item
                 android:id="@+id/nav_exit"
-                android:icon="@drawable/icon_logout"
+                android:icon="@drawable/ic_quit"
                 android:title="@string/title_exit"/>
         </menu>
     </item>

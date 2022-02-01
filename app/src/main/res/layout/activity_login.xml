@@ -18,9 +18,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="30dp"
         android:textSize="@dimen/font_20"
-        android:text="注册"
+        android:text="@string/register"
         />
 
     <LinearLayout
@@ -127,7 +127,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
-            android:background="@drawable/btn_login_selector"
+            android:background="@drawable/btn_primary_selector"
             android:text="登录"
             android:textColor="@color/white"
             android:textSize="@dimen/font_16"
@@ -141,22 +141,22 @@
 
             <ImageView
                 android:id="@+id/iv_sina"
-                android:layout_width="60dp"
-                android:layout_height="60dp"
-                android:src="@drawable/umeng_socialize_sina_on"/>
+                android:layout_width="52dp"
+                android:layout_height="52dp"
+                android:src="@drawable/umeng_socialize_sina"/>
 
             <ImageView
                 android:id="@+id/iv_qq"
-                android:layout_width="60dp"
-                android:layout_height="60dp"
-                android:src="@drawable/umeng_socialize_qq_on"/>
+                android:layout_width="52dp"
+                android:layout_height="52dp"
+                android:src="@drawable/umeng_socialize_qq"/>
 
             <ImageView
                 android:id="@+id/iv_weixin"
                 android:layout_width="60dp"
                 android:layout_height="60dp"
                 android:src="@drawable/umeng_socialize_wechat"
-                android:visibility="gone"/>
+                android:visibility="visible"/>
         </LinearLayout>
     </LinearLayout>
 </RelativeLayout>

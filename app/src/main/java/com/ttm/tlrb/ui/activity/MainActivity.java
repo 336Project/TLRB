@@ -7,17 +7,16 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.NavigationView;
-import android.support.design.widget.TabLayout;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.view.ViewPager;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.widget.Toolbar;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.viewpager.widget.ViewPager;
+
 import android.text.Html;
 import android.text.TextUtils;
 import android.view.Menu;
@@ -27,6 +26,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.facebook.drawee.view.SimpleDraweeView;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.navigation.NavigationView;
+import com.google.android.material.tabs.TabLayout;
 import com.ttm.tlrb.R;
 import com.ttm.tlrb.api.APIManager;
 import com.ttm.tlrb.api.UserManager;
@@ -55,6 +57,9 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     //private TextView mTextNickName;
     private TextView mTextIn;
     private TextView mTextOut;
+    private TabLayout mTabLayout;
+    private ViewPager mViewPager;
+    private RedBombPagerAdapter mPagerAdapter;
     private RedBombFragment mAllInformFragment;
     private RedBombFragment mSpendingFragment;
     private RedBombFragment mIncomeFragment;
@@ -89,13 +94,17 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         navigationView.setNavigationItemSelectedListener(this);
 
         View header = navigationView.getHeaderView(0);
-
+        header.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(MainActivity.this,UserInfoActivity.class));
+            }
+        });
         mHeaderView = (SimpleDraweeView) header.findViewById(R.id.iv_portrait);
         mTextUserName = (TextView) header.findViewById(R.id.tv_username);
         //mTextNickName = (TextView) header.findViewById(R.id.tv_nickname);
         mTextIn = (TextView) header.findViewById(R.id.tv_in);
         mTextOut = (TextView) header.findViewById(R.id.tv_out);
-        mHeaderView.setOnClickListener(this);
         mTextIn.setText("0");
         mTextOut.setText("0");
 
@@ -149,17 +158,17 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     }
 
     private void initTabLayout(){
-        RedBombPagerAdapter pagerAdapter = new RedBombPagerAdapter(getSupportFragmentManager());
-        mAllInformFragment=RedBombFragment.newInstance(0);
-        mSpendingFragment=RedBombFragment.newInstance(2);
-        mIncomeFragment=RedBombFragment.newInstance(1);
-        pagerAdapter.addFragment(mAllInformFragment,getString(R.string.action_all));
-        pagerAdapter.addFragment(mSpendingFragment,getString(R.string.action_out));
-        pagerAdapter.addFragment(mIncomeFragment,getString(R.string.action_in));
-        ViewPager viewPager = (ViewPager) findViewById(R.id.view_pager);
-        viewPager.setAdapter(pagerAdapter);
-        TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
-        tabLayout.setupWithViewPager(viewPager);
+        mPagerAdapter = new RedBombPagerAdapter(getSupportFragmentManager());
+        mAllInformFragment=RedBombFragment.newInstance(RedBombFragment.TYPE_ALL);
+        mSpendingFragment=RedBombFragment.newInstance(RedBombFragment.TYPE_OUT);
+        mIncomeFragment=RedBombFragment.newInstance(RedBombFragment.TYPE_IN);
+        mViewPager = (ViewPager) findViewById(R.id.view_pager);
+        mPagerAdapter.addFragment(mAllInformFragment,getString(R.string.action_all));
+        mPagerAdapter.addFragment(mSpendingFragment,getString(R.string.action_out));
+        mPagerAdapter.addFragment(mIncomeFragment,getString(R.string.action_in));
+        mViewPager.setAdapter(mPagerAdapter);
+        mTabLayout = (TabLayout) findViewById(R.id.tab_layout);
+        mTabLayout.setupWithViewPager(mViewPager);
     }
 
 
@@ -300,7 +309,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        //getMenuInflater().inflate(R.menu.main, menu);
+        getMenuInflater().inflate(R.menu.main, menu);
         return true;
     }
 
@@ -311,7 +320,9 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
         //noinspection SimplifiableIfStatement
-
+        if (id == R.id.action_search){
+            startActivity(new Intent(this,SearchActivity.class));
+        }
         return super.onOptionsItemSelected(item);
     }
 
@@ -395,12 +406,6 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 
     @Override
     public void onClick(View v) {
-        Intent intent = new Intent();
-        switch (v.getId()){
-            case R.id.iv_portrait:
-                intent.setClass(MainActivity.this,UserInfoActivity.class);
-                startActivity(intent);
-                break;
-        }
+
     }
 }

@@ -24,7 +24,7 @@
             android:id="@+id/btn_confirm"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/btn_login_selector"
+            android:background="@drawable/btn_primary_selector"
             android:text="确定"
             android:layout_marginTop="15dp"
             style="@style/TitleStyle.Light"

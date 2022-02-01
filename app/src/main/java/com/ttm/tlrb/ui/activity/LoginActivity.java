@@ -3,11 +3,12 @@ package com.ttm.tlrb.ui.activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.EditText;
 
+import androidx.annotation.Nullable;
+
+import com.tencent.tauth.Tencent;
 import com.ttm.tlrb.R;
 import com.ttm.tlrb.api.APIManager;
 import com.ttm.tlrb.api.BaseSubscriber;
@@ -29,7 +30,7 @@ import java.util.Map;
 
 import rx.Subscriber;
 
-public class LoginActivity extends BaseActivity implements View.OnClickListener,UMAuthListener{
+public class LoginActivity extends StatusBarActivity implements View.OnClickListener,UMAuthListener{
 
     private EditText mEditTextUserName;
     private EditText mEditTextPassword;
@@ -43,12 +44,15 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_login);
         initView();
+        Tencent.setIsPermissionGranted(true);
     }
 
-
+    @Override
+    protected int getStatusBarColor() {
+        return android.R.color.transparent;
+    }
 
     private void initView() {
         findViewById(R.id.textView_register).setOnClickListener(this);
@@ -233,6 +237,11 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
         mAuthData.setUserNickname(nickname);
         mAuthData.setUserPortrait(portrait);
         APIManager.getInstance().loginWithAuthData(mAuthData,mAuthLoginSubscriber);
+    }
+
+    @Override
+    public void onStart(SHARE_MEDIA share_media) {
+
     }
 
     @Override

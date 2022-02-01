@@ -83,7 +83,7 @@
         <item name="android:layout_marginTop">20dp</item>
         <item name="android:layout_marginRight">@dimen/add_redbomb_radiobutton_padding</item>
         <item name="android:layout_marginLeft">@dimen/add_redbomb_radiobutton_padding</item>
-        <item name="android:drawableRight">@drawable/personal_center_revocation_icon</item>
+        <item name="android:drawableRight">@drawable/ic_edit_clear</item>
         <item name="android:minHeight">40dp</item>
         <item name="android:background">@color/white</item>
         <item name="android:paddingLeft">10dp</item>
@@ -94,13 +94,13 @@
         <item name="android:layout_width">80dp</item>
         <item name="android:layout_height">80dp</item>
         <item name="roundingBorderColor">@color/white</item>
-        <item name="placeholderImage">@drawable/icon_user</item>
+        <item name="placeholderImage">@drawable/ic_user_default</item>
         <item name="placeholderImageScaleType">fitXY</item>
         <item name="actualImageScaleType">fitXY</item>
-        <item name="failureImage">@drawable/icon_user</item>
+        <item name="failureImage">@drawable/ic_user_default</item>
         <item name="failureImageScaleType">fitXY</item>
         <item name="roundAsCircle">true</item>
-        <!--<item name="roundingBorderWidth">1dp</item>-->
+        <item name="roundingBorderWidth">1dp</item>
     </style>
 
     <style name="UserInfoTextViewTitle">

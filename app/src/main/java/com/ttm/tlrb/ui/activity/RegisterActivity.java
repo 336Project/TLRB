@@ -1,11 +1,12 @@
 package com.ttm.tlrb.ui.activity;
 
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.EditText;
+
+import androidx.annotation.Nullable;
 
 import com.ttm.tlrb.R;
 import com.ttm.tlrb.api.APIManager;
@@ -21,7 +22,7 @@ import java.util.regex.Pattern;
 
 import rx.Subscriber;
 
-public class RegisterActivity extends BaseActivity implements View.OnClickListener{
+public class RegisterActivity extends StatusBarActivity implements View.OnClickListener{
 
     private EditText mEditTextUsername;
     private  EditText mEditTextPassword;
@@ -30,7 +31,6 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_register);
         initView();
     }

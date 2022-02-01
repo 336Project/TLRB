@@ -14,9 +14,9 @@
 
     <ImageView
         android:id="@+id/imageView_close"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_marginTop="30dp"
         android:src="@drawable/login_register_back"/>
 
     <LinearLayout
@@ -109,7 +109,7 @@
             android:id="@+id/button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/btn_login_selector"
+            android:background="@drawable/btn_primary_selector"
             android:text="注册"
             android:textColor="@color/white"
             android:textSize="@dimen/font_16"
