@@ -1,6 +1,7 @@
 package com.ttm.tlrb.ui.fragment;
 
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,13 +32,17 @@ import rx.Subscriber;
  */
 public class RedBombFragment extends BaseFragment implements SwipeRefreshLayout.OnRefreshListener,EmptyEmbeddedContainer.EmptyInterface,RedBombAdapter.onItemClickListener {
     public static final int GO_ADD_RED_BOMB=1001;//去添加红包界面
+    public static final int TYPE_ALL = 0;
+    public static final int TYPE_IN = 1;
+    public static final int TYPE_OUT = 2;
+    public static final int TYPE_SEARCH = 3;
     private List<RedBomb> mRedBombs = new ArrayList<>();
     private RedBombAdapter mAdapter;
     private SwipeRefreshLayout mRefreshLayout;
     private EmptyEmbeddedContainer mEmptyContainer;
     private int page = 1;
     private boolean hasMore = true;
-    private int type = 0;
+    private int type = TYPE_ALL;
     //private String mPageName;
 
 
@@ -60,14 +65,9 @@ public class RedBombFragment extends BaseFragment implements SwipeRefreshLayout.
     }
 
     private void initView(View view){
-        type = getArguments().getInt("type");
-        /*if(type == 1){
-            mPageName = getString(R.string.income);
-        }else if(type == 2){
-            mPageName = getString(R.string.action_out);
-        }else {
-            mPageName = getString(R.string.action_out);
-        }*/
+        if (getArguments()!= null) {
+            type = getArguments().getInt("type",TYPE_ALL);
+        }
         RecyclerView mRecyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
         final LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
         mRecyclerView.setLayoutManager(linearLayoutManager);
@@ -113,7 +113,14 @@ public class RedBombFragment extends BaseFragment implements SwipeRefreshLayout.
 
     private Subscriber<List<RedBomb>> subscriber;
 
-    private void requestData() {
+    private void requestData(){
+        requestData("");
+    }
+
+    private void requestData(String key) {
+        if (mRefreshLayout == null){
+            return;
+        }
         if(mRefreshLayout.isRefreshing()){
             page = 1;
         }
@@ -154,12 +161,26 @@ public class RedBombFragment extends BaseFragment implements SwipeRefreshLayout.
                 }
             };
         }
-        APIManager.getInstance().getRedBombList(type, page, Constant.PAGE_SIZE, subscriber);
+        if (type == TYPE_SEARCH) {
+            APIManager.getInstance().searchRedBomb(key,page, Constant.PAGE_SIZE, subscriber);
+        }else {
+            APIManager.getInstance().getRedBombList(type, page, Constant.PAGE_SIZE, subscriber);
+        }
+    }
+
+    public void onSearchKeyChange(String key){
+        if (isAdded()){
+            requestData(key);
+        }
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
+        unsubscribe();
+    }
+
+    private void unsubscribe(){
         if(subscriber != null && !subscriber.isUnsubscribed()){
             subscriber.unsubscribe();
         }

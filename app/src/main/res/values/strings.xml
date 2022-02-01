@@ -80,4 +80,6 @@
     <string name="requesting">请求中…</string>
     <string name="get_code">获取验证码</string>
     <string name="register">注册</string>
+    <string name="action_search">搜索</string>
+    <string name="search_hint">请输入名字</string>
 </resources>

@@ -386,6 +386,34 @@ public class APIManager {
     }
 
     /**
+     * 搜索
+     * @param page 页码
+     * @param size 页大小
+     * @param subscriber 回调
+     */
+    public void searchRedBomb(String keyword,int page,int size,Subscriber<List<RedBomb>> subscriber){
+        //关联当前用户
+        Map<String,Object> where = new HashMap<>();
+        where.put("userName",mUserManager.getAccount().getUsername());
+        where.put("isDelete",false);
+        where.put("name", keyword);
+
+        int skip = size * (page-1);
+        getAPIService().getRedBomb(GsonUtil.fromMap2Json(where),skip, size,"-createdAt")
+                .map(new Func1<ResponseEn<RedBomb>, List<RedBomb>>() {
+                    @Override
+                    public List<RedBomb> call(ResponseEn<RedBomb> redBombResponseEn) {
+                        if(redBombResponseEn != null){
+                            return redBombResponseEn.results;
+                        }
+                        return null;
+                    }
+                })
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(subscriber);
+    }
+    /**
      * 统计红包收入支出
      */
     public void countRedBombMoney(Subscriber<List<Map<String,String>>> subscriber){

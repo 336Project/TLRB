@@ -309,7 +309,7 @@ public class UpdateRedBombActivity extends TitlebarActivity implements View.OnCl
             case R.id.tv_women:
                 textSet(2);
                 mTvWomen.setTextColor(getResources().getColor(R.color.white));
-                mTvWomen.setBackgroundColor(getResources().getColor(R.color.Red_400));
+                mTvWomen.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
                 target=2;
                 break;
             case R.id.tv_all:
