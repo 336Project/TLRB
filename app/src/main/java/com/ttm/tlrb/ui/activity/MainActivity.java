@@ -36,7 +36,6 @@ import com.ttm.tlrb.ui.adapter.RedBombPagerAdapter;
 import com.ttm.tlrb.ui.application.Constant;
 import com.ttm.tlrb.ui.application.RBApplication;
 import com.ttm.tlrb.ui.entity.Account;
-import com.ttm.tlrb.ui.entity.BmobFile;
 import com.ttm.tlrb.ui.entity.RedBomb;
 import com.ttm.tlrb.ui.entity.VersionInfo;
 import com.ttm.tlrb.ui.fragment.RedBombFragment;
@@ -255,10 +254,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         dialog.setPositiveButton(getString(R.string.update), new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                BmobFile file = versionInfo.getFile();
-                if(file != null && !TextUtils.isEmpty(file.getUrl())) {
-                    RBApplication.getInstance().startDownloadApk(file.getUrl());
-                }
+                RBApplication.getInstance().startDownloadApk(versionInfo);
                 dialog.dismiss();
                 if(isForce) {
                     finishAll();

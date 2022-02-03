@@ -8,7 +8,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.text.Html;
-import android.text.TextUtils;
 import android.view.View;
 import android.widget.TextView;
 
@@ -19,7 +18,6 @@ import com.ttm.tlrb.R;
 import com.ttm.tlrb.api.APIManager;
 import com.ttm.tlrb.ui.application.Constant;
 import com.ttm.tlrb.ui.application.RBApplication;
-import com.ttm.tlrb.ui.entity.BmobFile;
 import com.ttm.tlrb.ui.entity.VersionInfo;
 import com.ttm.tlrb.utils.ToastUtil;
 import com.ttm.tlrb.view.MaterialDialog;
@@ -153,10 +151,7 @@ public class AboutActivity extends TitlebarActivity implements View.OnClickListe
     }
 
     private void startDownload(){
-        BmobFile file = mVersionInfo.getFile();
-        if(file != null && !TextUtils.isEmpty(file.getUrl())) {
-            RBApplication.getInstance().startDownloadApk(file.getUrl());
-        }
+        RBApplication.getInstance().startDownloadApk(mVersionInfo);
     }
 
     /**

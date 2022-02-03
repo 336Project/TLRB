@@ -9,6 +9,7 @@ import com.ttm.tlrb.BuildConfig;
 public class VersionInfo extends BaseEn{
     private String version;//版本号
     private String updateContent;//更新内容
+    private String path;//下载地址
     private BmobFile file;//下载文件
     private boolean isPatch;//是否是修复包
     private boolean isForce;//是否强制更新
@@ -59,11 +60,20 @@ public class VersionInfo extends BaseEn{
         this.file = file;
     }
 
+    public String getPath() {
+        return path;
+    }
+
+    public void setPath(String path) {
+        this.path = path;
+    }
+
     @Override
     public String toString() {
         return "VersionInfo{" +
                 "version='" + version + '\'' +
                 ", updateContent='" + updateContent + '\'' +
+                ", path='"+path+'\''+
                 ", file=" + file +
                 ", isPatch=" + isPatch +
                 ", isForce=" + isForce +

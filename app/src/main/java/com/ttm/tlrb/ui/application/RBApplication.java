@@ -14,6 +14,8 @@ import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.imagepipeline.core.ImagePipelineConfig;
 import com.ttm.tlrb.BuildConfig;
 import com.ttm.tlrb.api.UserManager;
+import com.ttm.tlrb.ui.entity.BmobFile;
+import com.ttm.tlrb.ui.entity.VersionInfo;
 import com.ttm.tlrb.utils.ApkUtils;
 import com.ttm.tlrb.utils.EnvironmentUtil;
 import com.umeng.commonsdk.UMConfigure;
@@ -106,16 +108,26 @@ public class RBApplication extends Application{
             public void onReceive(Context context, Intent intent) {
                 long id = intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1);
                 if(enqueue == id){
-                    ApkUtils.installApk(getInstance(),
-                            Uri.fromFile(new File(EnvironmentUtil.getDownloadFile(), Constant.DOWNLOAD_APK_NAME)));
+                    DownloadManager dm = (DownloadManager) context.getSystemService(Context.DOWNLOAD_SERVICE);
+                    ApkUtils.installApk(getInstance(),dm.getUriForDownloadedFile(id));
                 }
             }
         };
         registerReceiver(receiver, new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));
     }
 
-    public void startDownloadApk(String url){
-        enqueue = ApkUtils.downloadApk(this,url);
+    public void startDownloadApk(VersionInfo versionInfo){
+        if (versionInfo == null){
+            return;
+        }
+        BmobFile file = versionInfo.getFile();
+        String url = versionInfo.getPath();
+        if (TextUtils.isEmpty(url) && file != null && !TextUtils.isEmpty(file.getUrl())){
+            url = file.getUrl();
+        }
+        if(!TextUtils.isEmpty(url)) {
+            enqueue = ApkUtils.downloadApk(this,url);
+        }
     }
 
     public static RBApplication getInstance() {
