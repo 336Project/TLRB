@@ -1,18 +1,25 @@
 package com.ttm.tlrb.ui.application;
 
 import android.app.Application;
+import android.app.DownloadManager;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.net.Uri;
 import android.text.TextUtils;
 
-import com.alipay.euler.andfix.patch.PatchManager;
 import com.facebook.cache.disk.DiskCacheConfig;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.imagepipeline.core.ImagePipelineConfig;
 import com.ttm.tlrb.BuildConfig;
 import com.ttm.tlrb.api.UserManager;
+import com.ttm.tlrb.utils.ApkUtils;
 import com.ttm.tlrb.utils.EnvironmentUtil;
 import com.umeng.commonsdk.UMConfigure;
-import com.umeng.socialize.Config;
 import com.umeng.socialize.PlatformConfig;
+
+import java.io.File;
 
 import th.ds.wa.AdManager;
 
@@ -24,7 +31,6 @@ import th.ds.wa.AdManager;
 public class RBApplication extends Application{
     private static RBApplication instance;
     private String session = "";
-    private PatchManager mPatchManager;
 
     public String getSession() {
         if(TextUtils.isEmpty(session)){
@@ -52,8 +58,8 @@ public class RBApplication extends Application{
         HCrashHandler.init(this);
         initFresco();
         initAD();
-        initPatchManager();
         initUmeng();
+        registerUpgrade();
     }
 
     private void initSocial() {
@@ -77,15 +83,6 @@ public class RBApplication extends Application{
         AdManager.getInstance(this).init("abef61a1925a5d96", "95ce78a402f6cf12", false, BuildConfig.DEBUG);
     }
 
-    private void initPatchManager() {
-        mPatchManager = new PatchManager(this);
-        mPatchManager.init(BuildConfig.VERSION_NAME);
-        mPatchManager.loadPatch();
-    }
-
-    public PatchManager getPatchManager() {
-        return mPatchManager;
-    }
 
     private void initFresco(){
         DiskCacheConfig diskCacheConfig = DiskCacheConfig.newBuilder(this)
@@ -100,6 +97,25 @@ public class RBApplication extends Application{
         Fresco.initialize(this, config);
         //清理fresco缓存
         //Fresco.getImagePipeline().clearCaches();
+    }
+
+    private long enqueue;
+    private void registerUpgrade(){
+        BroadcastReceiver receiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                long id = intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1);
+                if(enqueue == id){
+                    ApkUtils.installApk(getInstance(),
+                            Uri.fromFile(new File(EnvironmentUtil.getDownloadFile(), Constant.DOWNLOAD_APK_NAME)));
+                }
+            }
+        };
+        registerReceiver(receiver, new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));
+    }
+
+    public void startDownloadApk(String url){
+        enqueue = ApkUtils.downloadApk(this,url);
     }
 
     public static RBApplication getInstance() {

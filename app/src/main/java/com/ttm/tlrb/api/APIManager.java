@@ -610,12 +610,12 @@ public class APIManager {
                     @Override
                     public Boolean call(File file) {
                         if(file != null) {
-                            try {
-                                RBApplication.getInstance().getPatchManager().addPatch(file.getAbsolutePath());
-                                return true;
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                            }
+//                            try {
+//                                RBApplication.getInstance().getPatchManager().addPatch(file.getAbsolutePath());
+//                                return true;
+//                            } catch (IOException e) {
+//                                e.printStackTrace();
+//                            }
                         }
                         return false;
                     }

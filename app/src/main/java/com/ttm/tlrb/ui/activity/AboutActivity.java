@@ -1,20 +1,26 @@
 package com.ttm.tlrb.ui.activity;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.text.Html;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.TextView;
 
+import androidx.annotation.Nullable;
+
 import com.ttm.tlrb.BuildConfig;
 import com.ttm.tlrb.R;
 import com.ttm.tlrb.api.APIManager;
 import com.ttm.tlrb.ui.application.Constant;
+import com.ttm.tlrb.ui.application.RBApplication;
 import com.ttm.tlrb.ui.entity.BmobFile;
 import com.ttm.tlrb.ui.entity.VersionInfo;
-import com.ttm.tlrb.ui.service.DownloadService;
 import com.ttm.tlrb.utils.ToastUtil;
 import com.ttm.tlrb.view.MaterialDialog;
 import com.umeng.analytics.MobclickAgent;
@@ -85,6 +91,15 @@ public class AboutActivity extends TitlebarActivity implements View.OnClickListe
     private String getNewVersionHtml(String newVersion){
         return "<font color='#ff3d00'>" +newVersion+ "</font>";
     }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 1000 && resultCode == Activity.RESULT_OK){
+            startDownload();
+        }
+    }
+
     @Override
     public void onClick(View v) {
         switch (v.getId()){
@@ -97,15 +112,18 @@ public class AboutActivity extends TitlebarActivity implements View.OnClickListe
                     materialDialog.setPositiveButton(getString(R.string.update), new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            if(hasNewVersion()) {
-                                BmobFile file = mVersionInfo.getFile();
-                                if(file != null && !TextUtils.isEmpty(file.getUrl())) {
-                                    Intent intent = new Intent(AboutActivity.this, DownloadService.class);
-                                    intent.putExtra(DownloadService.KEY_URL, file.getUrl());
-                                    startService(intent);
-                                }
-                            }
                             materialDialog.dismiss();
+                            if(hasNewVersion()) {
+                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                                    if (!getPackageManager().canRequestPackageInstalls()){
+                                        Intent intent = new Intent(Settings.ACTION_MANAGE_UNKNOWN_APP_SOURCES,
+                                                Uri.parse("package:"+getPackageName()));
+                                        startActivityForResult(intent,1000);
+                                        return;
+                                    }
+                                }
+                                startDownload();
+                            }
                         }
                     });
                     materialDialog.setNegativeButton(getString(R.string.cancel), new View.OnClickListener() {
@@ -131,6 +149,13 @@ public class AboutActivity extends TitlebarActivity implements View.OnClickListe
                 String message = getString(R.string.share_tip);
                 shareIntent(this,getString(R.string.app_name),message);
                 break;
+        }
+    }
+
+    private void startDownload(){
+        BmobFile file = mVersionInfo.getFile();
+        if(file != null && !TextUtils.isEmpty(file.getUrl())) {
+            RBApplication.getInstance().startDownloadApk(file.getUrl());
         }
     }
 

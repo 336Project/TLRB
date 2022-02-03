@@ -114,6 +114,7 @@ public class FeedBackActivity extends TitlebarActivity implements View.OnClickLi
                     if(logFile != null && logFile.exists()) {
                         FileUtil.deleteFile(logFile);
                     }
+                    finish();
                 }
             };
         }

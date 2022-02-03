@@ -34,12 +34,12 @@ import com.ttm.tlrb.api.APIManager;
 import com.ttm.tlrb.api.UserManager;
 import com.ttm.tlrb.ui.adapter.RedBombPagerAdapter;
 import com.ttm.tlrb.ui.application.Constant;
+import com.ttm.tlrb.ui.application.RBApplication;
 import com.ttm.tlrb.ui.entity.Account;
 import com.ttm.tlrb.ui.entity.BmobFile;
 import com.ttm.tlrb.ui.entity.RedBomb;
 import com.ttm.tlrb.ui.entity.VersionInfo;
 import com.ttm.tlrb.ui.fragment.RedBombFragment;
-import com.ttm.tlrb.ui.service.DownloadService;
 import com.ttm.tlrb.utils.HLog;
 import com.ttm.tlrb.utils.ToastUtil;
 import com.ttm.tlrb.view.MaterialDialog;
@@ -213,6 +213,11 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
      */
     private Subscriber<VersionInfo> mVersionInfoSubscriber;
     private void checkUpdate(){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            if (!getPackageManager().canRequestPackageInstalls()){
+                return;
+            }
+        }
         if(mVersionInfoSubscriber == null || mVersionInfoSubscriber.isUnsubscribed()){
             mVersionInfoSubscriber = new Subscriber<VersionInfo>() {
                 @Override
@@ -252,9 +257,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
             public void onClick(View v) {
                 BmobFile file = versionInfo.getFile();
                 if(file != null && !TextUtils.isEmpty(file.getUrl())) {
-                    Intent intent = new Intent(MainActivity.this, DownloadService.class);
-                    intent.putExtra(DownloadService.KEY_URL, file.getUrl());
-                    startService(intent);
+                    RBApplication.getInstance().startDownloadApk(file.getUrl());
                 }
                 dialog.dismiss();
                 if(isForce) {
