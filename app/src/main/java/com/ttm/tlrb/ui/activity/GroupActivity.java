@@ -107,9 +107,8 @@ public class GroupActivity extends TitlebarActivity implements TagGroup.OnTagCha
                             tags.add(categories.get(i).getName());
                         }
                         mTagGroup.setTags(tags);
-                        mTagGroup.setVisibility(View.VISIBLE);
-
                     }
+                    mTagGroup.setVisibility(View.VISIBLE);
                 }
             };
         }

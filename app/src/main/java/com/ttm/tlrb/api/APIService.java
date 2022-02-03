@@ -29,7 +29,7 @@ import rx.Observable;
  *
  */
 public interface APIService {
-    String BASE_URL = "https://api.bmob.cn/";
+    String BASE_URL = "https://api2.bmob.cn/";
     String BASE_DOWNLOAD_FILE_URL = BuildConfig.BASE_DOWNLOAD_FILE_URL;
     //int BATCH_LIMIT_COUNT = 50;
     /**登录*/
